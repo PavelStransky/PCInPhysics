@@ -1,0 +1,224 @@
+\documentclass[a4paper,11pt,twoside]{article}
+\usepackage[utf8]{inputenc}	% Text coding
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage{epsfig}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[unicode]{hyperref}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{xifthen}
+\usepackage{amsthm,thmtools}
+\usepackage{bold-extra}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[subrefformat=simple,labelformat=simple]{subcaption} % Instead of subfigure
+%\usepackage{showlabels}
+
+\hypersetup{
+	pdftitle={Využití počítačů ve fyzice},
+	pdfauthor={Pavel Stránský},
+	pdffitwindow=true,
+	colorlinks=true,
+	urlcolor=cyan,
+	linkcolor=red,
+	citecolor=green,
+	filecolor=magenta
+}
+
+\graphicspath{{figures/}}
+
+%\babelhyphenation[czech]{ma-te-ma-tic-kých}
+
+\renewcommand\thesubfigure{(\alph{subfigure})}
+
+% Page size
+\addtolength{\topmargin}{-1.5cm} %\addtolength{\textheight}{-10cm}
+\addtolength{\textwidth}{4cm} \addtolength{\textheight}{4cm} % Width and height of the text
+\addtolength{\voffset}{-0.5cm} % Top margin
+\addtolength{\hoffset}{-2cm}
+\setlength{\headheight}{15pt}
+
+\pagestyle{fancy}
+
+\DeclareMathOperator{\e}{e}
+
+\def\vector#1{\boldsymbol{#1}}								% Vector
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\derivative}[3][]{\ifthenelse{\isempty{#1}}	    % Normal derivative
+	{\frac{\d{#2}}{\d{#3}}}
+	{\frac{\d^{#1}{#2}}{\d{#3}^{#1}}}
+}
+\newcommand{\im}{\mathrm{i}}
+
+\def\makematrix#1{\begin{pmatrix}#1\end{pmatrix}}       % Matrix
+\def\abs#1{\left|#1\right|}
+\def\probability#1{\mathrm{Pr}\left[#1\right]}
+\def\expectation#1{\mathrm{E}\left[#1\right]}
+\def\dispersion#1{\sigma_{#1}^{2}}
+
+\def\code#1{\textnormal{\texttt{#1}}}
+\def\file#1{\textnormal{\textbf{\texttt{#1}}}}
+\long\def\python#1{{\color{ForestGreen}#1}}
+
+\newtheoremstyle{spaced}
+{5pt}{5pt}{\itshape}{}{\bfseries}{:}{.5em}{}
+
+\newtheoremstyle{red}
+{5pt}{5pt}{\itshape\color{red}}{}{\bfseries\color{red}}{:}{.5em}{}
+
+\newtheoremstyle{blue}
+{5pt}{5pt}{\itshape\color{blue}}{}{\bfseries\color{blue}}{:}{.5em}{}
+
+\begin{document}
+
+\theoremstyle{spaced}
+\newtheorem{example}{Příklad}[section]
+
+\theoremstyle{red}
+\newtheorem{task}{Úkol}[section]
+
+\theoremstyle{blue}
+\newtheorem{solution}{Řešení}[section]
+
+\title{Zápisky k předmětu Využití počítačů ve fyzice}
+\date{\today}
+\author{Pavel Stránský}
+
+\maketitle
+\tableofcontents
+
+\section{Obyčejné diferenciální rovnice}
+\subsection{Diferenciální rovnice prvního řádu}
+    Nejprve se budeme věnovat řešení jedné diferenciální rovnice prvního řádu,
+    \begin{equation}
+        \derivative{y}{t}=f(y,t)
+    \end{equation}
+    s počáteční podmínkou
+    \begin{equation}
+        y(t_{0})=y_{0}.
+    \end{equation}
+    Zde $y=y(t)$ je hledaná funkce a $t$ je nezávisle proměnná.
+    
+    Numerické řešení diferenciální rovnice spočívá v nahrazení infinitezimálních přírůstků přírůstky konečnými:
+    \begin{equation}\label{eq:Difference}
+        \frac{\Delta y}{\Delta t}=\phi(y,t)
+    \end{equation}
+    kde $\phi$ je funkce, která udává směr, podél kterého se při numerickém řešení vydáme.
+    Volbá této funkce je klíčová a záleží na ní, jak přesné řešení dostaneme a jak rychle ho dostaneme.
+
+    \subsubsection{Pár důležitých pojmů}
+    \begin{itemize}
+        \item{\bf Explicitní algoritmy:}
+        K výpočtu hodnoty funkce $y_{i+1}$ se vyžadují pouze hodnoty z aktuálních a minulých kroků, tj. $y_{i}$, $y_{i-1}$, atd.
+
+        \item {\bf Jednokrokové algoritmy:}
+        K výpočtu hodnoty funkce $y_{i+1}$ v následujícím kroku vyžadují pouze znalost hodnoty funkce v aktuálním kroku $y_{i}$.
+        Rozepsáním~\eqref{eq:Difference} dostaneme
+        \begin{equation}
+            \boxed{
+                y_{i+1}=y_{i}+\underbrace{\phi(y_{i},t)}_{\phi_{i}}\Delta t
+            },
+        \end{equation}
+        přičemž počáteční hodnota $y_{0}$ je dána počáteční podmínkou.
+        My se omezíme pouze na tyto algoritmy.
+
+        \item {\bf Lokální diskretizační chyba:}
+        \begin{equation}
+            \mathcal{L}=y(t+\Delta t)-y(t)-\phi(y(t),t)\Delta t,
+        \end{equation}        
+        kde $y(t)$ udává přesné řešení v čase $t$.
+
+        \item {\bf Akumulovaná diskretizační chyba:}
+        \begin{equation}
+            \epsilon_{i}=y_{i}-y(t_{i})
+        \end{equation}
+
+        \item {\bf Řád metody:} 
+        Metoda je $p$-tého řádu, pokud
+        \begin{equation}\label{eq:MethodOrder}
+            L(\Delta t)=\mathcal{O}(\Delta t^{p+1}).
+        \end{equation}
+
+        \item {\bf Kontrola chyby řešení:}
+        Chybu numerického řešení diferenciální rovnice lze zmenšit 1)~menším krokem, 2)~lepší metodou (metodou vyššího řádu). 
+        Menší krok však znamená vyšší výpočetní čas.
+        Sofistikované metody proto průběžně mění velikost kroku: když se funkce mění pomalu, krok prodlouží, když se mění rychle, krok zkrátí (tzv. {\bf metody s adaptivním krokem}).
+        Tím se docílí vysoké přesnosti při co nejmenším výpočetním čase.
+
+    \end{itemize}
+
+    \subsubsection{Eulerova metoda 1. řádu}
+        \begin{equation}\label{eq:Euler1}
+            \phi_{i}=f(y_{i},t_{i}),
+        \end{equation}
+        tj. krok do $y_{i+1}$ děláme vždy ve směru tečny v bodě $y_{i}$.
+
+        \begin{itemize}
+            \item Nejjednodušší metoda integrace diferenciálních rovnic.
+            \item Chyba je obrovská, k dosažení přesných hodnot je potřeba velmi malého kroku, což znamená dlouhý výpočetní čas.
+        \end{itemize}
+
+    \subsubsection{Eulerova metoda 2. řádu}
+        \begin{align}\label{eq:Euler2a}
+            k_{1}&=f(y_{i},t_{i})\nonumber\\
+            k_{2}&=f\left(y_{i}+k_{1}\Delta t,t+\Delta t\right)\\
+            \phi_{i}&=\frac{1}{2}\left(k_{1}+k_{2}\right),\nonumber
+        \end{align}
+        tj. uděláme jednoduchý Eulerův krok ve směru $k_{1}$, spočítáme derivaci $k_{2}$ po tomto kroku a vyrazíme z bodu $y_{i}$ ve směru, který je průměrem obou směrů (doporučuji si nakreslit obrázek).
+
+        Ekvivalentní je udělat \uv{Eulerův půlkrok} a vyrazit z bodu $y_{i}$ ve směru derivace spočtené po~tomto půlkroku:
+        \begin{align}\label{eq:Euler2b}
+            k'_{1}&=f(y_{i},t_{i})\nonumber\\
+            k'_{2}&=f\left(y_{i}+k'_{1}\frac{\Delta t}{2},t+\frac{\Delta t}{2}\right)\\
+            \phi_{i}&=k'_{2}\nonumber
+        \end{align}
+
+    \subsection{Runge-Kuttova metoda 4. řádu}
+        \begin{align}\label{eq:RungeKutta}
+            k_{1}&=f(y_{i},t_{i})\nonumber\\
+            k_{2}&=f\left(y_{i}+k_{1}\frac{\Delta t}{2},t+\frac{\Delta t}{2}\right)\nonumber\\
+            k_{3}&=f\left(y_{i}+k_{2}\frac{\Delta t}{2},t+\frac{\Delta t}{2}\right)\\
+            k_{4}&=f\left(y_{i}+k_{3}\Delta t,t+\Delta t\right)\nonumber\\
+            \phi_{i}&=\frac{1}{6}\left(k_{1}+2k_{2}+2k_{3}+k_{4}\right)\nonumber
+        \end{align}
+        
+        \begin{itemize}
+            \item Jedna z nejčastěji používaných metod.
+            \item Vysoká rychlost a přesnost při relativní jednoduchosti.
+            \item Existují i Runge-Kuttovy metody vyššího řádu $p$, avšak vyžadují výpočet více než $p$ dílčích derivací $k_{j}$.
+            Obecně platí, že metoda řádu $p\leq4$ vyžaduje $p$ derivací, metoda řádu $5\leq p\leq7$ vyžaduje $p+1$ derivací a metoda řádu $p=8,9$ vyřaduje $p+2$ derivací.
+        \end{itemize}
+
+    \begin{task}
+        Naprogramujte Eulerovu metodu 1. a 2. řádu a Runge-Kuttovu metodu.
+        Vyřešte diferenciální relaxační rovnici
+        \begin{equation}\label{eq:Exp}
+            \derivative{y}{t}=-y
+        \end{equation}
+        s počátečními podmínkami $y_{0}=1$ (analytickým řešením je funkce $e^{-t}$).
+        Integrační krok $\Delta t$ ponechte jako volný parametr.
+        Nakreslete grafy řešení $y(t)$ pro rozdílné hodnoty integračních kroků, například $\Delta t=0.01$ a $\Delta t=0.1$ pro čas $t\in\langle0;10\rangle$.
+    \end{task}
+
+    \begin{task}
+        Rozšiřte kód tak, aby počítal průměrnou kumulovanou chybu
+        \begin{equation}\label{eq:ExpError}
+            \mathcal{E}=\sqrt{\frac{1}{n}\sum_{i=0}^{n-1}\left(y_{i}-e^{-t_{i}}\right)^{2}}
+        \end{equation}
+        a nakreslete závislost $\mathcal{E}(\Delta t)$ pro $\Delta t\in\langle0.002;0.1\rangle$ a pro různé metody.
+        Jelikož očekáváme mocninnou závislost dle~\eqref{eq:MethodOrder}, kde exponent je tím větší, čím větší je řád metody, je výhodné graf $\mathcal{E}(\Delta t)$ kreslit v log-log měřítku.
+        V Pythonu použijete místo \textnormal{\texttt{plot(...)}} funkci \textnormal{\texttt{loglog(...)}} z knihovny \textnormal{\texttt{matplotlib.pyplot}}.
+        Ověřte, že získané křivky jsou v souladu s řády použitých metod.
+    \end{task}
+
+    \begin{task}
+        Pomocí naprogramovaných metod vyřešte nelineární diferenciální rovnici
+        \begin{equation}
+            \derivative{y}{t}=\sin\left(t y\right)
+        \end{equation}
+        s počáteční podmínkou $y_{0}=1$ a vykreslete graf jejího řešení.
+    \end{task}
+
+\end{document}
