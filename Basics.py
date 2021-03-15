@@ -33,11 +33,11 @@
 True
 False
 
-not True            # = False       # Negace se provádí pomocí not
-
 """ Logické operátory """
-True and False      # = False
-False or True       # = True
+False or True       # = True        # Logický součet
+True and False      # = False       # Logický součin
+not True            # = False       # Negace
+
 
 """ Porovnávání """
 2 == 1              # = False       # rovnost
@@ -103,6 +103,7 @@ bool(0)                 # = False   # int to bool (všechny hodnoty jsou True je
 ####################################################
 ##### 2. Proměnné a kolekce
 ####################################################
+# Python je case-sensitive, záleží tedy na velikosti písmen.
 # Proměnné není třeba deklarovat před přiřazením a není potřeba specifikovat jejich typ.
 # Konvence je používat male_pismo_s_podtrzitky (underscore style).
 # Lze pojmenovávat jakkoliv, klíčová je hlavně konzistence.
@@ -179,7 +180,7 @@ list(cena.values())     # = [48.2, 32.5, 19.9]              # Seznam hodnot; op�
 
 "kvetak" in cena        # = True                            # Kontrola, jestli prvek s klíčem "květák" v seznamu existuje
 
-cena["cokolada" = 24.9  # Přidá nový prvek do slovníku
+cena["cokolada"] = 24.9 # Přidá nový prvek do slovníku
 del cena["mleko"]       # odebere prvek s klíčem "mléko" ze slovníku
 
 """ Množiny (sets)"""
@@ -200,9 +201,9 @@ prvocisla - dvouciferna_prvocisla   # = {2, 3, 5, 7}                        # Ro
 # Bloky kódu musí být odsazeny a musí mít stejné odsazení
 
 """ Podmínka """
-if len(otevrena_divadla) > 1:
+if otevrena_divadla > 1:
     print("Hurá, jdeme za kulturou. A je z čeho vybírat.")
-elif len(otevrena_divadla) == 1:    # Část elif je nepovinná; může jich být ale i více
+elif otevrena_divadla == 1:         # Část elif je nepovinná; může jich být ale i více
     print("Jedno divadlo. Rychle koupit lístky")
 else:                               # Část else je také nepovinná
     print("Vše zavřené. Korona.")
@@ -210,13 +211,13 @@ else:                               # Část else je také nepovinná
 """ Cyklus """
 # Provádí se přes jakýkoliv iterovatelný objekt
 for fyzik in ["Einstein", "Dirac", "Feynman"]:
-    print(f"{genius} byl génius.".format(fyzik))
+    print(f"{fyzik} byl génius.")
 
 for zbozi in cena.keys():   # cena.keys() je iterovatelný objekt, lze ho takto vypsat
     print(zbozi)
 
 # Chceme-li iterovat přes celá čísla, použijeme range
-for i in range(10):         # Vypíše čísla od 0 do 9 včetně (deset čísel)
+for i in range(10):         # Vypíše čísla od 0 do 9 včetně (deset čísel)    
     print(i)        
 
 for j in range(10, 20, 3):  # Vypíše čísla od 10 (včetně) do 20 s krokem 3
@@ -224,8 +225,15 @@ for j in range(10, 20, 3):  # Vypíše čísla od 10 (včetně) do 20 s krokem 3
 
 """ Smyčka """
 while len(fibonacci) < 10:  # Provádí smyčku do té doby, dokud je splněna podmínka (dokud nemá seznam fibonacci deset prvků)
-    fibonacci.append(fibonacci[-1] + fibonacci[-2])
-    
+    fibonacci.append(fibonacci[-1] + fibonacci[-2])    
+
+# Ve smyčce a cyklu lze použít klíčová slova continue (pro okamžité provádění další iterace) a break (pro okamžité ukončení)
+while True:                             # Nekonečná smyčka
+    zadani = input('Zadejte řetězec: ') # Zadání z klávesnice
+    if len(zadani) > 5:                 # Je-li délka slova větší než 5...
+        print("V pořádku. Končím.")
+        break                           # ...smyčku ukončíme
+    print(f"Řetězec {zadani} je příliš krátký. Zadejte znovu.")
 
 ####################################################
 ## 4. Funkce
@@ -235,7 +243,7 @@ while len(fibonacci) < 10:  # Provádí smyčku do té doby, dokud je splněna p
 def odecti(x, y=1):      # Funkce (metoda) se definuje klíčovým slovem def; můžeme zadat i implicitní hototy argumentů
     """
         Vložíme-li takovýto komentář bezprostředně pod deklaraci funkce,
-        slouží jako dokumentační komentář a lze k němu přistoupit přes atribut __doc__.
+        slouží jako dokumentační komentář (docstring) a lze k němu přistoupit přes atribut __doc__.
         Zobrazí se také v našeptávači Visual Studio Code, pokud nad název funkce najedeme myší.
     """
     return x - y        # Hodnoty se vrací pomocí return

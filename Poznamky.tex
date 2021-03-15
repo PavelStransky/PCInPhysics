@@ -14,6 +14,7 @@
 \usepackage{bold-extra}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[subrefformat=simple,labelformat=simple]{subcaption} % Instead of subfigure
+\usepackage{listings}
 %\usepackage{showlabels}
 
 \hypersetup{
@@ -28,6 +29,21 @@
 }
 
 \graphicspath{{figures/}}
+
+\lstdefinestyle{listingsstyle}{
+    basicstyle=\ttfamily,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    keepspaces=true,                 
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    columns=fullflexible
+}
+
+\lstset{style=listingsstyle}
+
 
 %\babelhyphenation[czech]{ma-te-ma-tic-kých}
 
@@ -60,6 +76,9 @@
 
 \def\code#1{\textnormal{\texttt{#1}}}
 \def\file#1{\textnormal{\textbf{\texttt{#1}}}}
+
+\def\abbreviation#1{\textnormal{\textsc{#1}}}
+
 \long\def\python#1{{\color{ForestGreen}#1}}
 
 \newtheoremstyle{spaced}
@@ -88,6 +107,303 @@
 
 \maketitle
 \tableofcontents
+
+\section{Instalace používaných nástrojů}
+\label{sec:Instalace}
+    Příklady k cvičení budou demonstrovány v nejnovější verzi programovacího jazyka \href{https://python.org}{Python}.
+    Jako vývojové prostředí doporučuji \href{https://code.visualstudio.com}{Visual Studio Code}.
+    Tento volně dostupný program lze nainstalovat na všechny neužívanější operační systémy (Linux, Windows, macOS).    
+    Má nepřeberné možnosti při editaci zdrojových souborů, překladu a ladění snad ve všech známých programovacích jazycích.
+    Bohaté možnosti nastavení umožnují přizpůsobit si práci svým potřebám (například zvýrazňování syntaxe, klávesové zkratky či vzhled prostředí).
+    Pomocí doplňků ho můžete integrovat s dalšími službami, například s verzovacím programem Git, či vzdálenými repozitáři, čehož také využijeme.
+    Komunita, která toto vývojové prostředí používá a spravuje, je obrovská, což zaručuje dobrou podporu a rychlé přidávání nových funkcí.
+
+\subsection{Instalace Pythonu}
+\label{sec:Python}
+    Instalační soubor pro svůj operační systém stáhnete ze stránky \href{https://python.org}{python.org}.
+    Při instalaci na počítač s Windows doporučuji zvolit \uv{Add Python to PATH}, což zjednoduší práci s Pythonem z příkazové řádky, a na poslední obrazovce zvolit \uv{Disable path length limit}:
+    \begin{center}
+        \includegraphics[width=0.495\linewidth]{PythonInstallPath.png}
+        \includegraphics[width=0.495\linewidth]{PythonInstallPathLimit.png}
+    \end{center}
+    Pro ověření instalace napíšeme v příkazové řádce příkaz \code{python}.\footnote{Na počítačích s Linuxem je příkaz v terminálu \code{python3}.}
+    Tím se spustí \abbreviation{REPL}\footnote{{\bf R}ead-{\bf E}valuate-{\bf P}rint-{\bf L}oop.} Pythonu, ve které můžeme již psát všechny příkazy programovacího jazyka, které se po zadání ihned provedou a vypíšou výsledek.
+
+\subsubsection{Instalace doplňujících knihoven}
+    Samotná instalace Pythonu obsahuje jen minimální množství nejnutnějších knihoven.
+    My budeme využívat ještě následující rozšiřující knihovny:
+    \begin{itemize}
+        \item \file{\href{https://numpy.org}{NumPy}} ({\bf Num}erical {\bf Py}thon: numerická matematika, řady a vícedimenzionální datové typy),
+        \item \file{\href{https://scipy.org}{SciPy}} ({\bf Sci}entific {\bf Py}thon: algoritmy pro optimalizaci, statistiku, řešení diferenciálních rovnic, lineární algebru, atd.),
+        \item \file{\href{https://matplotlib.org}{Matplotlib}} (vizualizace, grafy).
+    \end{itemize}
+    K jejich doinstalování slouží modul \code{pip}.
+    V příkazové řádce napíšeme
+    \begin{lstlisting}
+        python -m pip install numpy scipy matplotlib
+    \end{lstlisting}
+    čímž se nainstalují naráz všechny tři knihovny.\footnote{
+        Pokud na počítači s Linuxem uvedený postup nebude fungovat, je potřeba nejprve nainstalovat instalátor \file{pip} pomocí příkazu \code{sudo apt install python3-pip}.
+        Pak lze použít buď výše uvedený příkaz, nebo stručnější \code{pip3 install numpy}.
+    }
+    
+    Existuje samozřejmě celá řada dalších užitečných a používaných knihoven, jako je například \file{\href{https://pandas.pydata.org/}{Pandas}} pro analýzu dat nebo \file{\href{https://www.sympy.org/}{SymPy}} pro symbolické výpočty, na které v tomto kurzu nedojde.
+
+\subsection{Instalace Visual Studio Code}
+    Instalace jazyka Python obsahuje jednoduché vývojové prostředí nazvané \abbreviation{\href{https://docs.python.org/3/library/idle.html}{IDLE}}.\footnote{
+        {\bf I}ntegrated {\bf D}evelopment and {\bf L}earning {\bf E}nvironment.
+    }
+    To však poskytuje jen omezené možnosti co se týče ladění, psaní rozsáhlejších projektů s více zdrojovými soubory nebo integrace s verzovacími programy.
+
+    Pro serióznější práci budeme používat \href{https://code.visualstudio.com}{Visual Studio Code} s doplňkem pro programovací jazyk Python.
+    Instalační soubor stáhnete ze stránky \href{https://code.visualstudio.com}{code.visualstudio.com}.
+    Během instalace na počítač s Windows doporučuji zvolit obě možnosti \uv{Add Open with Code action to...},
+    \begin{center}\includegraphics[width=0.5\linewidth]{VSCodeInstall.png}\end{center}
+    což zjednoduší otevírání složek s projekty nebo samostatných souborů pomocí pravého tlačítka myši.
+
+    Na operačním systému Linux je nejjednodušší provést instalci pomocí Snap Store příkazem v terminálu
+    \begin{lstlisting}
+        sudo snap install --classic code
+    \end{lstlisting}
+    nebo použít tento \href{https://code.visualstudio.com/docs/setup/linux}{návod}.
+
+\subsubsection{Instalace doplňku pro Python}
+    \begin{center}\includegraphics[width=\linewidth]{VSCodeInstallPython.png}\end{center}
+    Ke správě doplňků (extensions) se dostanete kliknutím na ikonku {\color{red} 1} nebo stisknutím \code{Ctrl+Shift+X}. 
+    Vyhledáte doplněk \href{https://marketplace.visualstudio.com/items?itemName=ms-python.python}{Python} {\color{red} 2} od Microsoftu, vyberete ho {\color{red} 3} a nainstalujete {\color{red} 4}.
+
+\subsection{Instalace Git}
+    Instalační soubor verzovacího systému \href{Git}{https://git-scm.com} stáhnete z webové stránky \href{https://git-scm.com}{git-scm.com}.
+    K instalaci Gitu potřebujete administrátorská práva.
+    
+    V následujícím postupu zobrazuji jen ty snímky obrazovky, na kterých je vhodné vybrat jinou volbu, než jaká je instalátorem standardně nabízena.
+    \begin{center}\includegraphics[width=0.5\linewidth]{GitInstallEditor.png}\end{center}
+    Jako editor zvolíme dříve nainstalované Visual Studio Code.
+    Systém Git vyžaduje editor jednak pro povinný komentář každé zapsané změny (commit), jednak pro ošetření kolizí při slučování větví (merge).
+    \begin{center}\includegraphics[width=0.5\linewidth]{GitInstallMain.png}\end{center}
+    Hlavní větev repozitáře se donedávna standardně jmenovala \code{master}.
+    Vzhledem k negativním konotacím tohoto slova v angličtině se přechází na neutrálnější označení.
+    Nejběžnější je \code{main}, na které již přešel i populární správce vzdálených repozitářů \href{https://github.com}{GitHub}.
+    Doporučuji tedy zvolit pojmenování \code{main}.
+
+    Všechna nastavení lze samozřejmě kdykoliv po instalaci změnit.
+
+\section{Úvod do systému Git}
+    Git je verzovací systém.
+    Pomáhá udržet historii změn souborů projektu, přičemž ke každému snímku historie se lze vrátit, a pokud se jedná o textový soubor, umí porovnat aktuální a historickou verzi řádek po řádku a zvýraznit provedené změny.    
+    Git umožňuje pracovat s nezávislými vývojovými větvemi (\emph{branches}), ve kterých lze například zkoušet různý přístup k řešení daného problému a mezi kterými lze jednoduše přepínat.
+    Nejlepší řešení lze pak snadno začlenit (\emph{merge}) do hlavní vývojové větve.
+
+    Git uchovává nejen historické verze souborů, ale také informace o tom, kdo změny provedl.
+    Proto se používá k práci v týmu, kdy každý člen týmu pracuje na určité části projektu a své změny následně do projektu včleňuje.
+    Pod správou Gitu se snadno vyvíjejí i velké projekty, například \href{https://github.com/microsoft/vscode}{Visual Studio Code}.
+    Tento projekt je otevřený (open source), což znamená, že kdokoliv, tedy i vy nebo já, má přístup ke všem zdrojovým kódům, může se do práce na projektu zapojit a přispět k jeho vývoji.
+    
+    Soubory projektu a informace o jejich historických změnách se nazývá souhrnně \emph{repozitář}.
+    Git patří mezi distribuované verzovací systémy.
+    To znamená, že každý uživatel má na svém počítači celý obsah repozitáře.
+    Hlavní výhody tohoto přístupu oproti centrálně řízeným verzovacím systémům jsou dvě:
+    \begin{enumerate}
+        \item Práce na projektu nevyžaduje připojení k centrálnímu serveru s repozitářem, a tedy můžete pracovat offline klidně někdě v džungli nebo na Marsu.
+        \item Případná porucha počítače spojená se ztrátou dat není žádná katastrofa, protože ostatní členové týmu mají identickou kopii repozitáře na svých počítačích.
+    \end{enumerate}
+    
+    Git nejefektivněji funguje na textové soubory, ale zvládne verzovat i soubory binární (například obrázky).
+
+    Program Git pochází z prostředí Linuxu, a proto je navržený tak, aby se s ním dalo pracovat z příkazové řádky (terminálu) pomocí jednoduchých textových příkazů.
+    Pro snadnější a rychlejší práci s Gitem je pak dispozici bezpočet různých grafických nadstaveb.  
+    Práce s Gitem je dokonce integrována přimo do vývojového prostředí Visual Studio Code.
+
+    Na stránkách projektu Git najdete \href{https://git-scm.com/book/en/v2}{podrobný interaktivní návod} ke všem funkcím verzovacího systému (a to částečně i v \href{https://git-scm.com/book/cs/v2}{češtině}).
+
+\subsection{Prvotní nastavení}
+    Git nelze používat do té doby, než jsou nastaveny základní informace o uživateli.
+    To se provede pomocí příkazů v příkazové řádce (terminálu)
+    \begin{lstlisting}
+        git config --global user.name "..."
+        git config --global user.email "..."
+    \end{lstlisting}
+    přičemž za ... doplníte své jméno (přezdívku) a email.
+    Těmito údaji se podepisují všechny zapsané změny v repozitáři.
+    Pokud tedy spolupracujete na projektu s jinými lidmi, je dobré zvolit takové údaje, pomocí kterých vás kolegové dobře identifikují a snadno kontaktují.
+
+    Výpis všech nastavení získáte příkazem
+    \begin{lstlisting}
+        git config --global
+    \end{lstlisting}
+    Uvidíte, že v mezi nastaveními je i název hlavní větve repozitáře (\code{init.defaultbranch=main}) a cesta k nastavenému textovému editoru (v našem případě Visual Studio Code).
+
+    Všechna nastavení a práci s příkazem \code{config} najdete v tomto \href{https://git-scm.com/docs/git-config}{podrobném návodu} nebo zadáním příkazu
+    \begin{lstlisting}
+        git help config
+    \end{lstlisting}
+
+\subsection{Vytvoření lokálního repozitáře}
+
+
+\subsection{Cheat Sheet}
+    Pro snadnou orientaci v použití Gitu si můžete vytisknout \href{https://training.github.com/downloads/github-git-cheat-sheet.pdf}{Git Cheat Sheet} nebo využít \href{https://ndpsoftware.com/git-cheatsheet.html}{tento interaktivní web}.
+
+\section{Úvod do Pythonu}
+    Python je v dnešní době velmi populární programovací jazyk, který pronikl do spousty nesouvisejících odvětví, a to zejména díky bohatosti a pokročilosti knihoven, které jsou vyvíjeny komunitou a jsou tudíž aktuální a dobře odladěné.
+    Python existuje na mnoha platformách od osobních počítačů po mikrokontroléry a dá se v něm naprogramovat téměř cokoliv: pokročilé vědecké výpočty používající nejnovější numerické algoritmy, dobře vypadající grafy, statistická analýza, analýza velkých dat a strojové učení, ale také webové služby, okénkové programy či editace obrázků a videí.
+    Je běžné, že i komerční programy obsahují Python coby skriptovací jazyk a tím umožňují uživateli používat své vlastní kódy \uv{uvnitř} komerčního produktu.\footnote{
+        Jako příklad poslouží nejnovější verze programu \href{https://www.wolfram.com/language/12/external-system-integration/evaluate-python-in-a-notebook.html}{Mathematica}, \href{https://www.originlab.com/doc/python/Run-Python-in-Origin}{Origin} či \href{https://developer.sas.com/guides/python.html}{SAS}.
+    }
+    
+    Python lze charakterizovat jako jazyk:
+    \begin{itemize}
+        \item 
+            \emph{Interpetovaný}, což znamená, že provádění programů probíhá přímo ze zdrojového kódu.\footnote{
+                Mezi další známé interpetované jazyky patří napříkad JavaScript nebo PHP.
+            }
+            Ke spouštění kódů je tedy potřeba mít nainstalovaný interpret, což jsme učinili v sekci~\ref{sec:Python}.
+            Pokud kód obsahuje syntaktickou chybu, je odhalena až ve chvíli, kdy se na ni při provádění kódu narazí.
+            U interpretovaných jazyků se neztrácí čas překladem do strojového kódu a je pro ně přirozené dynamické typování proměnných.
+            Tím, že interpet čte text kódu příkaz po příkazu, je provádění programů pomalejší, ale vzhledem k tomu, že velká část časově náročných funkcí a knihoven bývá napsána v rychlejších programovacích jazycích, není to zásadní nevýhoda.
+            
+            Opakem intepretovaných jazyků jsou jazyky kompilované, a to buď přímo do strojového kódu daného procesoru\footnote{Například C/C++, Pascal nebo Fortran.} nebo do mezikódu, který ke spuštění vyžaduje dodatečnou kompilaci, která však může být vysoce optimalizovaná přímo pro danou hardwarovou konfiguraci použitého počítače.\footnote{Zde se jedná napřílad o jazyky Java, C\# a celý .NET framework nebo Julia.}
+
+        \item 
+            \emph{Dynamicky typovaný}, což znamená, že proměnná nemusí mít předem daný typ a typ proměnné se může za běhu programu dokonce měnit.
+        
+        \item 
+            \emph{S automatickou správou paměti}, takže programátor se nemusí starat o alokování a uvolňování paměti. 
+            Python při inicializaci proměnné paměť automaticky alokuje a ve chvíli, kdy proměnnou přestaneme používat, paměť uvolní.\footnote{Algoritmus se nazývá \emph{Garbage collection}.} 
+
+        \item
+            V Pythonu lze svým spůsobem používat tři základní programovací paradigmata: \emph{procedurální, objektové a funkcionální}.
+    \end{itemize}
+         
+    Python klade důraz na jednoduchost, stručnost a čitelnost kódu.
+    Filosofie programovacího jazyka je shrnuta v \href{https://www.python.org/dev/peps/pep-0020/}{Zenu Pythonu}.\footnote{Zen se také vypíše, pokud do svého kódu zadáte \code{import this}.}
+
+\subsection{Vytvoření a spuštění kódu}
+    Ve Visual Studio Code vytvoříme nový soubor a uložíme si ho s příponou \code{*.py}. 
+    Podle přípony totiž VS Code pozná, že se jedná o pythonovský kód a použije k práci s ním správný doplněk.
+       
+    Hotový kód spustíte ve VS Code jedním z následujících tří způsobů.
+    \begin{enumerate}
+        \item 
+            \emph{Kliknutím na zelenou šipku na nástrojové liště}:
+            Tímto způsobem spustíte celý soubor kódu.
+        \item
+            \emph{Stiskem \code{F5}} (a výběrem Python File): Kód se spustí v režimu ladění (debugger).
+            Zastaví se na každém kontrolním bodě (breakpoint, vloží se na vybranou řádku kódu klávesou \code{F9}) nebo na každé chybě.
+            Pro pokračování provádění kódu stiskněte buď znovu \code{F5}, nebo \code{F10} pro jeden krok.
+
+        \item
+            \emph{Označením části kódu a stiskem Ctrl+Enter}: V okně označeném \code{TERMINAL} spustí \abbreviation{REPL} Pythonu a v něm označenou část kódu.
+            \abbreviation{REPL} se po provedení kódu nezavře, takže v něm lze psát dodatečné příkazy.
+            Pro ukončení \abbreviation{REPL} do něj stačí napsat \code{exit()} nebo v něm stisknout \code{Ctrl+Z} a potvrdit.
+    \end{enumerate}
+
+\subsection{Základy syntaxe Pythonu}
+    Soubor se vzorovými příklady najdete ve vzdáleném repozitáři: \file{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/Basics.py}{Basics.py}}.\footnote{
+        Vzorový soubor je inspirován příkladem \href{https://learnxinyminutes.com/docs/cs-cz/python/}{Nauč se Python v Y minutách}.
+    }
+    Doporučuji vám si ho stáhnout nebo jeho obsah překopírovat a důsledně si ho řádek po řádku projít a spouštět nejlépe pomocí označení a stiskem \code{Ctrl+Enter}, jak bylo popsáno v předchozí sekci.
+    Některé části kódu odkazují na proměnné zavedené v dřívější části kódu, proto kód procházejte postupně od začátku do konce.
+
+    Z vzorového souboru bych vypíchl následující body:
+    \begin{enumerate}
+        \item 
+            \emph{Základní datové typy a operátory}: Zaměřte se na možnosti formátování řetězců. 
+            Python obsahuje jen dva základní číselné typy: \code{int} a \code{float}.
+            Zbytek je podobný jako v jiných programovacích jazycích.
+
+        \item
+            \emph{Proměnné a kolekce}: 
+            Důležité standardní kolekce jsou \emph{seznam} (list) [...] a \emph{slovník} (dicctionary) \{...\}.
+            Dále existuje typ \emph{n-tice} (tuple) (...) a \emph{množina} (set) \{...\}.
+            O jaký typ kolekce se jedná poznáte podle typu závorek, kterými je uzavřena.
+            Python nabízí bohaté možnosti indexování prvků kolekcí.
+
+            Python nemá typ \uv{řada} (jedno či vícerozměrný soubor hodnot stejných typů).
+            Ten je implementován až v rozšiřujících knihovnách, například v knihovně \file{numpy}, které se budeme věnovat později.
+            
+        \item
+            \emph{Podmínky a cykly}:
+            Příkaz uvozující blok kódu vždy končí znakem :.
+            Každý blok je definován svým odsazením, které musí být na každém řádku stejné
+            (tj. musí obsahovat stejný počet odsazujících znaků, mezi které patří buď mezera nebo tabulátor).
+            Konvence je používat k odsazení \href{https://www.python.org/dev/peps/pep-0008/#indentation}{4 mezery}.
+
+            Cykly jsou možné pouze přes iterovatelné objekty.
+            Pro cyklus přes přirozená čísla (indexy) musíme vytvořit odpovídající iterovatelný objekt příkazem \code{range}.
+            V drtivé většině se lze při programování v Pythonu indexům zcela vyhnout.
+
+        \item 
+            \emph{Funkce}: Python umožnuje velkou variabilitu co se týče argumentů funkce a návratových hodnot díky své funkci automatického sbalení a rozbalení kolekcí.
+            Funkce se navíc chová jako objekt, lze ji tedy přiřadit jakékoliv proměnné.
+            To je jeden z prvků funkcionálního programování.
+
+            Funkcionální programování také obsahuje koncept anonymní funkce, což je jednoduchá funkce definovaná na jednom řádku, která nemá vlastní jméno.
+            V Pythonu se vytváří pomocí klíčového slova \code{lambda}.
+
+        \item 
+            \emph{Moduly}: Při programování je důležité vhodně strukturovat kód.
+            Python obsahuje jednoduchý koncept modulů, přičemž každý soubor s příponou \code{*.py} lze použít jako modul.
+            Modul je vlastně speciální typ objektu.
+
+            Dobře se seznamte se způsoby, jak modul načíst a používat, jelikož většina funkcí Pythonu se nachází právě v modulech.
+            Jedná se například o matematické funkce v modulu \file{math}.
+
+        \item 
+            \emph{Třídy}: Python umožňuje objektově orientované programování.
+            Práce s třídami se však v mnohém liší od striktně objektově orientovaných programovacích jazyků, jakými jsou například C++, C\# nebo Java.
+            Důležitý rozdíl je například v přístupnosti atributů (všechny atributy v Pythonu jsou veřejné).
+            Rovněž dědičnost a dědění metod se chová odlišně.
+            Dále je nutné pamatovat na to, že každá metoda třídy musí mít v deklaraci jako první argument odkaz na instanci, se kterou je volána (konvenčně se označuje \code{self}).
+            Ve vzorovém souboru je opravdu jen to nejnutnější minimum.
+            Pokud chcete v Pythonu využívat objekty seriózně, doporučuji pročíst si odpovídající \href{https://docs.python.org/3/tutorial/classes.html}{kapitolu v manuálu}.
+    \end{enumerate}
+
+    Uvedený soubor s příklady obsahuje jen ty struktury jazyka Python, které budeme používat.
+    V budoucích cvičeních se ještě seznámíte se \emph{správou kontextu} (klíčové slovo \code{with}).
+    Python umožňuje navíc 
+    \begin{itemize}
+        \item ošetření chyb pomocí \emph{výjimek} (klíčová slova \code{raise}, \code{try}, \code{except}, \code{finally}),
+        \item tvorbu \emph{generátorů} (klíčové slovo \code{yield}),
+        \item \emph{asynchronní programování}, korutiny a úkoly (klíčová slova \code{await}, \code{async})
+        \item či tvorbu a použití \emph{dekorátorů}.
+    \end{itemize}
+    Pro plné ovládnutí jazyka vám doporučuji se v budoucnu s těmito koncepty seznámit, a to buď ze specializovaných přednášek, z tutoriálů a návodů na webu, nebo studiem cizích kódů.
+
+\subsection{Pojmenování proměnných a formátování}
+    Formátování kódu Pythonu je celkem volné.
+    Povinné je dodržet jen správné odsazení bloků.
+    Pro snazší čitelnost kódu byla nicméně vytvořena řada doporučení, která najdete souhrnně na stránce \href{https://www.python.org/dev/peps/pep-0008}{PEP 8}.\footnote{\abbreviation{PEP} = {\bf P}ython {\bf E}nhancement {\bf P}roposal}
+        
+    Pro pojmenování proměnných existuje jediné závazné pravidlo, které zní, že indentifikátor se nesmí shodovat s žádným z \href{https://docs.python.org/3/reference/lexical_analysis.html#keywords}{35 klíčových slov} jazyka.
+    Kromě toho jsou ve výše uvedeném dokumentu další nezávazná pravidla k pojmenování proměnných:
+    \begin{itemize}
+        \item
+            \emph{Proměnné a funkce} se doporučuje pojmenovávat malými písmeny a jednotlivá slova spojovat podtržítky, tzv. underscore style (například \code{pocet\_bodu}).
+        \item
+            \emph{Konstanty} se doporučuje pojmenovávat velkými písmeny a jednotlivá slova spojovat podtržítky (například \code{PLANCKOVA\_KONSTANTA}).
+        \item
+            \emph{Třídy} se doporučuje pojmenovávat tak, že jednotlivá slova názvu začínají velkým písmenem a mezi nimi není žádný znak, tzv. Pascal style (například \code{PostovniAdresa}).
+        \item
+            Kvůli čitelnosti je dobré se vyhnout jednopísmenným označením \code{l}, \code{I} a \code{O}, jelikož takto označené proměnné mohou být snadno zaměněny s čísly \code{1} a \code{0}.
+
+    \end{itemize}
+    Pokud vám vyhovuje jiný styl pojmenovávání, lze ho použít.
+    Je však dobré být v pojmenovávání konzistentní napříč celým projektem.
+
+    Častá otázka je, zda proměnné označovat \emph{česky či anglicky}.
+    Jelikož nikdy nevíte, kdo v dnešním propojeném světě bude chtít váš kód použít a třeba i upravit pro své potřeby, je vhodnější používat anglická pojmenování.
+    
+    Snadná čitelnost kódu je podpořena i vhodným psaním \emph{komentářů}.
+    Obecné tvrzení zní, že dobře napsaný kód je čitelný i bez komentářů.
+    Poslouží hlavně vhodně označené proměnné a správně navržená struktura kódu.
+    Komentovat je dobré jen ty části kódu, kde se používá nějaký ne všeobecně známý trik nebo postup.
+    Nadbytek komentářů je velmi těžké udržovat při změnách kódu a může vést i k tomu, že po několika úpravách nebudou komentáře v souladu s tím, co kód vykonává.
+    
+    Naopak dobré je nešetřit vysvětlením, co dělají jednotlivé funkce, jaké jsou jejich argumenty a co vracejí na výstupu.
+    K tomu slouží komentář typu \emph{docstring}, který je vysvětlený v souboru \file{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/Basics.py}{Basics.py}} v sekci o funkcích.
+    Použití \emph{docstringu} usnadní i tvorbu a správu doprovodné dokumentace k celému projektu.
+    Existují například nástroje, které vám z těchto komentářů vytvoří strukturované webové stránky.
 
 \section{Obyčejné diferenciální rovnice}
 \subsection{Diferenciální rovnice prvního řádu}
