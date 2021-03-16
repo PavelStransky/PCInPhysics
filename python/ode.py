@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import numpy as np
 
 def step_euler_1(model, y, t, dt):
     """ First-order Euler method """

@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
-
-import math
+import math                             # Používáme goniometrické funkce
 
 # plt.ion()                             # Interactive Mode On - pokud spustíme tuto funkci, program nebude zastavovat na plt.show()
 
@@ -12,11 +11,11 @@ plt.show()                              # Zobrazení grafu
 
 
 """ Více grafů v jednom panelu """
-ys2 = [math.tan(x) for x in xs]
+ys2 = [math.tan(x) for x in xs]         # Funkce tangens
 
 plt.plot(xs, ys1)
 plt.plot(xs, ys2)
-plt.show()
+plt.show()                              # Ukáže graf. POZOR, Pro pokračování provádění kódu je potřeba graf zavřít (pokud nepoužíváte interaktivní mód plt.ion())
 
 """ Popisky os a grafu"""
 plt.plot(xs, ys1, color="red", linestyle=":", label="$\\sin(x)$")
