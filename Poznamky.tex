@@ -35,20 +35,33 @@
 \lstdefinestyle{listingsstyle}{
     basicstyle=\ttfamily,
     breakatwhitespace=false,         
+    numbersep=3,
     breaklines=true,                 
     keepspaces=true,                 
     showspaces=false,                
     showstringspaces=false,
     showtabs=false,                  
     tabsize=2,
-    columns=fullflexible
+    columns=fullflexible,
 }
 
 \lstset{style=listingsstyle}
 
+\lstdefinestyle{TinyPython}{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize
+}
+
 %\babelhyphenation[czech]{ma-te-ma-tic-kých}
 
 \renewcommand\thesubfigure{(\alph{subfigure})}
+
+\newcommand{\subsubsubsection}[1]{\paragraph{#1}\mbox{}
+
+}
+
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
 
 % Page size
 \addtolength{\topmargin}{-1.5cm} %\addtolength{\textheight}{-10cm}
@@ -144,8 +157,7 @@
     K jejich doinstalování slouží modul \code{pip}.
     V příkazové řádce napíšeme
     \begin{lstlisting}
-        python -m pip install numpy scipy matplotlib
-    \end{lstlisting}
+        python -m pip install numpy scipy matplotlib\end{lstlisting}
     čímž se nainstalují naráz všechny tři knihovny.\footnote{
         Pokud na počítači s Linuxem uvedený postup nebude fungovat, je potřeba nejprve nainstalovat instalátor \file{pip} pomocí příkazu \code{sudo apt install python3-pip}.
         Pak lze použít buď výše uvedený příkaz, nebo stručnější \code{pip3 install numpy}.
@@ -167,8 +179,7 @@
 
     Na operačním systému Linux je nejjednodušší provést instalci pomocí Snap Store příkazem v terminálu
     \begin{lstlisting}
-        sudo snap install --classic code
-    \end{lstlisting}
+        sudo snap install --classic code\end{lstlisting}
     nebo použít tento \href{https://code.visualstudio.com/docs/setup/linux}{návod}.
 
 \subsubsection{Instalace doplňku pro Python}
@@ -244,25 +255,194 @@
     To se provede pomocí příkazů v příkazové řádce (terminálu)
     \begin{lstlisting}
         git config --global user.name "..."
-        git config --global user.email "..."
-    \end{lstlisting}
+        git config --global user.email "..."\end{lstlisting}
     přičemž za ... doplníte své jméno (přezdívku) a email.
     Těmito údaji se podepisují všechny zapsané změny v repozitáři.
     Pokud tedy spolupracujete na projektu s jinými lidmi, je dobré zvolit takové údaje, pomocí kterých vás kolegové snadno identifikují a úspěšně kontaktují.
 
     Výpis všech nastavení získáte příkazem
     \begin{lstlisting}
-        git config --global
-    \end{lstlisting}
+        git config --list\end{lstlisting}
     Uvidíte, že v mezi nastaveními je i název hlavní větve repozitáře (\code{init.defaultbranch=main}) a cesta k nastavenému textovému editoru (v našem případě Visual Studio Code).
 
     Všechna nastavení a práci s příkazem \code{config} najdete v tomto \href{https://git-scm.com/docs/git-config}{podrobném návodu} nebo zadáním příkazu
     \begin{lstlisting}
-        git help config
-    \end{lstlisting}
+        git help config\end{lstlisting}
+
+\subsubsection{Stav souborů v repozitáři}
+    \begin{itemize}
+        \item \emph{Nesledovaný (untracked):} Systém Git historii tohoto souboru neuchovává.
+            Každý nové vytvořený soubor je v tomto stavu.
+
+        \item \emph{Připravený k zapsání (staged):} Soubor je systémem Git sledován (verzován).
+            Od předchozího zapsání v něm došlo ke změnám (nebo byl nově vytvořen) a k zapsání byl připraven pomocí příkazu
+            \begin{lstlisting}
+        git add soubor\end{lstlisting}
+            Hromadný příkaz
+            \begin{lstlisting}
+        git add *\end{lstlisting}
+            připraví k zapsání všechny změněné soubory a všechny nové soubory kromě těch, které jsou uvedeny v souboru \file{.gitignore} (viz sekce~\ref{sec:gitignore}).
+
+            Přehled změn v souborech připravených k zapsání oproti naposledy uložené verzi dá příkaz
+            \begin{lstlisting}
+        git diff --staged\end{lstlisting}
+
+        \item \emph{Změněný (modified):} Soubor je systémem Git sledován (verzován).
+            Od předchozího zapsání v něm došlo ke změnám, avšak soubor ještě nebyl označen k zapsání.
+            Přehled změn v souborech oproti naposledy uložené verzi dá příkaz
+            \begin{lstlisting}
+        git diff\end{lstlisting}
+        
+        \item \emph{Zapsaný (committed):} Soubor je systémem Git sledován(verzován) a je zapsaný v repozitáři.
+            Jedná se o verzi souboru, ke které je vždy možné se vrátit.
+            Zapsání (commit) všech souborů připravených k zapsání (staged) se provede příkazem
+            \begin{lstlisting}
+        git commit [m "popis revize"]\end{lstlisting}
+            kde \code{"popis revize"} je povinné označení ukládaného historického snímku.
+            Pokud se neuvede část v hranatých závorkách, systém Git spustí textový editor zvolený při jeho instalaci a v něm otevře soubor, do kterého název revize a případně nějaké podrobnější komentáře uvedete.
+            Po uložení souboru a uzavření textového editoru se provede zapsání.
+    \end{itemize}
+
+\subsubsection{Životní cyklus souborů v repozitáři}
+Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci diferenciálních rovnic ze sekce~\ref{sec:ODR1}.
+
+\subsubsubsection{Vytvoření nového repozitáře}
+    Ve složce, jejíž historii chceme ukládat, se repozitář vytvoří jednoduchým příkazem
+    \begin{lstlisting}
+        git init\end{lstlisting}
+    Existenci repozitáře lze vždy odhalit pomocí skryté podsložky s názvem \code{.git}:
+    \begin{center}\includegraphics[width=0.7\linewidth]{FolderGit.png}\end{center}
+    V této složce je uložena veškerá zapsaná historie vašeho projektu od jeho vytvoření.
+    Pokud tuto složku smažete, přijdete tím o \uv{paměť} systému Git pro daný projekt, avšak aktuální soubory projektu zůstanou tak, jak jsou.
+    Pokud naopak přesunete nebo překopírujete složku s projektem včetně podsložky \code{.git} kamkoliv jinam, klidně na jiný počítač, kopírujete zároveň celou historii projektu.
+
+\subsubsubsection{Stav repozitáře}
+    Aktuální stav repozitáře kdykoliv zjistíte pomocí příkazu
+    \begin{lstlisting}
+        git status\end{lstlisting}
+    Příkaz vypíše název aktuální větve a stav všech souborů v projektu.
+    Pro čerstvě vytvořený repozitář se dozvíte něco takového:
+    \begin{center}\includegraphics[width=0.6\linewidth]{GitStatusEmpty.png}\end{center}
+
+\subsubsubsection{Vytvoření a první zapsání nového souboru}
+    Ve složce s projektem otevřeme Visual Studio Code (napsáním \code{code} do příkazové řádky nebo stiskem pravého tlačítka myši nad otevřenou složkou a výběrem \uv{Open with Code}), vytvoříme nový soubor a uložíme ho jako \file{ode.py}.
+    Příkaz \code{git status} ukáže
+    \begin{center}\includegraphics[width=0.7\linewidth]{GitStatusFirst.png}\end{center}
+    Systém Git si je vědom toho, že si uživatel nemusí pamatovat všechny příkazy, a proto se snaží práci usnadnit a napovídá, které další akce lze v další fázi použít a jak.
+
+    Příkazem \code{git add *} se nový soubor připraví k zapsání.
+    Stav repozitáře se změní takto:
+    \begin{center}\includegraphics[width=0.45\linewidth]{GitStatusAdd.png}\end{center}
+
+    Zapsání se provede příkazem \code{git commit}.
+    Otevře se editor (nový soubor ve Visual Studiu Code), do kterého uvedeme stručný a výstižný popis změn:
+    \begin{center}\includegraphics[width=0.9\linewidth]{VSCodeCommit.png}\end{center}
+    Po uložení a zavření souboru se vytvoří první snímek historie našeho projektu.
+    V příkazové řádce vidíme stručný souhrn, co se zapsalo.
+    \begin{center}\includegraphics[width=0.5\linewidth]{GitStatusCommit.png}\end{center}
+
+\subsubsubsection{Změny v souboru}
+    Do souboru \file{ode.py} vepíšeme první část kódu, kterým bude řešení jedné diferenciální rovnice Eulerovou metodou 1. řádu.
+
+    \begin{lstlisting}[style=TinyPython]
+        def step_euler_1(model, y, t, dt):
+            y1 = y + model(y, t) * dt
+            t1 = t + dt
+            return y1, t1
+        
+        def solve(model, step=step_euler_1, dt=0.1, maxt=10, initial_condition=1):
+            y = initial_condition                   # Initial conditions
+            ys = [y]                                # List with results
+            
+            t = 0                                   # Actual time
+            ts = [t]                                # List with times
+            
+            while t < maxt:
+                y, t = step(model, y, t, dt)        # Step
+                
+                ys.append(y)                        # Store position
+                ts.append(t)                        # Store time
+                    
+            return ys, ts
+        
+        def relaxation(y, t):
+            return -y
+        
+        ys, ts = solve(relaxation)\end{lstlisting}
+    Po spuštění kód vyřeší diferenciální rovnici relaxace~\eqref{eq:Exp} a v proměnných \code{ys} a \code{ts} vrátí seznam $y$-ových hodnot a odpovídajících časových okamžiků $t$.
+
+    Kód funguje a dává smysluplné výsledky ($y(t)$ klesá s rostoucím časem k nule), zapíšeme tedy změny do \uv{historie}.
+    Stav repozitáře je
+    \begin{center}\includegraphics[width=0.7\linewidth]{GitStatusChange.png}\end{center}
+    Soubor je ve stavu změněný (modified).
+    Před zapsáním je nutné jeho stav změnit na k zapsání (staged) pomocí příkazu \code{git add *}.
+    Lze také použít zkrácený příkaz
+    \begin{lstlisting}
+        git commit -a\end{lstlisting}
+    který všechny změněné soubory převede do stavu k zapsání a rovnou zapsání provede.
+    Změnu označním popisem \uv{Eulerova metoda 1. řádu}.
+    \begin{center}\includegraphics[width=0.6\linewidth]{GitStatusCommit2.png}\end{center}
+
+    {\color{blue} Dobrá programátorská praxe je zapisovat vždy jen takový kód, který lze spustit, tj. který neobsahuje žádné syntaktické chyby.}
+
+\subsubsubsection{Přidání dalšího souboru do projektu}
+    V programu na řešení diferenciálních rovnic je dobré oddělit univerzální výpočetní funkce od funkcí specifických pro daný model.
+    Vytvoříme tedy nový soubor \file{relaxation.py}, do kterého přesuneme kód
+    \begin{lstlisting}[style=TinyPython]
+        import ode
+
+        def relaxation(y, t):
+            return -y
+        
+        ys, ts = ode.solve(relaxation)\end{lstlisting}
+    Nesmíme zapomenout náš \uv{modul} naimportovat pomocí příkazu \code{import ode}.
+    Program lze spustit a funguje, je tedy dobrý čas tyto změny zapsat.
+    Nejdříve se ale podíváme na stav repozitáře:    
+    \begin{center}\includegraphics[width=0.7\linewidth]{GitStatusChange2.png}\end{center}
+    Soubor \file{ode.py} se změnil, soubor \file{relaxation.py} byl vytvořen a zatím je ve stavu nesledován.
+    Navíc se ještě vytvořila celá složka \file{\_\_pycache\_\_/}.\footnote{
+        Pro urychlení provádění celého programu ukládá do tohoto adresáře interpret Pythonu speciálně předpřipravené používané moduly.
+    }
+    Jedná se o pomocnou složku, kterou verzovat nechceme.
+    Toho se docílí buď tím, že ji ponecháme v nesledovaném stavu (untracked) a začneme sledovat jen nový soubor.
+    Tento postup však znemožní používání hromadných příkazů \code{git add *} či \code{git commit -a}.
+    Gitu lze speciálně naznačit, jaké soubory a jaké složky jsou jen pomocné, a má je tedy ignorovat.
+    Za tím účelem se vytvoří speciální soubor pojmenovaný \file{.gitignore}, do kterého zapíšeme následující pravidlo
+    \begin{lstlisting}
+        __pycache__/\end{lstlisting}
+    a uložíme.
+    Stav repozitáře se změní následovně:
+    \begin{center}\includegraphics[width=0.7\linewidth]{GitStatusIgnore.png}\end{center}
+    Pomocná složka už není uvedena mezi nesledovanými soubory a Git ji ignoruje.
+    Můžeme již připravit k zapsání všechny nové a změněné soubory pomocí hromadného příkazu \code{git add *} a následně zapsat všechny změn pomocí \code{git commit},
+    přičemž změnu pojmenuji \uv{Oddělení řešitele ODE a modelu}.
+
+\subsubsubsection{Zobrazení historie revizí}
+\label{sec:gitlog}
+    Historie zobrazíme příkazem
+    \begin{lstlisting}
+        git log\end{lstlisting}
+    \begin{center}\includegraphics[width=0.7\linewidth]{GitLog.png}\end{center}
+    Vypsaný seznam obsahuje všechny údaje o jednotlivých snímcích historie (zapsáních), tj. datum a čas, autora a jeho e-mail a hash kód podepisující zapsání.
+
+    Příkaz log má velké možnosti, jak formátovat a filtrovat informace o zapsáních, přičemž všechny jsou uvedeny v \href{https://git-scm.com/docs/git-log}{referenční příručce}.
+    Nejdůležitější jsou
+    \begin{itemize}
+        \item \code{git log -{}-oneline} naformátuje vše hezčím způsobem (každé zapsání na jednom řádku) a z hashe zobrazí jen prvních 7 znaků, což stačí k identifikaci jednotlivých zapsání,
+        \item \code{git log -2} vypíše jen poslední dva záznamy,
+        \item \code{git log -{}-stat} vypíše statistiky o jednotlivých verzích (počty změn a výpis změněných souborů),
+        \item \code{git log -{}-graph} zobrazí výsledek \uv{graficky}, což se hodí v případě více větví (větve budou vysvětleny v sekci~\ref{sec:branches}),
+        \item \code{git log -{}-follow ode.py} vypíše všechny historické změny v souboru \file{ode.py},
+        \item \code{git log -{}-since "2 years 1 day 3 minutes ago"} 
+        \item \code{git log -{}-until "2019-01-15"} vypíše všechny změny od, resp. do uvedeného časového údaje,
+        \item \code{git log -{}-author="Pavel"} vypíše všechny změny, které zapsal uživatel Pavel,
+        \item \code{git log -{}-grep="Euler"} vypíše všechny změny, které obsahují v popisu slovo \uv{Euler}.
+    \end{itemize}
+    Uvedené filtry lze samozřejmě libovolně kombinovat.
 
 \subsubsection{.gitignore}
-    Překladače programovacích jazyků často vytvářejí v adresáři vašeho projektu dočasné pomocné soubory, které nechcete, aby se staly součástí repozitáře (tyto soubory nenesou žádnou relevantní informaci, navíc mohou na různých počítačích vypadat jinak podle toho, jaký překladač či jaké vývojové prostředí zrovna použijete).
+\label{sec:gitignore}
+    Překladače programovacích jazyků často vytvářejí v adresáři projektu dočasné pomocné soubory, které nechcete, aby se staly součástí repozitáře (tyto soubory nenesou žádnou relevantní informaci, navíc mohou na různých počítačích vypadat jinak podle toho, jaký překladač či jaké vývojové prostředí zrovna použijete).
     Abyste mohli používat příkazy pro hromadné sledování či zapisování souborů \code{git add *} či \code{git commit -a}, musíte GITu naznačit, jaké soubory má ignorovat.
     K tomu slouží soubor \code{.gitignore}.
     
@@ -301,11 +481,90 @@
 
     {\color{ForestGreen}
     \begin{task}
-        Podívejte se do souboru \code{.gitignore} v repozitáři k těmto zápiskům.
+        Podívejte se do souboru \code{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/.gitignore}{.gitignore}} v repozitáři k těmto zápiskům.
         Zatímco Python si téměř žádné pomocné soubory nevytváří, {\LaTeX} jich generuje požehnaně.
         Proto je tento soubor celkem dlouhý. 
     \end{task}
     }
+
+\subsubsection{Větve}
+\label{sec:branches}
+    Verzovací systém Git umožňuje pracovat paralelně na několika různých verzích kódu a mezi nimi dokáže efektivně přepínat.
+    Větvení se hodí v případě, že chceme vyzkoušet více různých přístupů k řešení úlohy.
+    Pro každé vytvoříme vlastní větev úprav, což dovolí řešení porovnávat a nakonec vybrat to, které vyhovuje nejvíce.
+    Každou větev můžeme dále větvit.
+    Perspektivní větve lze následně slučovat dohromady, neperspektivní lze nechat být.
+    
+    Častá programátorská praxe je taková, že v hlavní větvi\footnote{Hlavní větev se donedávna pojmenovávala \code{master}, dnes se spíše prosazuje pojmenování \code{main}.} se nachází vždy jen odladěná a otestovaná verze programu.
+    Pro každou změnu v projektu se vytvoří nová větev.
+    Na té se může pracovat hodinu, ale třeba několik měsíců.
+    V této \uv{vývojové} větvi se změny provedou, odladí, pošlou testerům, a teprve poté se začlení do hlavní větve.
+    Mezitím je stále k dispozici funkční program hlavní větve, který lze bez obav používat k ostrému provozu.
+
+\subsubsubsection{Vytvoření nové větve}
+    Budeme pokračovat ve vývoji programu pro řešení obyčejných diferenciálních rovnic.
+    Předpokládejme, že řešení pro jednu rovnici máme hotové a chceme ho rozšířit tak, bych fungovalo i na soustavu více diferenciálních rovnic 1. řádu, kterým se věnuje sekce~\ref{sec:ODRn}.
+    K tomu vytvoříme novou větev \code{odesystem}
+    \begin{lstlisting}
+        git branch odesystem\end{lstlisting}
+    a přepneme se na ni příkazem\footnote{
+        Vytvoření nové větve a přepnutí se do ní lze jedním příkazem \code{git switch -c odesystem}.
+    }
+    \begin{lstlisting}
+        git switch odesystem\end{lstlisting}
+        Zpět na hlavní větev se lze vrátit příkazem \code{git switch main}.\footnote{
+            Git umožňuje přepínání mezi větvemi také pomocí příkazu \code{git checkout}.
+        }
+
+\subsubsubsection{Výpis větví}
+    Seznam všech větví se vypíše příkazem
+    \begin{lstlisting}
+        git branch\end{lstlisting}
+    \begin{center}\includegraphics[width=0.45\linewidth]{GitBranch.png}\end{center}
+    Aktivní větev je vyznačena hvězdičkou i barevně.
+
+    Další užitečná upřesnění výpisu větví jsou
+    \begin{itemize}
+        \item \code{git branch -{}-merged} vypíše jen větve spojené s aktuální větví,
+        \item \code{git branch -{}-no-merged} vypíše jen větve nespojené s aktuální větví.
+    \end{itemize}
+
+\subsubsubsection{Změny a sloučení větví}
+    Poté, co provedeme a odladíme změny související s rozšířením programu na výpočet soustavy diferenciálních rovnic ve větvi \code{odesystem}, můžeme tyto změny začlenit do hlavní větve \code{main}.
+    K tomu slouží příkaz
+    \begin{lstlisting}
+        git merge odesystem\end{lstlisting}
+    spuštěný v hlavní větvi.
+    Pokud během slučování nedojde k žádným konfliktům, vše proběhne hladce.
+    Může se však stát, že byly provedeny změny na stejném místě jednoho souboru v obou větvích (konflikt).
+    V tom případě Git označí konflikty v souborech a jejich stav změní na modifikovaný.
+    Pak je potřeba tyto soubory projít, vybrat z konfliktních verzí jednu, případně kód upravit tak, aby odrážel obě konfliktní změny, a zapsat příkazem \code{git commit -a}.
+    Tím je slučování dokončeno.    
+    
+\subsubsubsection{Odstranění větve}
+    Větev odstraníme prostým
+    \begin{lstlisting}
+        git branch -d odesystem\end{lstlisting}
+    Odstraňovat větve má smysl jen v případě, kdy jsme přesvědčeni, že změny v ní provedené byla slepá cesta.
+
+\subsubsection{Návrat k dřívějším verzím}
+    Pozor, při neopatrném použití těchto příkazů hrozí ztráta dat!
+    Pokud si budete následující příkazy zkoušet, doporučuji vám zazálohovat si celou složku s projektem včetně repozitáře (složky \file{.git}).
+
+    \begin{itemize}
+        \item \code{git commit -{}-amend} umožňuje změnit popis posledního zapsání.
+        \item \code{git restore soubor} vrátí změny uvedeného souboru na posledně zapsanou verzi (lze použít i hromadné \code{git restore *}\footnote{\code{git restore *} se chová podobně jako \code{git reset -{}-hard}.}).
+        \item \code{git reset HEAD\~{}1} zruší poslední\footnote{Číslo udává, o kolik revizí se vracíme zpět.} zapsání, avšak soubory ve složce projektu ponechá tak, jak jsou.\footnote{HEAD vlastně značí ukazatel na poslední zapsání.}
+        \item \code{git reset -{}-hard HEAD\~{}1} zruší poslední zapsání a soubory projektu uvede do stavu, v jakém byly na začátku této poslední revize. 
+        Všechny provedené změny jsou nenávratně ztraceny.
+        Pokud byl nějaký soubor v poslední revizi vytvořen, je smazán.
+        Toto je nejnebezpečnější příkaz, proto používejte jen v opravdu odůvodněných případech.
+        \item \code{git reset 946cb25} se vrátí na zapsání, jehož hash začíná uvedeným číslem.
+        \item \code{git reset ORIG\_HEAD} se vrátí na tu zapsanou verzi, na které jsme byli bezprostředně před použitím posledního příkazu \code{git reset}.
+        \item \code{git checkout -b oldrev 946cb25} vytvoří novou větev nazvanou \uv{oldrev}, ve které budou soubory ve stavu, kdy bylo provedeno zapsání s uvedeným hashem (hash zjistíme například pomocí \code{git log -{}-oneline} popsaného v sekci~\ref{sec:gitlog}).
+        \item \code{git checkout 946cb25} vrátí se do tohoto zapsání, ale ponechá historii tak, jak je.\footnote{Tzv. Detached HEAD state.}.
+            K návratu zpět stačí použít příkaz pro přepnutí do hlavní větve \code{git switch main}.
+    \end{itemize}
 
 \subsubsection{Cheat Sheet}
     Pro snadnou orientaci v použití Gitu bez nutnosti pamatovat si všechny příkazy je dostupný \href{https://training.github.com/downloads/github-git-cheat-sheet.pdf}{Git Cheat Sheet} nebo \href{https://ndpsoftware.com/git-cheatsheet.html}{tento interaktivní web}.
@@ -491,6 +750,7 @@
     Jednoduchý příklad vykreslení grafů je v souboru \file{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/python/plot.py}{plot.py}} v repozitáři.
 
 \section{Obyčejné diferenciální rovnice 1. řádu}
+\label{sec:ODR1}
     V této části se budeme věnovat řešení jedné diferenciální rovnice prvního řádu,
     \begin{equation}
         \derivative{y}{t}=f(y,t)
@@ -635,9 +895,10 @@
 
 \newpage
 {\color{red}
+\subsection*{Domácí úkol}
 \begin{task}
     Naprogramujte Eulerovu metodu 1. a 2. řádu a Runge-Kuttovu metodu.
-    Vyřešte diferenciální relaxační rovnici
+    Vyřešte numericky diferenciální relaxační rovnici
     \begin{equation}\label{eq:Exp}
         \derivative{y}{t}=-y
     \end{equation}
@@ -667,3 +928,6 @@
 \end{task}
 }
 \end{document}
+
+\section{Soustavy diferenciálních rovnic 1. řádu}
+\label{sec:ODEn}
