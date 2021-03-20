@@ -99,11 +99,11 @@ def local_error(ode_solution, analytical_solution):
         Arguments:
         ode_solution -- a result returned from ode_solve
     """
-    ys, ts, name = ode_solution
+    ys, ts, _ = ode_solution
     return [y - analytical_solution(t) for y, t in zip(ys, ts)]
 
 
-def compare_ode_methods(model, dt = 0.1, analytical_solution=None):
+def compare_methods(model, dt = 0.1, analytical_solution=None):
     """ Compares different methods for solving differential equations """
     ode_solutions = []
 
