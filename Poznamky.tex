@@ -743,7 +743,13 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Použití \emph{docstringu} usnadní i tvorbu a správu doprovodné dokumentace k celému projektu.
     Existují například nástroje, které vám z těchto komentářů vytvoří strukturované webové stránky.
 
-\subsubsection{Grafy}
+\subsubsection{Řady (knihovna numpy)}
+\label{sec:numpy}
+    Jak bylo zmíněno v předchozí sekci, definice jazyka Python neobsahuje typ \emph{řada}, tj. jedno či vícerozměrně pole hodnot stejného typu.
+
+    Základy práce s řadami jsou vysvětleny přímo v souboru \file{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/python/arrays.py}{arrays.py}} v repozitáři.
+
+\subsubsection{Grafy (knihovna MatPlotLib)}
     K vykreslení grafů slouží knihovna \file{\href{https://matplotlib.org}{Matplotlib}}.
     V základní instalaci Pythonu není obsažena, je nutné ji doinstalovat podle návodu v sekci~\ref{sec:pip}.
 
@@ -762,7 +768,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Zde $y=y(t)$ je hledaná funkce a $t$ je nezávisle proměnná.
     
     Numerické řešení diferenciální rovnice spočívá v nahrazení infinitezimálních přírůstků přírůstky konečnými:
-    \begin{equation}\label{eq:Difference}
+    \begin{equation}\label{eq:Diference}
         \frac{\Delta y}{\Delta t}=\phi(y,t)
     \end{equation}
     kde $\phi$ je funkce, která udává směr, podél kterého se při numerickém řešení vydáme.
@@ -775,7 +781,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 
         \item {\bf Jednokrokové algoritmy:}
         K výpočtu hodnoty funkce $y_{i+1}$ v následujícím kroku vyžadují pouze znalost hodnoty funkce v aktuálním kroku $y_{i}$.
-        Rozepsáním~\eqref{eq:Difference} dostaneme
+        Rozepsáním~\eqref{eq:Diference} dostaneme
         \begin{equation}
             \boxed{
                 y_{i+1}=y_{i}+\underbrace{\phi(y_{i},t)}_{\phi_{i}}\Delta t
@@ -797,7 +803,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 
         \item {\bf Řád metody:} 
         Metoda je $p$-tého řádu, pokud
-        \begin{equation}\label{eq:MethodOrder}
+        \begin{equation}\label{eq:RadMetodyODR}
             L(\Delta t)=\mathcal{O}(\Delta t^{p+1}).
         \end{equation}
 
@@ -897,6 +903,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 {\color{red}
 \subsection*{Domácí úkol}
 \begin{task}
+\label{task:ODR1}
     Naprogramujte Eulerovu metodu 1. a 2. řádu a Runge-Kuttovu metodu.
     Vyřešte numericky diferenciální relaxační rovnici
     \begin{equation}\label{eq:Exp}
@@ -908,13 +915,14 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 \end{task}
 
 \begin{task}
+\label{task:KumulovanaChyba}
     Rozšiřte kód tak, aby počítal průměrnou kumulovanou chybu
-    \begin{equation}\label{eq:ExpError}
+    \begin{equation}\label{eq:ExpChyba}
         \mathcal{E}=\sqrt{\frac{1}{n}\sum_{i=0}^{n-1}\left(y_{i}-y(t_{i})\right)^{2}},
     \end{equation}
     kde $y(t)$ je analytické řešení diferenciální rovnice.
     Nakreslete závislost $\mathcal{E}(\Delta t)$ pro $\Delta t\in\langle0.002;0.1\rangle$ a pro různé metody.
-    Jelikož očekáváme mocninnou závislost dle~\eqref{eq:MethodOrder}, kde exponent je tím větší, čím větší je řád metody, je výhodné graf $\mathcal{E}(\Delta t)$ kreslit v log-log měřítku.
+    Jelikož očekáváme mocninnou závislost dle~\eqref{eq:RadMetodyODR}, kde exponent je tím větší, čím větší je řád metody, je výhodné graf $\mathcal{E}(\Delta t)$ kreslit v log-log měřítku.
     V Pythonu použijete místo \textnormal{\texttt{plot(...)}} funkci \textnormal{\texttt{loglog(...)}} z knihovny \textnormal{\texttt{matplotlib.pyplot}}.
     Ověřte, že získané křivky jsou v souladu s řády použitých metod.
 \end{task}
@@ -927,7 +935,130 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     s počáteční podmínkou $y_{0}=1$ a vykreslete graf jejího řešení.
 \end{task}
 }
-\end{document}
 
 \section{Soustavy diferenciálních rovnic 1. řádu}
-\label{sec:ODEn}
+\label{sec:ODRn}
+    Každou obyčejnou diferenciální rovnici $n$-tého řádu lineární v nejvyšší derivaci lze převést na~soustavu $n$ obyčejných diferenciálních rovnic prvního řádu ve tvaru
+    \begin{equation}\label{eq:ODR}
+        \derivative{\vector{y}}{t}=\vector{f}(\vector{y},t),
+    \end{equation}
+    kde $\vector{y}=\vector{y}(t)$ je vektor hledaných funkcí a $\vector{y}(t_{0})=\vector{y}_{0}$ vektor počáteční podmínky.
+
+    \begin{example}
+        Pohybovou rovnici
+        \begin{equation}
+            Ma=F(y),
+        \end{equation}
+        kde $M$ je hmotnost pohybujícího se tělesa, $x=x(t)$ jeho poloha a $a=a(t)=\d^{2}x/\d t^{2}$ zrychlení převedeme na~dvě diferenciální rovnice prvního řádu zavedením rychlosti $v=v(t)=\d x/\d t$:
+        \begin{equation}
+            \derivative{}{t}\makematrix{y \\ v}=\makematrix{v \\ \frac{1}{M}F(y)},
+        \end{equation}
+        tj. vektor funkce pravých stran podle rovnice~\eqref{eq:ODR} je
+        \begin{equation}
+            \vector{f}(\vector{y},t)=\makematrix{v \\ \frac{1}{M}F(y)}
+        \end{equation}
+        kde $\vector{y}\equiv(x,v)$.
+    \end{example}
+
+    \begin{example}
+    Pohybová rovnice pro harmonický oscilátor (matematické kyvadlo s malou výchylkou) při volbě jednotek $M=\Omega=1$, kde $M$ je hmotnost kmitající částice a $\Omega$ její rychlost, zní
+    \begin{align}
+        a&=\derivative[2]{y}{t}=-y &&\Longleftrightarrow &
+        \derivative{}{t}\makematrix{y \\ v}&=\makematrix{v \\ t}
+    \end{align}
+
+    \end{example}
+
+    {\color{ForestGreen}
+    \begin{task}
+    Převeďte na soustavu obyčejných diferenciálních rovnic prvního řádu rovnici třetího řádu pro Hiemenzův tok
+    \begin{equation}
+        y'''+yy''-y'^{2}+1=0.
+    \end{equation}
+    \end{task}
+    }
+
+    \begin{solution}
+    Hledaná soustava diferenciálních rovnic je
+    \begin{equation}
+        \derivative{}{t}\makematrix{y \\ v \\ a}=\makematrix{v \\ a \\ -ya+v^{2}-1}.
+    \end{equation}
+    \end{solution}
+
+    Drtivá většina knihoven a algoritmů pro integraci obyčejných diferenciálních rovnic počítá s rovnicemi ve~tvaru~\eqref{eq:ODR}.
+
+\subsection{Symplektické algoritmy}
+    Jedná se o speciální algoritmy navržené pro řešení pohybových differenciálních rovnic.
+    Od běžných algoritmů je odlišuje to, že zachovávají objem fázového prostoru, a~tedy i energii (zatímco u obecných algoritmů se energie s integračním časem mění a většinou roste).
+    
+    V praxi se ze~symplektických algoritmů používá nejčastěji \emph{Verletův algoritmus}.
+    Pro diferenciální rovnici 2. řádu ve tvaru 
+    \begin{equation}\label{eq:EM}
+        M\derivative[2]{x}{t}=F(x),
+    \end{equation}
+    což je pohybová rovnice pro jeden hmotný bod o hmotnosti $M$, na který působí časově neproměnná síla $F(x)$, má Verletův algoritmus tvar
+    \begin{align}
+        x_{i+1}&=y_{i}+v_{i}\Delta t+\frac{1}{2}a_{i}\Delta t^{2},\nonumber\\
+        v_{i+1}&=v_{i}+\frac{1}{2}\left(a_{i+1}+a_{i}\right)\Delta t,
+        \label{eq:Verlet}
+    \end{align}
+    kde $a_{i}\equiv F(x_{i})/M$ je zrychlení částice.
+
+    Verletův algoritmus se používá nejčastěji v molekulární dynamice k simulaci pohybu velkého množství vzájemně interagujících částic.
+    Jedná se o velmi rychlou a efektivní metodu.
+
+    Řád Verletova algoritmu je $p=2$. 
+    Symplektické algoritmy s vyšším řádem existují, avšak v praxi se nepoužívají.
+
+\newpage
+{\color{red}
+\subsection*{Domácí úkol}
+\begin{task}
+    Rozšiřte kód naprogramovaný v úkolu~\ref{task:ODR1} tak, aby fungoval pro libovolně velkou soustavu obyčejných diferenciálních rovnic.
+    Využijte k tomu funkce pro práci s řadami z knihovny \file{numpy} popsané v sekci~\ref{sec:numpy}.
+    Vyřešte diferenciální rovnici harmonického oscilátoru 
+    \begin{equation}\label{eq:HO}
+        \derivative[2]{x}{t}=-x
+    \end{equation}
+    s počátečními podmínkami $y_{0}=0$, $y'_{0}\equiv v_{0}=1$ a porovnejte řešení různými metodami s analytickým řešením $x(t)=\sin t$.
+    Jako časový krok volte například $\Delta t=0.1$ a $\Delta t=0.01$ a počítejte na časovém intervalu $t\in\langle 0;30\rangle$.
+\end{task}    
+
+\begin{task}
+    Naprogramujte Verletův algoritmus~\eqref{eq:Verlet}.
+    Ukažte, že zatímco při použití Eulerovy metody nebo Runge-Kuttovy metody energie systému v průběhu výpočtu roste, Verletův algoritmus energii zachovává.
+    Energie harmonického oscilátoru~\eqref{eq:HO} je dána vzorcem
+    \begin{equation}\label{eq:HOE}
+        E=\frac{1}{2}\left(y^{2}+v^{2}\right).
+    \end{equation}
+\end{task}
+
+\begin{task}
+    Eulerovu metodu 1. řádu lze pro soustavy dvou diferenciálních rovnic 1. řádu vylepšit následující záměnou:
+    \begin{align}
+        &\begin{matrix}
+            x_{i+1}=x_{i}+v_{i}\Delta t \\
+            v_{i+1}=v_{i}-x_{i}\Delta t 
+        \end{matrix}
+        &&\longrightarrow
+        &\begin{matrix}
+            x_{i+1}=x_{i}+v_{i}\Delta t \\
+            v_{i+1}=v_{i}-x_{i+1}\Delta t 
+        \end{matrix}
+    \end{align}
+    (vypočítáme $x_{i+1}$ a tuto hodnotu použijeme namísto hodnoty $x_{i}$ pro výpočet rychlosti $v_{i+1}$).
+    Naprogramujte tuto metodu a pomocí výsledků úlohy~\ref{task:KumulovanaChyba} ukažte, že pro harmonický oscilátor se jedná o metodu 2. řádu.
+\end{task}
+
+\begin{task}
+    Pohrajte si s řešením rovnice pro klesající exponenciálu
+    \begin{equation}\label{eq:Exp2}
+        \derivative[2]{x}{t}=y
+    \end{equation}
+    s počátečními podmínkami $x_{0}=1$, $x'_{0}=-1$.
+    Přesvědčte se, že Verletova metoda a vylepšená Eulerova metoda z předchozího úkolu jsou nestabilní --- pro tuto rovnici v relativně krátkém čase začnou řešení exponenciálně divergovat.
+\end{task}
+}
+
+\end{document}
+
