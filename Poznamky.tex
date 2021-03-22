@@ -932,7 +932,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     \begin{equation}
         \derivative{y}{t}=\sin\left(t y\right)
     \end{equation}
-    s počáteční podmínkou $y_{0}=1$ a vykreslete graf jejího řešení.
+    s počáteční podmínkou $y_{0}=1$, $t_{0}=0$ a vykreslete graf jejího řešení.
 \end{task}
 }
 
@@ -947,24 +947,24 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     \begin{example}
         Pohybovou rovnici
         \begin{equation}
-            Ma=F(y),
+            Ma=F(x),
         \end{equation}
         kde $M$ je hmotnost pohybujícího se tělesa, $x=x(t)$ jeho poloha a $a=a(t)=\d^{2}x/\d t^{2}$ zrychlení převedeme na~dvě diferenciální rovnice prvního řádu zavedením rychlosti $v=v(t)=\d x/\d t$:
         \begin{equation}
-            \derivative{}{t}\makematrix{y \\ v}=\makematrix{v \\ \frac{1}{M}F(y)},
+            \derivative{}{t}\makematrix{x \\ v}=\makematrix{v \\ \frac{1}{M}F(x)},
         \end{equation}
         tj. vektor funkce pravých stran podle rovnice~\eqref{eq:ODR} je
         \begin{equation}
-            \vector{f}(\vector{y},t)=\makematrix{v \\ \frac{1}{M}F(y)}
+            \vector{f}(\vector{y},t)=\makematrix{v \\ \frac{1}{M}F(x)}
         \end{equation}
-        kde $\vector{y}\equiv(x,v)$.
+        kde $\vector{y}\equiv\makematrix{x \\ v}$.
     \end{example}
 
     \begin{example}
     Pohybová rovnice pro harmonický oscilátor (matematické kyvadlo s malou výchylkou) při volbě jednotek $M=\Omega=1$, kde $M$ je hmotnost kmitající částice a $\Omega$ její rychlost, zní
     \begin{align}
-        a&=\derivative[2]{y}{t}=-y &&\Longleftrightarrow &
-        \derivative{}{t}\makematrix{y \\ v}&=\makematrix{v \\ t}
+        a&=\derivative[2]{x}{t}=-x &&\Longleftrightarrow &
+        \derivative{}{t}\makematrix{x \\ v}&=\makematrix{v \\ -x}
     \end{align}
 
     \end{example}
@@ -973,7 +973,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     \begin{task}
     Převeďte na soustavu obyčejných diferenciálních rovnic prvního řádu rovnici třetího řádu pro Hiemenzův tok
     \begin{equation}
-        y'''+yy''-y'^{2}+1=0.
+        x'''+xx''-x'^{2}+1=0.
     \end{equation}
     \end{task}
     }
@@ -981,7 +981,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     \begin{solution}
     Hledaná soustava diferenciálních rovnic je
     \begin{equation}
-        \derivative{}{t}\makematrix{y \\ v \\ a}=\makematrix{v \\ a \\ -ya+v^{2}-1}.
+        \derivative{}{t}\makematrix{x \\ v \\ a}=\makematrix{v \\ a \\ -xa+v^{2}-1}.
     \end{equation}
     \end{solution}
 
@@ -998,7 +998,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     \end{equation}
     což je pohybová rovnice pro jeden hmotný bod o hmotnosti $M$, na který působí časově neproměnná síla $F(x)$, má Verletův algoritmus tvar
     \begin{align}
-        x_{i+1}&=y_{i}+v_{i}\Delta t+\frac{1}{2}a_{i}\Delta t^{2},\nonumber\\
+        x_{i+1}&=x_{i}+v_{i}\Delta t+\frac{1}{2}a_{i}\Delta t^{2},\nonumber\\
         v_{i+1}&=v_{i}+\frac{1}{2}\left(a_{i+1}+a_{i}\right)\Delta t,
         \label{eq:Verlet}
     \end{align}
@@ -1020,16 +1020,16 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     \begin{equation}\label{eq:HO}
         \derivative[2]{x}{t}=-x
     \end{equation}
-    s počátečními podmínkami $y_{0}=0$, $y'_{0}\equiv v_{0}=1$ a porovnejte řešení různými metodami s analytickým řešením $x(t)=\sin t$.
+    s počátečními podmínkami $x_{0}=0$, $x'_{0}\equiv v_{0}=1$, $t_{0}=0$ a porovnejte řešení různými metodami s analytickým řešením $x(t)=\sin t$.
     Jako časový krok volte například $\Delta t=0.1$ a $\Delta t=0.01$ a počítejte na časovém intervalu $t\in\langle 0;30\rangle$.
 \end{task}    
 
 \begin{task}
     Naprogramujte Verletův algoritmus~\eqref{eq:Verlet}.
     Ukažte, že zatímco při použití Eulerovy metody nebo Runge-Kuttovy metody energie systému v průběhu výpočtu roste, Verletův algoritmus energii zachovává.
-    Energie harmonického oscilátoru~\eqref{eq:HO} je dána vzorcem
+    Energie bezrozměrného harmonického oscilátoru~\eqref{eq:HO} je dána vzorcem
     \begin{equation}\label{eq:HOE}
-        E=\frac{1}{2}\left(y^{2}+v^{2}\right).
+        E=\frac{1}{2}\left(x^{2}+v^{2}\right).
     \end{equation}
 \end{task}
 
@@ -1053,10 +1053,22 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 \begin{task}
     Pohrajte si s řešením rovnice pro klesající exponenciálu
     \begin{equation}\label{eq:Exp2}
-        \derivative[2]{x}{t}=y
+        \derivative[2]{x}{t}=x
     \end{equation}
     s počátečními podmínkami $x_{0}=1$, $x'_{0}=-1$.
     Přesvědčte se, že Verletova metoda a vylepšená Eulerova metoda z předchozího úkolu jsou nestabilní --- pro tuto rovnici v relativně krátkém čase začnou řešení exponenciálně divergovat.
+\end{task}
+
+\begin{task}
+    Vyřešte nelineární soustavu tří diferenciálních rovnic pro jednoduchý Lorenzův model vedení tepla v atmosféře
+    \begin{align}
+        \derivative{x}{t}&=\sigma(y-x),\nonumber\\
+        \derivative{y}{t}&=x(\rho-z)-y,\\
+        \derivative{z}{t}&=xy-\beta z\nonumber
+    \end{align}
+    s hodnotami parametrů $\sigma=10$, $\rho=28$ a $\beta=8/3$, počátečními podmínkami $(x_0, y_0, z_0)=(1,1,1)$ (na počátečních podmínkách zase tolik nezáleží), s krokem $\Delta t=0.01$ a na časovém intervalu $t\in\langle0,100\rangle$.
+    Vykreslete graf $z(x)$.
+    Výsledná křivka je slavný Lorenzův podivný atraktor ve tvaru motýlích křídel, krerý zpopularizoval teorii klasického chaosu.
 \end{task}
 }
 
