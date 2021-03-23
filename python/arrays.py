@@ -13,16 +13,23 @@ i = np.array([1, 2, 3.14], dtype="int8")# V odůvodněných případech lze typ 
 s = np.linspace(0, 1, 30)               # Řada 30 čísel rovnoměrně pokrývající interval 0 a 1 (včetně koncových bodů)
 r = np.arange(0, 1, 0.1)                # Řada čísel mezi 0 a 1 s krokem 0.1
 
-o = np.zeros((4, 5, 6))                 # Vytvoří třírozměrnou řadu o rozměru 4 x 5 x 6 a vyplní ji nulami
-z = np.ones((10, 10))                   # Vytvoří dvourozměrnou řadu (matici) o rozměru 10 x 10 a vyplní ji jedničkami
+""" Vícerozměrné řady """
+# https://numpy.org/doc/stable/reference/routines.array-creation.html
+e = np.empty((3, 3))                    # Vytvoří dvourozměrnou řadu (matici) o rozměru 3 x 3 a NEINICIALIZUJE JI
+z = np.zeros((4, 5, 6))                 # Vytvoří třírozměrnou řadu o rozměru 4 x 5 x 6 a vyplní ji nulami
+o = np.ones((10, 10))                   # Vytvoří dvourozměrnou řadu (matici) o rozměru 10 x 10 a vyplní ji jedničkami
 i = np.identity(4)                      # Vytvoří jednotkovou matici rozměru 4 x 4
 f = np.full((3, 4), np.pi)              # Matice, jejíž všechny elementy budou pi
 
-print(o.ndim)           # = 3           # Počet rozměrů řady
-print(o.shape)          # = (4, 5, 6)   # Tvar řady
-print(o.size)           # = 120         # Celkový počet prvků řady
+print(z.ndim)           # = 3           # Počet rozměrů řady
+print(z.shape)          # = (4, 5, 6)   # Tvar řady
+print(z.size)           # = 120         # Celkový počet prvků řady
 
+""" Přeskupení elementů řady """
+# https://numpy.org/doc/stable/reference/routines.array-manipulation.html
 sm = s.reshape((3, 10))                 # Změní tvar řady; počet elementů se musí zachovat
+fl = s.flatten()                        # Z elementů vytvoří jednorozměrnou řadu
+
 print(sm)
 
 t = sm.transpose()                      # Transpozice
@@ -40,3 +47,9 @@ r = np.random.rand(3, 5)                # Matice rozměru 3 x 5 vyplněná náho
 np.random.shuffle(sm)                   # Náhodně promíchá řadu (na místě)
 ri = np.random.randint(0, 100, (3, 5))  # Matice rozměru 3 x 5 vyplněná náhodnými celými čísly 0 <= d < 100
 rn = np.random.normal(0, 1, (3, 5))     # Matice rozměru 3 x 5 vyplněná náhodnými Gaussovsky rozdělenými čísly (mu = 0, sigma = 1)
+
+""" Matematické funkce """
+# https://numpy.org/doc/stable/reference/routines.emath.html
+sinus = np.sin(r)                       # Provede sinus každého elementu řady a zachová tvar řady
+exponential = np.exp(r)                 # Provede exponenciálu každého prvku matice. 
+                                        # POZOR, toto není exponenciála matice
