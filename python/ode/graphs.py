@@ -92,6 +92,49 @@ def plot_compare_methods(model, initial_condition, index=0, analytical_solution=
     plt.show()
 
 
+def plot_compare_steps(model, initial_condition, integrator, index=0, analytical_solution=None, dts=(0.5, 0.2, 0.1), **kwargs):
+    """ Compares solutions for different ODE methods in one graph.
+
+        Arguments:
+        model -- a function returning the right-hand side of the ODE
+        analytical_solution -- exact solution of the ODE (if available)
+        index -- for a set of ODE the index of the function to be plotted
+        kwargs -- addtitional parameters for ode_solve function (step, times, etc)
+    """
+
+    show_error = analytical_solution is not None
+
+    figure, axes = plt.subplots(2 if show_error else 1, 1)
+
+    tsa = None
+    for dt in dts:
+        ys, ts = ode.ode_solve(model, initial_condition, integrator=integrator, dt=dt, **kwargs)
+        if ys.ndim != 1:
+            ys = ys[:, index]
+
+        axes[0].plot(ts, ys, label=f"{integrator.__name__}, $dt={dt}$")
+
+        if show_error:
+            axes[1].plot(ts, local_error(ys, ts, analytical_solution))
+
+        if dt == np.min(dts):
+            tsa = ts
+
+    if analytical_solution is not None:
+        axes[0].plot(tsa, analytical_solution(tsa), label=analytical_solution.__name__)
+
+    # Axes labels
+    axes[0].set_xlabel("t")
+    axes[0].set_ylabel("y")
+    axes[0].legend()
+
+    if show_error:
+        axes[1].set_xlabel("t")
+        axes[1].set_ylabel(r'$\Delta$y')
+
+    plt.show()
+
+
 def plot_cummulative_error(model, initial_condition, analytical_solution, index=0, integrators=[ode.euler_1, ode.euler_2, ode.runge_kutta_4], dts=np.linspace(0.002, 0.1, 100), **kwargs):
     """ Compares solutions for different ODE methods in one graph.
 
