@@ -754,11 +754,45 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 
     Základy práce s řadami jsou vysvětleny přímo v souboru \ghfile{python/basics/}{arrays.py} v repozitáři.
 
-\subsubsection{Grafy (knihovna MatPlotLib)}
+\subsubsection{Grafy (knihovna matplotlib)}
     K vykreslení grafů slouží knihovna \file{\href{https://matplotlib.org}{Matplotlib}}.
     V základní instalaci Pythonu není obsažena, je nutné ji doinstalovat podle návodu v sekci~\ref{sec:pip}.
 
     Jednoduchý příklad vykreslení grafů je v souboru \ghfile{python/basics/}{plot.py} v repozitáři.
+
+\subsubsection{Pseudonáhodná čísla}\label{sec:PseudonahodnaCisla}
+    V Pythonu lze pseudonáhodná čísla generovat pomocí několika knihoven.
+    \begin{itemize}
+        \item 
+            Pro základní použití je k dispozici knihovna \file{\href{https://docs.python.org/3/library/random.html}{random}}.
+            Z ní nejdůležitější funkce jsou tyto:
+            \begin{itemize}
+                \item \code{random()}: \emph{reálné} pseudonáhodné číslo $x$ rovnoměrně z intervalu $x\in\langle 0;1)$.
+                \item \code{uniform(a, b)}: \emph{reálné} pseudonáhodné číslo $x$ rovnoměrně z intervalu $x\in\langle a;b\rangle$.
+                \item \code{gauss(mu, sigma)}: pseudonáhodné číslo z Gaussovského rozdělení se střední hodnotou \code{mu} a směrodatnou odchylkou \code{sigma}. 
+                \item \code{randint(a, b)}: \emph{celé} pseudonáhodné číslo $d$ z intervalu $a\leq d<b$.
+                \item \code{seed(s)}: nastaví počáteční násadu generátoru podle parametru \code{s} (pro jednu konkrétní násadu bude generátor dávat stejnou sekvenci čísel). 
+                Parametr může být jakéhokoliv typu, tedy číslo, řetězec atd. 
+                Pokud se parametr neuvede, použije se jako násada systémový čas.
+                \item \code{choice(l)}: vybere pseudonáhodně element ze seznamu \code{l}.
+                \item \code{shuffle(l)}: promíchá elementy v seznamu \code{l}.
+            \end{itemize}
+
+        \item
+            Ke generování řad či vícerozměrných objektů, jejichž elementy jsou náhodná čísla, lze použít i knihovnu \file{numpy}, viz sekce~\ref{sec:numpy} a soubor s příklady~\ghfile{python/basics/}{numpy.py}.
+
+        \item 
+            Pro pokročilejší použití je knihovna \file{\href{https://numpy.org/doc/stable/reference/random/index.html}{numpy.random}}.
+            Ta umožňuje zvolit vlastní generátor pseudonáhodných čísel, generovat čísla z celé řady \href{https://numpy.org/doc/stable/reference/random/generator.html}{statistických rozdělení} a generovat naráz celé vektory či matice.
+            \begin{itemize}
+                \item \code{generator = default\_rng()}: Inicializuje standardní generátor pseudonáhodných čísel.
+                \item \code{generator = Generator(PCG64())}: Inicializuje specifický generátor pseudonáhodných čísel (v~tomto případě PCG-64, což je O'Neillův permutační kongruenční generátor).
+                \item \code{generator.random(size=10)}: vektor délky 10 s elementy z rovnoměrného rozdělení z~intervalu $\langle 0;1)$.
+                \item \code{generator.normal(size=10)}: vektor délky 10 s elementy z normálního Gaussova rozdělení se střední hodnotou $0$ a směrodatnou odchylkou $1$.
+                \item \code{generator.normal(loc=1, scale=2, size=(10,10))}: matice rozměru $10\times10$ s elementy z normálního Gaussova rozdělení se střední hodnotou $1$ a směrodatnou odchylkou $2$.
+            \end{itemize}            
+    \end{itemize}
+
 
 \section{Obyčejné diferenciální rovnice 1. řádu}
 \label{sec:ODR1}
@@ -1126,7 +1160,6 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Symplektické algoritmy s vyšším řádem existují, avšak v praxi se nepoužívají.
 
 \newpage
-{\color{red}
 \subsection*{Domácí úkol na 30.3.2021}
 \begin{task}
     Rozšiřte kód naprogramovaný v úkolu~\ref{task:ODR1} tak, aby fungoval pro libovolně velkou soustavu obyčejných diferenciálních rovnic.
@@ -1185,7 +1218,37 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Vykreslete graf $z(x)$.
     Výsledná křivka je slavný Lorenzův podivný atraktor ve tvaru motýlích křídel, krerý zpopularizoval teorii klasického chaosu.
 \end{task}
-}
 
+\section{Náhodná procházka}\label{sec:NahodnaProchazka}
+    Náhodná procházka je jeden ze základních prostředků, jak simulovat velké množství nejen fyzikálních procesů (například pohyb Brownovské částice, fluktuace akciového trhu, cestu opilce z~hospody atd.).
+    V dalších cvičeních si ukážeme, jak se pomocí náhodné procházky dá jednoduše hledat minimum funkcí (a to i funkcí více proměnných). 
+
+    Algoritmus pro náhodnou procházku je následující: v každém časovém kroku uděláme krok v~$d$-rozměrném prostoru $\vector{y}_{i}\rightarrow\vector{y}_{i+1}$ takovým způsobem, aby pravděpodobnost pohybu do všech směrů byla stejná.
+    Délka kroku $d$ se volí buď náhodná, nebo konstantní.
+
+    K simulování náhodných procesů slouží algoritmy generující pseudonáhodná čísla, což jsou čísla, která mají statistické vlastnosti blízké vlastnostem skutečných náhodných čísel, avšak jsou počítána jednoduchými deterministickými algoritmy.
+    Náhodná čísla se generují od počáteční tzv. \emph{násady} (seed), kterou lze explicitně zadat, a tím posloupnost náhodných čísel přesně zreprodukovat (díky tomu, že generující algoritmy jsou deterministické).
+    Pokud násada není explicitně zadána, knihovny pro generování pseudonáhodných čísel většinou volí systémový čas, takže při každém spuštění programu dostáváme posloupnost odlišnou.
+
+    Základní funkce a postupy pro generování náhodných čísel v Pythonu jsou uvedeny v sekci~\ref{sec:PseudonahodnaCisla}.
+
+    \begin{task}
+        Naprogramujte náhodnou procházku ve 2D rovině.
+        Délku kroku volte konstantní, například $l=1$, směr volte náhodně.
+        Začněte z bodu $[0;0]$ a procházku ukončete poté, co opustíte oblast tvaru čtverce o hraně délky $2a$.
+        Uchovávejte celou procházku v poli či seznamu.
+        Nakonec trajektorii vykreslete do~grafu.
+    \end{task}
+
+    \begin{task}
+        Upravte náhodnou procházku tak, aby počítala s cyklickými okrajovými podmínkami.
+        To znamená, že pokud opustíte oblast čtverce jednou jeho stranou, objevíte se na straně protilehlé (jako kdybyste okraje čtverce zavinuli a slepili).
+        Výpočet ukončete poté, co uděláte $n$ kroků.
+    \end{task}
+
+    \begin{task}\label{task:NahodnaProchazka}
+        Zamyslete se nad tím, jak byste realizovali náhodnou procházku s konstantní délkou kroku v $d>2$ rozměrech, a zkuste své řešení naprogramovat.
+        Zásadní je dodržet požadavek, aby pohyb do jakéhokoliv směru nastával se stejnou pravděpodobností (esence úlohy tedy spočívá v generování náhodného směru v $d$-rozměrném prostoru).
+    \end{task}
 \end{document}
 
