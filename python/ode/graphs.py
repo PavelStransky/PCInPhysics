@@ -65,6 +65,8 @@ def plot_compare_methods(model, initial_condition, index=0, analytical_solution=
     show_error = analytical_solution is not None
 
     figure, axes = plt.subplots(2 if show_error else 1, 1)
+    main_panel = axes[0] if show_error else axes
+    error_panel = axes[1] if show_error else None
 
     ts = None
     for integrator in integrators:
@@ -72,22 +74,23 @@ def plot_compare_methods(model, initial_condition, index=0, analytical_solution=
         if ys.ndim != 1:
             ys = ys[:, index]
 
-        axes[0].plot(ts, ys, label=integrator.__name__)
+        main_panel.plot(ts, ys, label=integrator.__name__)
 
         if show_error:
-            axes[1].plot(ts, local_error(ys, ts, analytical_solution))
+            error_panel.plot(ts, local_error(ys, ts, analytical_solution))
 
     if analytical_solution is not None:
-        axes[0].plot(ts, analytical_solution(ts), label=analytical_solution.__name__)
+        ts = np.linspace(min(ts), max(ts), 200)
+        main_panel.plot(ts, analytical_solution(ts), label=analytical_solution.__name__)
 
     # Axes labels
-    axes[0].set_xlabel("t")
-    axes[0].set_ylabel("y")
-    axes[0].legend()
+    main_panel.set_xlabel("t")
+    main_panel.set_ylabel("y")
+    main_panel.legend()
 
     if show_error:
         axes[1].set_xlabel("t")
-        axes[1].set_ylabel(r'$\Delta$y')
+        axes[1].set_ylabel(r'$\epsilon$')
 
     plt.show()
 
@@ -105,33 +108,34 @@ def plot_compare_steps(model, initial_condition, integrator, index=0, analytical
     show_error = analytical_solution is not None
 
     figure, axes = plt.subplots(2 if show_error else 1, 1)
+    main_panel = axes[0] if show_error else axes
+    error_panel = axes[1] if show_error else None
 
-    tsa = None
+    ts = None
     for dt in dts:
         ys, ts = ode.ode_solve(model, initial_condition, integrator=integrator, dt=dt, **kwargs)
         if ys.ndim != 1:
             ys = ys[:, index]
 
-        axes[0].plot(ts, ys, label=f"{integrator.__name__}, $dt={dt}$")
+        main_panel.plot(ts, ys, label=f"$dt={dt}$")
 
         if show_error:
-            axes[1].plot(ts, local_error(ys, ts, analytical_solution))
-
-        if dt == np.min(dts):
-            tsa = ts
+            error_panel.plot(ts, local_error(ys, ts, analytical_solution))
 
     if analytical_solution is not None:
-        axes[0].plot(tsa, analytical_solution(tsa), label=analytical_solution.__name__)
+        ts = np.linspace(min(ts), max(ts), 200)
+        main_panel.plot(ts, analytical_solution(ts), label=analytical_solution.__name__)
 
     # Axes labels
-    axes[0].set_xlabel("t")
-    axes[0].set_ylabel("y")
-    axes[0].legend()
+    main_panel.set_xlabel("t")
+    main_panel.set_ylabel("y")
+    main_panel.legend()
 
     if show_error:
-        axes[1].set_xlabel("t")
-        axes[1].set_ylabel(r'$\Delta$y')
+        error_panel.set_xlabel("t")
+        error_panel.set_ylabel(r'$\epsilon$')
 
+    figure.suptitle(integrator.__name__)
     plt.show()
 
 

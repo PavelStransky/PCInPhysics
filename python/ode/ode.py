@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.integrate import odeint
 
 def euler_1(model, y, t, dt):
     """ First-order Euler method """
@@ -54,3 +55,11 @@ def ode_solve(model, initial_condition, integrator=runge_kutta_4, dt=0.1, maxt=1
         ts.append(t)                        # Store time
             
     return np.array(ys), np.array(ts)
+
+
+def scipy_ode_solve(model, initial_condition, dt=0.1, maxt=10):
+    """ Numerical solution of the differential equation with the scipy solver """
+    ts = np.arange(0, maxt, dt)
+    ys = odeint(model, initial_condition, ts)
+        
+    return ys, ts
