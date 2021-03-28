@@ -90,6 +90,7 @@
 
 \def\code#1{\textnormal{\texttt{#1}}}
 \def\file#1{\textnormal{\textbf{\texttt{#1}}}}
+\def\ghfile#1#2{\textnormal{\textbf{\texttt{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/#1#2}{#2}}}}}
 
 \def\abbreviation#1{\textnormal{\textsc{#1}}}
 
@@ -99,18 +100,24 @@
 {5pt}{5pt}{\itshape}{}{\bfseries}{:}{.5em}{}
 
 \newtheoremstyle{red}
-{5pt}{5pt}{\itshape}{}{\bfseries}{:}{.5em}{}
+{5pt}{5pt}{\itshape\color{red}}{}{\bfseries\color{red}}{:}{.5em}{}
+
+\newtheoremstyle{green}
+{5pt}{5pt}{\itshape\color{ForestGreen}}{}{\bfseries\color{ForestGreen}}{:}{.5em}{}
 
 \newtheoremstyle{blue}
 {5pt}{5pt}{\itshape\color{blue}}{}{\bfseries\color{blue}}{:}{.5em}{}
+
+\theoremstyle{red}
+\declaretheorem[name=Úkol,numberwithin=section]{task}
+
+\theoremstyle{green}
+\declaretheorem[name=Úkol,numberwithin=section,sibling=task]{voluntary}
 
 \begin{document}
 
 \theoremstyle{spaced}
 \newtheorem{example}{Příklad}[section]
-
-\theoremstyle{red}
-\newtheorem{task}{Úkol}[section]
 
 \theoremstyle{blue}
 \newtheorem{solution}{Řešení}[section]
@@ -345,12 +352,12 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Do souboru \file{ode.py} vepíšeme první část kódu, kterým bude řešení jedné diferenciální rovnice Eulerovou metodou 1. řádu.
 
     \begin{lstlisting}[style=TinyPython]
-        def step_euler_1(model, y, t, dt):
+        def euler_1(model, y, t, dt):
             y1 = y + model(y, t) * dt
             t1 = t + dt
             return y1, t1
         
-        def solve(model, step=step_euler_1, dt=0.1, maxt=10, initial_condition=1):
+        def ode_solve(model, initial_condition, integrator=runge_kutta_4, dt=0.1, maxt=10):
             y = initial_condition                   # Initial conditions
             ys = [y]                                # List with results
             
@@ -358,7 +365,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
             ts = [t]                                # List with times
             
             while t < maxt:
-                y, t = step(model, y, t, dt)        # Step
+                y, t = integrator(model, y, t, dt)  # Step
                 
                 ys.append(y)                        # Store position
                 ts.append(t)                        # Store time
@@ -368,8 +375,8 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         def relaxation(y, t):
             return -y
         
-        ys, ts = solve(relaxation)\end{lstlisting}
-    Po spuštění kód vyřeší diferenciální rovnici relaxace~\eqref{eq:Exp} a v proměnných \code{ys} a \code{ts} vrátí seznam $y$-ových hodnot a odpovídajících časových okamžiků $t$.
+        ys, ts = ode_solve(relaxation, 1)\end{lstlisting}
+    Po spuštění kód vyřeší diferenciální rovnici relaxace~\eqref{eq:relaxace} a v proměnných \code{ys} a \code{ts} vrátí seznam $y$-ových hodnot a odpovídajících časových okamžiků $t$.
 
     Kód funguje a dává smysluplné výsledky ($y(t)$ klesá s rostoucím časem k nule), zapíšeme tedy změny do \uv{historie}.
     Stav repozitáře je
@@ -394,7 +401,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         def relaxation(y, t):
             return -y
         
-        ys, ts = ode.solve(relaxation)\end{lstlisting}
+        ys, ts = ode.ode_solve(relaxation, 1)\end{lstlisting}
     Nesmíme zapomenout náš \uv{modul} naimportovat pomocí příkazu \code{import ode}.
     Program lze spustit a funguje, je tedy dobrý čas tyto změny zapsat.
     Nejdříve se ale podíváme na stav repozitáře:    
@@ -479,13 +486,11 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 
     Pokud na GitHubu zakládáte nový projekt, můžete upřesnit, jaký programovací jazyk budete používat a GitHub automaticky vytvoří optimální soubor \code{.gitignore}.
 
-    {\color{ForestGreen}
-    \begin{task}
-        Podívejte se do souboru \code{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/.gitignore}{.gitignore}} v repozitáři k těmto zápiskům.
+    \begin{voluntary}
+        Podívejte se do souboru \ghfile{}{.gitignore} v repozitáři k těmto zápiskům.
         Zatímco Python si téměř žádné pomocné soubory nevytváří, {\LaTeX} jich generuje požehnaně.
         Proto je tento soubor celkem dlouhý. 
-    \end{task}
-    }
+    \end{voluntary}
 
 \subsubsection{Větve}
 \label{sec:branches}
@@ -625,7 +630,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     \end{enumerate}
 
 \subsubsection{Základy syntaxe Pythonu}
-    Soubor se vzorovými příklady najdete v repozitáři ke cvičení: \file{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/python/PythonBasics.py}{PythonBasics.py}}.\footnote{
+    Soubor se vzorovými příklady najdete v repozitáři ke cvičení: \ghfile{python/basics/}{introduction.py}.\footnote{
         Vzorový soubor je inspirován příkladem \href{https://learnxinyminutes.com/docs/cs-cz/python/}{Nauč se Python v Y minutách}.
     }
     Doporučuji vám si ho stáhnout nebo jeho obsah překopírovat a důsledně si ho řádek po řádku projít a spouštět nejlépe pomocí označení a stiskem \code{Ctrl+Enter}, jak bylo popsáno v předchozí sekci.
@@ -736,7 +741,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Nadbytek komentářů je velmi těžké udržovat při úpravách a může vést i k tomu, že po několika změnách kódu nebudou komentáře v souladu s tím, co kód vykonává.
     
     Naopak doporučené je nešetřit popisem, co dělají jednotlivé funkce, jaké jsou jejich argumenty a co vracejí na výstupu.
-    K tomu slouží komentář typu \emph{docstring}, který je vysvětlený v souboru \file{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/python/PythonBasics.py}{PythonBasics.py}} v sekci o funkcích.\footnote{
+    K tomu slouží komentář typu \emph{docstring}, který je vysvětlený v souboru \ghfile{python/basics/}{introduction.py} v sekci o funkcích.\footnote{
         Stejně jako v mluvených jazycích se zlepšujete čtením literatury, v programovacích jazycích pomáhá čtení cizích kódů.
         Pro přiklad použití komentářů se koukněte třeba na zdrojový soubor funkce \code{\href{https://github.com/scipy/scipy/blob/master/scipy/optimize/optimize.py}{optimize}} z knihovny \file{scipy}.
     }
@@ -747,13 +752,13 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 \label{sec:numpy}
     Jak bylo zmíněno v předchozí sekci, definice jazyka Python neobsahuje typ \emph{řada}, tj. jedno či vícerozměrně pole hodnot stejného typu.
 
-    Základy práce s řadami jsou vysvětleny přímo v souboru \file{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/python/arrays.py}{arrays.py}} v repozitáři.
+    Základy práce s řadami jsou vysvětleny přímo v souboru \ghfile{python/basics/}{arrays.py} v repozitáři.
 
 \subsubsection{Grafy (knihovna MatPlotLib)}
     K vykreslení grafů slouží knihovna \file{\href{https://matplotlib.org}{Matplotlib}}.
     V základní instalaci Pythonu není obsažena, je nutné ji doinstalovat podle návodu v sekci~\ref{sec:pip}.
 
-    Jednoduchý příklad vykreslení grafů je v souboru \file{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/python/plot.py}{plot.py}} v repozitáři.
+    Jednoduchý příklad vykreslení grafů je v souboru \ghfile{python/basics/}{plot.py} v repozitáři.
 
 \section{Obyčejné diferenciální rovnice 1. řádu}
 \label{sec:ODR1}
@@ -783,8 +788,9 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         K výpočtu hodnoty funkce $y_{i+1}$ v následujícím kroku vyžadují pouze znalost hodnoty funkce v aktuálním kroku $y_{i}$.
         Rozepsáním~\eqref{eq:Diference} dostaneme
         \begin{equation}
+            \label{eq:phi}
             \boxed{
-                y_{i+1}=y_{i}+\underbrace{\phi(y_{i},t)}_{\phi_{i}}\Delta t
+                y_{i+1}=y_{i}+\underbrace{\phi(y_{i},t_{i})}_{\phi_{i}}\Delta t
             },
         \end{equation}
         přičemž počáteční hodnota $y_{0}$ je dána počáteční podmínkou.
@@ -798,6 +804,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 
         \item {\bf Akumulovaná diskretizační chyba:}
         \begin{equation}
+            \label{eq:AkumulovanaChyba}
             \epsilon_{i}=y_{i}-y(t_{i})
         \end{equation}
 
@@ -887,11 +894,9 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
                 y''(t)\approx\frac{y'\left(t+\frac{\Delta t}{2}\right)-y'(t)}{\frac{\Delta t}{2}}.
             \end{equation}
 
-            {\color{ForestGreen}
-                \begin{task}
-                    Dokončete odvození vztahů~\eqref{eq:Euler2b}.
-                \end{task}
-            }
+            \begin{voluntary}
+                Dokončete odvození vztahů~\eqref{eq:Euler2b}.
+            \end{voluntary}            
     \end{itemize}
 
     Analogicky se postupuje při odvození metod vyššího řádu.
@@ -900,13 +905,14 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Tato volnost s řádem metody narůstá.
 
 \newpage
-{\color{red}
-\subsection*{Domácí úkol}
+\subsection*{Domácí úkol na 23.3.2021}
 \begin{task}
 \label{task:ODR1}
     Naprogramujte Eulerovu metodu 1. a 2. řádu a Runge-Kuttovu metodu.
-    Vyřešte numericky diferenciální relaxační rovnici
-    \begin{equation}\label{eq:Exp}
+    Vyřešte numericky diferenciální relaxační rovnici\footnote{
+        Rovnice popisuje například Newtonův zákon chladnutí tělesa, aktuální množství prvku při radioaktivním rozpadu nebo různé populační modely.
+    }
+    \begin{equation}\label{eq:relaxace}
         \derivative{y}{t}=-y
     \end{equation}
     s počátečními podmínkami $y_{0}=1$ (analytickým řešením je funkce $e^{-t}$).
@@ -917,7 +923,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 \begin{task}
 \label{task:KumulovanaChyba}
     Rozšiřte kód tak, aby počítal průměrnou kumulovanou chybu
-    \begin{equation}\label{eq:ExpChyba}
+    \begin{equation}\label{eq:KumulovanaChyba}
         \mathcal{E}=\sqrt{\frac{1}{n}\sum_{i=0}^{n-1}\left(y_{i}-y(t_{i})\right)^{2}},
     \end{equation}
     kde $y(t)$ je analytické řešení diferenciální rovnice.
@@ -930,11 +936,122 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 \begin{task}
     Pomocí naprogramovaných metod vyřešte nelineární diferenciální rovnici
     \begin{equation}
+        \label{eq:sinyt}
         \derivative{y}{t}=\sin\left(t y\right)
     \end{equation}
     s počáteční podmínkou $y_{0}=1$, $t_{0}=0$ a vykreslete graf jejího řešení.
 \end{task}
-}
+
+\setcounter{solution}{1}
+\begin{solution}
+    Jedno možné řešení v souborech \ghfile{python/ode/}{ode.py} (integrační metoda), \ghfile{python/ode/}{graphs.py} (vykreslování grafů) a \ghfile{python/ode/}{relaxation.py} (hlavní soubor, který obsahuje definici modelu a volá všechny výpočetní a vykreslovací funkce).
+    Na řešení této úlohy je také ukázán základ práce s větvemi v sekci~\ref{sec:branches}.
+    
+    \begin{itemize}
+    \item \ghfile{python/ode/}{ode.py}: 
+        Modul napsaný maximálně obecně, aby ho bylo možné použít na řešení libovolné diferenciální rovnice, a také soustav diferenciálních rovnic probíraných v sekci~\ref{sec:ODRn}.
+        
+        \begin{itemize}
+        \item \code{euler\_1}: 
+            Integrační krok Eulerovy metody 1. řádu.
+        \item \code{euler\_2}: 
+            Integrační krok Eulerovy metody 2. řádu.
+        \item \code{runge\_kutta\_4}: 
+            Integrační krok Runge-Kuttovy metody 4. řádu.
+        \item \code{ode\_solve}: 
+            Integruje diferenciální rovnici danou pravou stranou prvního parametru \code{model} s počáteční podmínkou předanou parametrem \code{initial\_condition}. 
+            Integrační metodu lze specifikovat parametrem \code{integrator}, což je vlastně funkce $\phi(y_{i}, t_{i})$ z rovnice~\eqref{eq:phi}. 
+            Délku kroku udává parametr \code{dt}.
+            Funkce vrací pole hodnot řešení rovnice (soustavy rovnic) v jednotlivých časech a pole časů.
+        \item \code{scipy\_ode\_solve}: 
+            Integruje diferenciální rovnici pomocí funkce \code{odeint} z knihovny \code{sci\-py.integrate}. 
+            Pozor, parametr \code{dt} zde neznačí integrační krok, nýbrž časový krok výsledného pole.
+            Funkce \code{odeint} používá sofistikovaný řešitel diferenciálních rovnic s proměnným krokem.
+            Pro podrobnosti můžete mrknout na \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html}{dokumentaci} k této funkci.
+    \end{itemize}
+
+    \item \ghfile{python/ode/}{graphs.py}: 
+        Vykresluje grafy srovnávající různé metody nebo různé kroky výpočtu.
+        \begin{itemize}
+        \item \code{plot\_solution\_error}:
+            Vykreslí graf řešení diferenciální rovnice.
+            Parametr \code{analytical\_solution} je odkaz na přesné řešení dané diferenciální rovnice. 
+            Je-li zadán, vykreslí se do grafu dva panely: jeden s hodnotami numerického řešení, druhý s rozdílem řešení numerického a přesného $\epsilon$ (akumulovaná diskretizační chyba dle  rovnice~\eqref{eq:AkumulovanaChyba}).
+        \item \code{plot\_compare\_methods}:
+            Vykreslí do jednoho obrázku řešení zadané diferenciální rovnice různými metodami.
+            Z důvodu efektivnějšího kódu se v této funkci používá trochu složitější práce s panely, než jak je uvedeno ve vzorovém souboru \ghfile{python/basics/}{plot.py}.
+        \item \code{plot\_compare\_steps}:
+            Vykreslí do jednoho obrázku řešení zadané diferenciální rovnice s různými integračními kroky.
+        \item \code{plot\_cummulative\_errors}:
+            Řešení úlohy~\ref{task:KumulovanaChyba}.
+        \end{itemize}
+
+    \item \file{relaxation.py}:
+        Soubor, který využívá integračních funkcí z modulu \ghfile{python/ode/}{ode.py} a vykreslovacích funkcí z modulu \ghfile{python/ode/}{graphs.py}
+        pro řešení diferenciální rovnice pro relaxaci.
+        \begin{itemize}
+        \item Vyřeší diferenciální rovnici různými metodami, řešení nakreslí do jednoho grafu a porovná s teoretickou funkcí.
+        \item Vyřeší diferenciální rovnici s různým časovým krokemm, řešení nakreslí do jednoho grafu a porovná s teoretickou funkcí.
+        \item Nakreslí graf k úloze~\ref{task:KumulovanaChyba}.
+        \end{itemize}
+    \end{itemize}
+
+    \begin{figure}[!htbp]
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=relaxation_methods.eps,width=\linewidth}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=relaxation_euler_1.eps,width=\linewidth}
+        \end{subfigure}
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=relaxation_euler_2.eps,width=\linewidth}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=relaxation_runge_kutta_4.eps,width=\linewidth}
+        \end{subfigure}
+        \caption{
+            \protect\small
+            Integrace relaxační diferenciální rovnice ~\eqref{eq:relaxace} různými metodami a s různými časovými kroky.
+        }	
+        \label{fig:relaxace}
+    \end{figure}
+
+    Příslušné grafy jsou zobrazeny na obrázku~\ref{fig:relaxace}.
+    Je vidět, že chyba opravdu klesá s řádem metody a že čím je metoda vyššího řádu, tím rychleji chyba klesá se zmenšujícím se krokem.
+\end{solution}
+
+\begin{solution}
+    \begin{figure}[!htbp]
+        \centering\epsfig{file=relaxation_cummulative_error.eps,width=0.7\linewidth}
+        \caption{
+            \protect\small
+            Závislost průměrné kumulované chyby~\eqref{eq:KumulovanaChyba} na délce kroku $\Delta t$ vypočítaná a vykreslená pomocí funkce pro relaxační diferenciální rovnici.
+        }
+        \label{fig:relaxace_chyba}
+    \end{figure}
+
+    Řešení této úlohy vykreslí funkce \code{plot\_cummulative\_error} z modulu \ghfile{python/ode/}{graphs.py}. Graf je zobrazen na obrázku~\ref{fig:relaxace_chyba}.
+    Body log-log grafu byla proložena přímka pomocí funkce lineární regrese \code{linregress} z knihovny \file{scipy.stats}.
+    Nafitovaná směrnice $\alpha$ je uvedena v obrázku.
+\end{solution}
+
+\begin{solution}
+    \begin{figure}[!htbp]
+        \centering\epsfig{file=sinyt.eps,width=0.7\linewidth}
+        \caption{
+            \protect\small
+            Řešení diferenciální rovnice~\eqref{eq:sinyt} s počáteční podmínkou $y(0)=1$.
+            Použitá metoda: Runge-Kutta, časový krok $\Delta t=0.02$.
+        }
+        \label{fig:sinyt}
+    \end{figure}
+
+    Řešení je v souboru \ghfile{python/ode/}{sinyt.py}.
+    Graf vypočítané funkce je na obrázku~\ref{fig:sinyt}.
+\end{solution}
+
 
 \section{Soustavy diferenciálních rovnic 1. řádu}
 \label{sec:ODRn}
@@ -969,14 +1086,12 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 
     \end{example}
 
-    {\color{ForestGreen}
-    \begin{task}
+    \begin{voluntary}
     Převeďte na soustavu obyčejných diferenciálních rovnic prvního řádu rovnici třetího řádu pro Hiemenzův tok
     \begin{equation}
         x'''+xx''-x'^{2}+1=0.
     \end{equation}
-    \end{task}
-    }
+    \end{voluntary}
 
     \begin{solution}
     Hledaná soustava diferenciálních rovnic je
@@ -1012,7 +1127,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 
 \newpage
 {\color{red}
-\subsection*{Domácí úkol}
+\subsection*{Domácí úkol na 30.3.2021}
 \begin{task}
     Rozšiřte kód naprogramovaný v úkolu~\ref{task:ODR1} tak, aby fungoval pro libovolně velkou soustavu obyčejných diferenciálních rovnic.
     Využijte k tomu funkce pro práci s řadami z knihovny \file{numpy} popsané v sekci~\ref{sec:numpy}.
