@@ -66,6 +66,7 @@ def plot_compare_methods(model, initial_condition, index=0, analytical_solution=
 
     figure, axes = plt.subplots(2 if show_error else 1, 1)
 
+    ts = None
     for integrator in integrators:
         ys, ts = ode.ode_solve(model, initial_condition, integrator=integrator, **kwargs)
         if ys.ndim != 1:
@@ -75,6 +76,9 @@ def plot_compare_methods(model, initial_condition, index=0, analytical_solution=
 
         if show_error:
             axes[1].plot(ts, local_error(ys, ts, analytical_solution))
+
+    if analytical_solution is not None:
+        axes[0].plot(ts, analytical_solution(ts), label=analytical_solution.__name__)
 
     # Axes labels
     axes[0].set_xlabel("t")
