@@ -1224,7 +1224,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     V dalších cvičeních si ukážeme, jak se pomocí náhodné procházky dá jednoduše hledat minimum funkcí (a to i funkcí více proměnných). 
 
     Algoritmus pro náhodnou procházku je následující: v každém časovém kroku uděláme krok v~$d$-rozměrném prostoru $\vector{y}_{i}\rightarrow\vector{y}_{i+1}$ takovým způsobem, aby pravděpodobnost pohybu do všech směrů byla stejná.
-    Délka kroku $d$ se volí buď náhodná, nebo konstantní.
+    Délka kroku $s$ se volí buď náhodná, nebo konstantní.
 
     K simulování náhodných procesů slouží algoritmy generující pseudonáhodná čísla, což jsou čísla, která mají statistické vlastnosti blízké vlastnostem skutečných náhodných čísel, avšak jsou počítána jednoduchými deterministickými algoritmy.
     Náhodná čísla se generují od počáteční tzv. \emph{násady} (seed), kterou lze explicitně zadat, a tím posloupnost náhodných čísel přesně zreprodukovat (díky tomu, že generující algoritmy jsou deterministické).
@@ -1232,10 +1232,12 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 
     Základní funkce a postupy pro generování náhodných čísel v Pythonu jsou uvedeny v sekci~\ref{sec:PseudonahodnaCisla}.
 
+    \newpage
+    {\color{red}\subsection*{Domácí úkol na 6.4.2021}}
     \begin{task}
         Naprogramujte náhodnou procházku ve 2D rovině.
-        Délku kroku volte konstantní, například $l=1$, směr volte náhodně.
-        Začněte z bodu $[0;0]$ a procházku ukončete poté, co opustíte oblast tvaru čtverce o hraně délky $2a$.
+        Délku kroku volte konstantní $s=1$, směr volte náhodně.
+        Začněte z bodu $(x,y)=(0,0)$ a procházku ukončete poté, co opustíte oblast tvaru čtverce o hraně délky $2a$.
         Uchovávejte celou procházku v poli či seznamu.
         Nakonec trajektorii vykreslete do~grafu.
     \end{task}
@@ -1251,4 +1253,3 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         Zásadní je dodržet požadavek, aby pohyb do jakéhokoliv směru nastával se stejnou pravděpodobností (esence úlohy tedy spočívá v generování náhodného směru v $d$-rozměrném prostoru).
     \end{task}
 \end{document}
-
