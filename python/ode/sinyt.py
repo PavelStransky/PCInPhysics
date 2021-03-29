@@ -7,7 +7,7 @@ import graphs
 def model(y, t):
     return np.sin(y * t)
 
-ys, ts = ode.ode_solve(model, 1, dt=0.02)
+ys, ts = ode.ode_solve(model, 1, dt=1, integrator=ode.euler_1)
 plt.plot(ts, ys)
 plt.xlabel("t")
 plt.ylabel("y")
