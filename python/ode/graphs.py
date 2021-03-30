@@ -171,3 +171,4 @@ def plot_cummulative_error(model, initial_condition, analytical_solution, index=
     plt.legend()
 
     plt.show()
+
