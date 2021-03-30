@@ -5,7 +5,7 @@ import graphs
 import symplectic
 
 def ho(y, t):
-    """ Derivatives for the harmonic osciilator """
+    """ Derivatives for the harmonic oscillator """
     x, v = y
     return np.array([v, -x])
 
