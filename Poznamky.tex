@@ -52,6 +52,11 @@
     basicstyle=\ttfamily\footnotesize
 }
 
+\lstdefinestyle{console}{
+    basicstyle=\ttfamily\footnotesize\color{white},
+    backgroundcolor=\color{black}
+}
+
 %\babelhyphenation[czech]{ma-te-ma-tic-kých}
 
 \renewcommand\thesubfigure{(\alph{subfigure})}
@@ -235,8 +240,12 @@
     To předurčuje verzovací systémy pro efektivní správu týmových projektů, kdy každý člen týmu pracuje na určité části projektu a své změny následně do projektu včleňuje.
 
     My budeme používat verzovací systém \href{https://git-scm.com}{Git}.
-    Ten patří mezi \emph{distribuované} verzovací systémy, což znamená, že každý uživatel má na svém počítači celý obsah repozitáře a pouze ve chvílích, kdy uzná za vhodné nebo kdy je k tomu příležitost, může své změny synchronizovat se \emph{vzdáleným repozitářem}, ve kterém se shromažďují změny od všech členů týmu, začleňují do hlavní vývojové větve projektu a hlídají případné kolize.
-    Výhody tohoto přístupu oproti centrálně řízeným verzovacím systémům jsou následující:
+    Ten patří mezi \emph{distribuované} verzovací systémy\footnote{
+        Další distribuované verzovací systémy jsou například \href{https://www.mercurial-scm.org/}{Mercurial}, \href{https://bazaar.canonical.com}{Bazaar} či \href{http://darcs.net/}{Darcs}.
+    }, což znamená, že každý uživatel má na svém počítači celý obsah repozitáře a pouze ve chvílích, kdy uzná za vhodné nebo kdy je k tomu příležitost, může své změny synchronizovat se \emph{vzdáleným repozitářem}, ve kterém se shromažďují změny od všech členů týmu, začleňují do hlavní vývojové větve projektu a hlídají případné kolize.
+    Výhody tohoto přístupu oproti centralizovaným verzovacím systémům\footnote{
+        Nejznámější reprezentant centralizovaného verzovacího systému je \href{https://subversion.apache.org/}{Subversion}.
+    } jsou následující:
     \begin{enumerate}
         \item Práce na projektu nevyžaduje připojení k nějakému centrálnímu serveru s repozitářem, a tedy můžete pracovat offline klidně někdě v džungli nebo na Marsu.
         \item Není potřeba spravovat zvlášť server s repozitářem a zvlášť klientské počítače. Vše je na jednom místě.
@@ -249,11 +258,11 @@
     Tento projekt je navíc otevřený (open source), což znamená, že kdokoliv, tedy i vy nebo já, má přístup k celému repozitáři, tedy ke všem zdrojovým kódům a k jejich kompletní historii. 
     Může se do práce na projektu zapojit, přispět k jeho vývoji a začít psát historii sám.
     
-    Program Git pochází z prostředí Linuxu, a proto je navržený tak, aby se s ním dalo pracovat z příkazové řádky (terminálu) pomocí jednoduchých textových příkazů.
+    Program Git pochází z prostředí Linuxu a je navržený tak, aby se s ním dalo pracovat z příkazové řádky (terminálu) pomocí jednoduchých textových příkazů.
     Tímto způsobem lze používat všechny dostupné funkce Gitu.
     My se s nejdůležitějšími funkcemi seznámíme právě pomocí textových příkazů, protože na nich se nejlépe naučí, jak tento Git funguje a jaké jsou jeho možnosti.
-    Jakmile si člověk ujasní principy verzování pomocí Gitu, nabízí se spousta nástrojů a doplňků pro různé programy, které práci s repozitáři usnadní a zrychlí.
-    Obsluha Git repozitářů je ostatně integrována i do vývojového prostředí Visual Studio Code.
+    Jakmile si člověk ujasní principy verzování pomocí Gitu, může využít některý z množství nástrojů a doplňků pro různé programy, které práci s repozitáři usnadní a zrychlí.
+    Obsluha Git repozitářů je integrována i do vývojového prostředí Visual Studio Code.
 
     Na stránkách projektu Git najdete \href{https://git-scm.com/book/en/v2}{podrobný interaktivní návod} ke všem funkcím verzovacího systému (a to částečně i v \href{https://git-scm.com/book/cs/v2}{češtině}).
 
@@ -276,12 +285,16 @@
     \begin{lstlisting}
         git help config\end{lstlisting}
 
-\subsubsection{Stav souborů v repozitáři}
+\subsubsection{Čtyři možné stavy souborů v repozitáři}
     \begin{itemize}
-        \item \emph{Nesledovaný (untracked):} Systém Git historii tohoto souboru neuchovává.
+        \item \emph{Nesledovaný (untracked):} 
+            Systém Git historii tohoto souboru neuchovává.
             Každý nové vytvořený soubor je v tomto stavu.
+            Speciální podskupinu tvoří \emph{ignorované (ignored)} soubory, což bývají v drtivé většině pomocné soubory nebo soubory s citlivými údaji.
+            Seznam ignorovaných souborů se uvede do speciálního souboru \file{.gitignore}, o kterém pojednává sekce~\ref{sec:gitignore}.
 
-        \item \emph{Připravený k zapsání (staged):} Soubor je systémem Git sledován (verzován).
+        \item \emph{Připravený k zapsání (staged):} 
+            Soubor je systémem Git sledován (verzován).
             Od předchozího zapsání v něm došlo ke změnám (nebo byl nově vytvořen) a k zapsání byl připraven pomocí příkazu
             \begin{lstlisting}
         git add soubor\end{lstlisting}
@@ -294,13 +307,20 @@
             \begin{lstlisting}
         git diff --staged\end{lstlisting}
 
-        \item \emph{Změněný (modified):} Soubor je systémem Git sledován (verzován).
+            Verze souborů se změnami připravenými k zapsání jsou uloženy mimo pracovní adresář: při dodatečných modifikacích souboru se k těmto verzím souboru lze vrátit příkazem
+            \begin{lstlisting}
+        git restore --staged soubor\end{lstlisting}
+            (pozor, tímto příkazem se nenávratně ztratí všechny změny v souboru, které byly provedeny od jeho poslední přípravy k zapsání).
+
+        \item \emph{Změněný (modified):} 
+            Soubor je systémem Git sledován (verzován).
             Od předchozího zapsání v něm došlo ke změnám, avšak soubor ještě nebyl označen k zapsání.
-            Přehled změn v souborech oproti naposledy uložené verzi dá příkaz
+            Přehled změn v souborech oproti naposledy uložené verzi či oproti verzi připravené k zapsání dá příkaz
             \begin{lstlisting}
         git diff\end{lstlisting}
         
-        \item \emph{Zapsaný (committed):} Soubor je systémem Git sledován(verzován) a je zapsaný v repozitáři.
+        \item \emph{Zapsaný (committed):} 
+            Soubor je systémem Git sledován (verzován) a jeho historie je zaznamenána v repozitáři.
             Jedná se o verzi souboru, ke které je vždy možné se vrátit.
             Zapsání (commit) všech souborů připravených k zapsání (staged) se provede příkazem
             \begin{lstlisting}
@@ -322,9 +342,10 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     V této složce je uložena veškerá zapsaná historie vašeho projektu od jeho vytvoření.
     Pokud tuto složku smažete, přijdete tím o \uv{paměť} systému Git pro daný projekt, avšak aktuální soubory projektu zůstanou tak, jak jsou.
     Pokud naopak přesunete nebo překopírujete složku s projektem včetně podsložky \code{.git} kamkoliv jinam, klidně na jiný počítač, kopírujete zároveň celou historii projektu.
+    Nedoporučuji jakkoliv měnit soubory v této složce, protože tím můžete nevratně narušit integritu repozitáře a systém Git přestane být schopen repozítář používat.
 
 \subsubsubsection{Stav repozitáře}
-    Aktuální stav repozitáře kdykoliv zjistíte pomocí příkazu
+    Aktuální stav repozitáře kdykoliv zjistíte pomocí
     \begin{lstlisting}
         git status\end{lstlisting}
     Příkaz vypíše název aktuální větve a stav všech souborů v projektu.
@@ -388,7 +409,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         git commit -a\end{lstlisting}
     který všechny změněné soubory převede do stavu k zapsání a rovnou zapsání provede.
     Změnu označním popisem \uv{Eulerova metoda 1. řádu}.
-    \begin{center}\includegraphics[width=0.6\linewidth]{GitStatusCommit2.png}\end{center}
+    \begin{center}\includegraphics[width=0.5\linewidth]{GitStatusCommit2.png}\end{center}
 
     {\color{blue} Dobrá programátorská praxe je zapisovat vždy jen takový kód, který lze spustit, tj. který neobsahuje žádné syntaktické chyby.}
 
@@ -606,7 +627,9 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     \end{itemize}
          
     Python klade důraz na jednoduchost, stručnost a čitelnost kódu.
-    Filosofie programovacího jazyka je shrnuta v \href{https://www.python.org/dev/peps/pep-0020/}{Zenu Pythonu},\footnote{Zen se také vypíše, pokud do svého kódu zadáte \code{import this}.} se kterým vám doporučuji se seznámit.
+    Filosofie programovacího jazyka je shrnuta v \href{https://www.python.org/dev/peps/pep-0020/}{Zenu Pythonu},\footnote{
+        Zen se také vypíše, pokud do svého kódu zadáte \code{import this}.
+    } se kterým vám doporučuji se seznámit.
 
 \subsubsection{Vytvoření a spuštění kódu}
     Ve Visual Studio Code vytvoříme nový soubor a uložíme si ho s příponou \code{*.py}. 
