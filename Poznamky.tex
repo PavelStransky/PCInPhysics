@@ -592,6 +592,82 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
             K návratu zpět stačí použít příkaz pro přepnutí do hlavní větve \code{git switch main}.
     \end{itemize}
 
+\subsubsection{Vzdálené repozitáře}\label{sec:GITRemote}
+    Verzovací systém GIT umí kromě sledování a uchovávání historie změn souborů vašeho projektu i koordinovat změny, které provádí na projektu více řešitelů (pracovní tým). 
+    K tomu slouží vzdálené repozitáře.
+    Mezi nejrozšířenější systémy patří
+    \begin{itemize}
+    \item \href{https://github.com}{GitHub}: 
+        Na něm si každý může zdarma zřídit vlastní repozitáře a používat je například k~synchronizaci svého projektu mezi různými počítači, pro sdílení vlastních výtvorů s komunitou nebo právě pro spolupráci ve vlastním týmu. 
+        Vlastníkem firmy vyvíjející tento systém je Microsoft.
+        Z toho důvodu je základní práce s ním integrována i co vývojového prostředí Visual Studio Code.
+    \item \href{https://gitlab.mff.cuni.cz}{GitLab}: 
+        Open source řešení, základní verze rovněž zdarma, k pokročilé verzi má MFF UK licenci.
+    \end{itemize}
+    Oba systémy disponují webovým rozhraním, ze kterého lze projekty jednoduše spravovat, a~rovněž desktopovými aplikacemi, které umožňují pracovat s lokálními repozitáři pomocí jednoduchého rozhraní.
+    Pro GitHub existuje například \href{https://desktop.github.com}{GitHub Desktop}.
+    Projekty mohou být soukromé (přístup k nim máte pouze vy či ti, kterým pošlete pozvánku) nebo veřejné (přístup má kdokoliv).
+
+    Tyto zápisky a vzorové ukázky kódů jsou veřejně na GitHubu a můžete k nim dostat na adrese \url{https://github.com/PavelStransky/PCInPhysics2021}.
+    K dispozici je samozřejmě celý repozitář s historií se všemi commity a se všemi vývojovými větvemi.
+    Repozitář můžete stáhnout buď z uvedené webové stránky (zelené tlačítko \code{Clone or download}), nebo pomocí programu git.
+
+    \begin{itemize}
+    \item \code{git clone https://github.com/PavelStransky/PCInPhysics2021}
+    
+        V aktuální složce vytvoří podsložku \code{PCInPhysics} a do ní stáhne celý repozitář.
+        V případě těchto zápisků se jedná o tento soubor v {\LaTeX}u,
+        výsledné PDF, EPS či PNG verze všech obrázků a všechny zdrojové kódy.
+
+    \item \code{git remote -v}
+    
+        V adresáři s lokálním repozitářem ukáže, na jaký vzdálený repozitář je navázaný.
+        Stejně jako základní větev se standardně jmenuje \code{main}, vzdálený repozitář se standardně jmenuje \code{origin}.
+        Vy můžete mít na jeden projekt navázáno více vzdálených repozitářů, každý pak samozřejmě musíte pojmenovat jinak.
+
+    \item \code{git remote add origin https://github.com/Uzivatel/VzdalenyRepozitar}
+    
+        Přidá do vašeho projektu odkaz na vzdálený repozitář umístěný na GitHubu.
+
+    \item \code{git remote show origin}
+    
+        Zobrazí informace o vzdáleném repozitáři.
+
+    \item \code{git pull}
+    
+        Do adresáře s lokálním repozitářem stáhne aktuální verzi aktuální větve.
+        Pokud máte lokálně rozpracované změny, stažení se nepovede.
+        Pokud máte uložené změny (commit), git se automaticky pokusí vaše změny sloučit se změnami v globálním repozitáři (merge).
+        
+    \item \code{git fetch}
+    
+        Stáhne celý vzdálený repozitář (všechny větve).
+    
+    \item \code{git push origin master}
+    
+        Do vzdáleného repozitáře \code{origin} zapíše vaši větev \code{master}.
+        Vzdálený repozitář může být nastaven tak, že vaše změny musí ještě někdo schválit.
+
+    \item \code{git push}
+
+        Zkrácený zápis, pokud jste dříve nastavili pomocí příkazu \code{git push --set-upstream origin master} název lokální větve a příslušného vzdáleného repozitáře.
+
+    \end{itemize}
+
+    Další informace najdete například v \href{https://git-scm.com/book/cs/v2/Z%C3%A1klady-pr%C3%A1ce-se-syst%C3%A9mem-Git-Pr%C3%A1ce-se-vzd%C3%A1len%C3%BDmi-repozit%C3%A1%C5%99i}{dokumentaci}.
+
+    \begin{task}
+        Stáhněte si do svých počítačů (naklonujte si) z GitHubu repozitář s poznámkami k tomuto cvičení.
+        V budoucnu si pomocí příkazu \code{git pull} stahujte aktuální verze.
+        Můžete si vytvořit pracovní větev poznámek a v ní si s kódy hrát.
+        V hlavní větvi \code{master} se vám uchová originální verze ze~vzdáleného repozitáře.
+    \end{task}
+
+    \begin{task}
+        Vytvořte si účet na GitHubu, vytvořte prázdný projekt a navažte si ho s dříve na cvičení vytvořeným lokálním repozitářem pomocí příkazů \code{git remote add} (plný příkaz výše).
+        Následně si do vzdáleného repozitáře nahrajte lokální repozitář pomocí příkazu \code{git push}. 
+    \end{task}
+
 \subsubsection{Cheat Sheet}
     Pro snadnou orientaci v použití Gitu bez nutnosti pamatovat si všechny příkazy je dostupný \href{https://training.github.com/downloads/github-git-cheat-sheet.pdf}{Git Cheat Sheet} nebo \href{https://ndpsoftware.com/git-cheatsheet.html}{tento interaktivní web}.
 
