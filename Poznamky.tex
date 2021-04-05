@@ -962,7 +962,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Tato volnost s řádem metody narůstá.
 
 \newpage
-\subsection*{Domácí úkol na 23.3.2021}
+\subsection{Domácí úkol na 23.3.2021}
 \begin{task}
 \label{task:ODR1}
     Naprogramujte Eulerovu metodu 1. a 2. řádu a Runge-Kuttovu metodu.
@@ -977,33 +977,34 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Nakreslete grafy řešení $y(t)$ pro rozdílné hodnoty integračních kroků, například $\Delta t=0.01$ a $\Delta t=0.1$ pro čas $t\in\langle0;10\rangle$.
 \end{task}
 
-\begin{task}
-\label{task:KumulovanaChyba}
-    Rozšiřte kód tak, aby počítal průměrnou kumulovanou chybu
-    \begin{equation}\label{eq:KumulovanaChyba}
-        \mathcal{E}=\sqrt{\frac{1}{n}\sum_{i=0}^{n-1}\left(y_{i}-y(t_{i})\right)^{2}},
-    \end{equation}
-    kde $y(t)$ je analytické řešení diferenciální rovnice.
-    Nakreslete závislost $\mathcal{E}(\Delta t)$ pro $\Delta t\in\langle0.002;0.1\rangle$ a pro různé metody.
-    Jelikož očekáváme mocninnou závislost dle~\eqref{eq:RadMetodyODR}, kde exponent je tím větší, čím větší je řád metody, je výhodné graf $\mathcal{E}(\Delta t)$ kreslit v log-log měřítku.
-    V Pythonu použijete místo \textnormal{\texttt{plot(...)}} funkci \textnormal{\texttt{loglog(...)}} z knihovny \textnormal{\texttt{matplotlib.pyplot}}.
-    Ověřte, že získané křivky jsou v souladu s řády použitých metod.
-\end{task}
-
-\begin{task}
-    Pomocí naprogramovaných metod vyřešte nelineární diferenciální rovnici
-    \begin{equation}
-        \label{eq:sinyt}
-        \derivative{y}{t}=\sin\left(t y\right)
-    \end{equation}
-    s počáteční podmínkou $y_{0}=1$, $t_{0}=0$ a vykreslete graf jejího řešení.
-\end{task}
-
 \setcounter{solution}{1}
 \begin{solution}
+    \label{sol:ODR1}
     Jedno možné řešení v souborech \ghfile{python/ode/}{ode.py} (integrační metoda), \ghfile{python/ode/}{graphs.py} (vykreslování grafů) a \ghfile{python/ode/}{relaxation.py} (hlavní soubor, který obsahuje definici modelu a volá všechny výpočetní a vykreslovací funkce).
     Na řešení této úlohy je také ukázán základ práce s větvemi v sekci~\ref{sec:branches}.
     
+    \begin{figure}[!htbp]
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=relaxation_methods.eps,width=\linewidth}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=relaxation_euler_1.eps,width=\linewidth}
+        \end{subfigure}
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=relaxation_euler_2.eps,width=\linewidth}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=relaxation_runge_kutta_4.eps,width=\linewidth}
+        \end{subfigure}
+        \caption{
+            \protect\small
+            Integrace relaxační diferenciální rovnice ~\eqref{eq:relaxace} různými metodami a s různými časovými kroky.
+        }	
+        \label{fig:relaxace}
+    \end{figure}
+
     \begin{itemize}
     \item \ghfile{python/ode/}{ode.py}: 
         Modul napsaný maximálně obecně, aby ho bylo možné použít na řešení libovolné diferenciální rovnice, a také soustav diferenciálních rovnic probíraných v sekci~\ref{sec:ODRn}.
@@ -1053,34 +1054,25 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         \end{itemize}
     \end{itemize}
 
-    \begin{figure}[!htbp]
-        \begin{subfigure}{0.49\linewidth}
-            \centering\epsfig{file=relaxation_methods.eps,width=\linewidth}
-        \end{subfigure}
-        \hfill
-        \begin{subfigure}{0.49\linewidth}
-            \centering\epsfig{file=relaxation_euler_1.eps,width=\linewidth}
-        \end{subfigure}
-        \begin{subfigure}{0.49\linewidth}
-            \centering\epsfig{file=relaxation_euler_2.eps,width=\linewidth}
-        \end{subfigure}
-        \hfill
-        \begin{subfigure}{0.49\linewidth}
-            \centering\epsfig{file=relaxation_runge_kutta_4.eps,width=\linewidth}
-        \end{subfigure}
-        \caption{
-            \protect\small
-            Integrace relaxační diferenciální rovnice ~\eqref{eq:relaxace} různými metodami a s různými časovými kroky.
-        }	
-        \label{fig:relaxace}
-    \end{figure}
-
     Příslušné grafy jsou zobrazeny na obrázku~\ref{fig:relaxace}.
     Je vidět, že chyba opravdu klesá s řádem metody a že čím je metoda vyššího řádu, tím rychleji chyba klesá se zmenšujícím se krokem.
 \end{solution}
 
+\begin{task}
+\label{task:KumulovanaChyba}
+    Rozšiřte kód tak, aby počítal průměrnou kumulovanou chybu
+    \begin{equation}\label{eq:KumulovanaChyba}
+        \mathcal{E}=\sqrt{\frac{1}{n}\sum_{i=0}^{n-1}\left(y_{i}-y(t_{i})\right)^{2}},
+    \end{equation}
+    kde $y(t)$ je analytické řešení diferenciální rovnice.
+    Nakreslete závislost $\mathcal{E}(\Delta t)$ pro $\Delta t\in\langle0.002;0.1\rangle$ a pro různé metody.
+    Jelikož očekáváme mocninnou závislost dle~\eqref{eq:RadMetodyODR}, kde exponent je tím větší, čím větší je řád metody, je výhodné graf $\mathcal{E}(\Delta t)$ kreslit v log-log měřítku.
+    V Pythonu použijete místo \textnormal{\texttt{plot(...)}} funkci \textnormal{\texttt{loglog(...)}} z knihovny \textnormal{\texttt{matplotlib.pyplot}}.
+    Ověřte, že získané křivky jsou v souladu s řády použitých metod.
+\end{task}
+
 \begin{solution}
-    \begin{figure}[!htbp]
+    \begin{figure}[!htb]
         \centering\epsfig{file=relaxation_cummulative_error.eps,width=0.7\linewidth}
         \caption{
             \protect\small
@@ -1094,8 +1086,18 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Nafitovaná směrnice $\alpha$ je uvedena v obrázku.
 \end{solution}
 
+
+\begin{task}
+    Pomocí naprogramovaných metod vyřešte nelineární diferenciální rovnici
+    \begin{equation}
+        \label{eq:sinyt}
+        \derivative{y}{t}=\sin\left(t y\right)
+    \end{equation}
+    s počáteční podmínkou $y_{0}=1$, $t_{0}=0$ a vykreslete graf jejího řešení.
+\end{task}
+
 \begin{solution}
-    \begin{figure}[!htbp]
+    \begin{figure}[!htb]
         \centering\epsfig{file=sinyt.eps,width=0.7\linewidth}
         \caption{
             \protect\small
@@ -1123,7 +1125,9 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         \begin{equation}
             Ma=F(x),
         \end{equation}
-        kde $M$ je hmotnost pohybujícího se tělesa, $x=x(t)$ jeho poloha a $a=a(t)=\d^{2}x/\d t^{2}$ zrychlení převedeme na~dvě diferenciální rovnice prvního řádu zavedením rychlosti $v=v(t)=\d x/\d t$:
+        kde $M$ je hmotnost pohybujícího se tělesa, $x=x(t)$ jeho poloha a $a=a(t)=\d^{2}x/\d t^{2}$ zrychlení převedeme na~dvě diferenciální rovnice prvního řádu zavedením rychlosti $v=v(t)=\d x/\d t$:\footnote{
+            Tato soustava rovnic odpovídá Hamiltonovým pohybovým rovnicím, se kterými se seznámíte v přednášce Teoretická mechanika.
+        }
         \begin{equation}
             \derivative{}{t}\makematrix{x \\ v}=\makematrix{v \\ \frac{1}{M}F(x)},
         \end{equation}
@@ -1195,6 +1199,54 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Jako časový krok volte například $\Delta t=0.1$ a $\Delta t=0.01$ a počítejte na časovém intervalu $t\in\langle 0;30\rangle$.
 \end{task}    
 
+\begin{solution}
+\label{sol:ODRn}
+    Metody jsou naprogramovány v souborech \ghfile{python/ode/}{ode.py} (integrační metoda), \ghfile{python/ode/}{graphs.py} (vykreslování grafů) a jsou podrobně diskutování v řešení úlohy~\ref{sol:ODR1}.
+    Soubor \ghfile{python/ode/}{ho.py} obsahuje pravé strany diferenciálních rovnic harmonického oscilátoru (funkce \code{ho}) a volá všechny výpočetní a vykreslovací funkce.
+    Navíc obsahuje následující funkce:
+    \begin{itemize}
+    \item \code{ho\_solution}:
+        Přesné řešení pohybové rovnice harmonického oscilátoru s počáteční podmínkou $x_{0}=0,x'_{0}=1,t_{0}=0$, jímž je funkce $x(t)=\sin t$.
+    \item \code{ho\_energy}:
+        Pro vstupní polohu a rychlost (nebo pole poloh a rychlostí) vrátí energii harmonického oscilátoru.
+    \end{itemize}
+
+    \begin{figure}[!htb]
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=ho_methods.eps,width=\linewidth}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=ho_symplectic.eps,width=\linewidth}
+        \end{subfigure}
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=ho_energy.eps,width=\linewidth}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=ho_energy_symplectic.eps,width=\linewidth}
+        \end{subfigure}
+        \caption{
+            \protect\small
+            Integrace diferenciální rovnice harmonického oscilátoru~\eqref{eq:HO} různými metodami.
+            Časový krok je $\Delta t=0.1$.
+            \emph{Levý sloupec:} všechny metody.
+            \emph{Pravý sloupec:} Bez eulerovy metody 1. řádu a včetně symplektických metod.
+            \emph{1.~řádek:} hodnoty $y(t)$.
+            \emph{2.~řádek:} Akumulované diskretizační chyby dle~\eqref{eq:AkumulovanaChyba}.
+            Pro Eulerovu metodu 1. řádu je obalová křivka divergence numerického od analytického řešení očividně exponenciální v čase.
+            \emph{3.~řádek:} energie~\eqref{eq:HOE}. 
+            Pro Eulerovy metody energie roste.
+            Energie se mění i pro Runge-Kuttovu metodu (pro tento systém energie s časem klesá), avšak změna je řádově menší než pro ostatní metody, a tudíž není na grafech při daném měřítku svislé osy vidět.
+            Naopak pro Verletův algoritmus a pro \uv{předbíhající} Eulerovu metodu energie osciluje okolo počáteční energie $E=\frac{1}{2}$.
+        }	
+        \label{fig:HO}
+    \end{figure}
+
+    Příslušné grafy jsou zobrazeny na obrázku~\ref{fig:HO}.
+\end{solution}
+
+
 \begin{task}
     Naprogramujte Verletův algoritmus~\eqref{eq:Verlet}.
     Ukažte, že zatímco při použití Eulerovy metody nebo Runge-Kuttovy metody energie systému v průběhu výpočtu roste, Verletův algoritmus energii zachovává.
@@ -1203,6 +1255,18 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         E=\frac{1}{2}\left(x^{2}+v^{2}\right).
     \end{equation}
 \end{task}
+
+\begin{solution}
+    Symplektický Verletův algoritmus je naprogramován v souboru \ghfile{python/ode/}{symplectic.py}.
+    Toto vzorové řešení bude fungovat \emph{jen} pro jednu pohybovou rovnici, tj. pro jednu diferencální rovnici původně druhého řádu přepsanou na dvě diferenciální rovnice prvního řádu, přičemž první rovnice musí být pro souřadnici, druhá pro rychlost. 
+    Řešení lze samozřejmě rozšířit na více pohybových rovnic.
+
+    V souboru \ghfile{python/ode/}{symplectic.py} je i funkce \code{plot\_energy}, která vykreslí graf závislosti $E(t)$.
+    Energie je znázorněna v panelech na třetím řádku na obrázku~\ref{fig:HO}.
+    Harmonický oscilátor je konzervativní systém (zachovává energii), pozorovaná rostoucí energie je způsobena nepřesností integračních metod.
+    U symplektických algoritmů energie slabě osciluje okolo střední hodnoty, která však i pro velmi dlouhé časy zůstává na přesné hodnotě $E=\frac{1}{2}$.
+\end{solution}
+
 
 \begin{task}
     Eulerovu metodu 1. řádu lze pro soustavy dvou diferenciálních rovnic 1. řádu vylepšit následující záměnou:
@@ -1221,6 +1285,30 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Naprogramujte tuto metodu a pomocí výsledků úlohy~\ref{task:KumulovanaChyba} ukažte, že pro harmonický oscilátor se jedná o metodu 2. řádu.
 \end{task}
 
+\begin{solution}
+    \uv{Vylepšené} Eulerovy metody jsou naprogramovány v souboru \ghfile{python/ode/}{symplectic.py}.
+    Metoda s předbíhající se souřadnicí je označena \code{euler\_1\_modified\_x}, metoda s předbíhající rychlostí pak \code{euler\_1\_modified\_v}.
+    Obě metody dávají velmi podobné výsledky, v grafech je proto uvedena jen první z nich.
+
+    Řešení diferenciální rovnice harmonického osciátoru je znázorněno v pravém sloupci obrázku~\ref{fig:HO}.
+    Je vidět, že so se přesnosti týče, vylepšená Eulerova metoda je srovnatelná s Verletovou metodou.
+    Energie však osciluje trochu víc.
+
+    \begin{figure}[!htbp]
+        \centering\epsfig{file=ho_cummulative_error.eps,width=0.7\linewidth}
+        \caption{
+            \protect\small
+            Závislost průměrné kumulované chyby~\eqref{eq:KumulovanaChyba} na délce kroku $\Delta t$ vypočítaná a vykreslená pro soustavu diferenciálních rovnic pro harmonický osciátor.
+            Zobrazeny jsou i symplektické metody.
+        }
+        \label{fig:ho_chyba}
+    \end{figure}
+    
+    Řád metody lze určit na základě obrázku~\ref{fig:ho_chyba}.
+    Jak u Verletovy metody, tak u vylepšené Eulerovy metody klesá průměrná kumulovaná chyba s druhou mocninou délky časového kroku $\delta t$, jedná se tedy o metody 2. řádu.
+\end{solution}
+
+
 \begin{task}
     Pohrajte si s řešením rovnice pro klesající exponenciálu
     \begin{equation}\label{eq:Exp2}
@@ -1230,17 +1318,59 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Přesvědčte se, že Verletova metoda a vylepšená Eulerova metoda z předchozího úkolu jsou nestabilní --- pro tuto rovnici v relativně krátkém čase začnou řešení exponenciálně divergovat.
 \end{task}
 
+\begin{solution}
+    Řešení rovnice~\eqref{eq:Exp2} je v souboru \ghfile{python/ode/}{exp.py}.
+    Soustava rovnic je analogická k soustavě harmonického oscilátoru --- liší se pouze znaménkem.
+    Systém popsaný touto rovnicí \emph{není konzervativní} --- nelze nadefinovat zachovávající se veličinu, která by měla význam energie.
+
+    \begin{figure}[!htbp]
+        \centering
+        \epsfig{file=exp_divergence.eps,width=0.8\linewidth,keepaspectratio}
+        \caption{
+            \protect\small
+            Totéž jako v obrázku~\ref{fig:HO}, avšak pro exponenciálně klesající systém daný rovnicí~\eqref{eq:Exp2}.
+            Symplektické algoritmy jsou nestabilní.
+            }	
+        \label{fig:Exp2}
+    \end{figure}
+    
+    Z obrázku~\ref{fig:Exp2} je vidět, že symplektické algoritmy jsou nestabilní, a tudíž nejsou na tento typ úlohy vhodné, což je pochopitelné, protože jsou navrženy pouze pro energii zachovávající systémy.
+    Příčinu nestability lze nahlédnout i z obecného řešení rovnice~\eqref{eq:Exp2},
+    \begin{equation}
+        y(t)=A\e^{t}+B\e^{-t},
+    \end{equation}
+    přičemž my speciálními počátečními podmínkami vybíráme pouze exponenciálně klesající řešení.
+    Symplektické algoritmy však v určitou chvíli \uv{překmitnou} na exponenciálně rostoucí řešení, což způsobí pozorovanou divergovat.
+\end{solution}
+
 \begin{task}
     Vyřešte nelineární soustavu tří diferenciálních rovnic pro jednoduchý Lorenzův model vedení tepla v atmosféře
     \begin{align}
         \derivative{x}{t}&=\sigma(y-x),\nonumber\\
         \derivative{y}{t}&=x(\rho-z)-y,\\
+    \label{eq:Lorenz}
         \derivative{z}{t}&=xy-\beta z\nonumber
     \end{align}
     s hodnotami parametrů $\sigma=10$, $\rho=28$ a $\beta=8/3$, počátečními podmínkami $(x_0, y_0, z_0)=(1,1,1)$ (na počátečních podmínkách zase tolik nezáleží), s krokem $\Delta t=0.01$ a na časovém intervalu $t\in\langle0,100\rangle$.
     Vykreslete graf $z(x)$.
     Výsledná křivka je slavný Lorenzův podivný atraktor ve tvaru motýlích křídel, krerý zpopularizoval teorii klasického chaosu.
 \end{task}
+
+\begin{solution}
+    Řešení Lorenzova systému diferenciálních rovnic je jednoduchou aplikací kódu naprogramovaného v úloze~\ref{sol:ODRn} a lze ho nalézt v souboru \ghfile{python/ode/}{lorenz.py}.
+    Příslušnou projekci trojrozměrné trajektorie do 2D roviny $(x,z)$ lze nalézt na obrázku~\ref{fig:Lorenz}.
+
+    \begin{figure}[!htbp]
+        \centering
+        \epsfig{file=lorenz.eps,width=0.7\linewidth,keepaspectratio}
+        \caption{
+            \protect\small
+                Lorenzův systém~\eqref{eq:Lorenz} integrovaný pomocí Runge-Kuttovy metody 4. řádu na časovém intervalu $t\in\langle0;100\rangle$ s krokem $\Delta t=0.01$.
+            }	
+        \label{fig:Lorenz}
+    \end{figure}
+\end{solution}
+
 
 \section{Náhodná procházka}\label{sec:NahodnaProchazka}
     Náhodná procházka je jeden ze základních prostředků, jak simulovat velké množství nejen fyzikálních procesů (například pohyb Brownovské částice, fluktuace akciového trhu, cestu opilce z~hospody atd.).
