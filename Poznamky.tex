@@ -1263,7 +1263,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Symplektické algoritmy s vyšším řádem existují, avšak v praxi se nepoužívají.
 
 \newpage
-\subsection*{Domácí úkol na 30.3.2021}
+{\color{red}\subsection{Domácí úkol na 30.3.2021}}
 \begin{task}
     Rozšiřte kód naprogramovaný v úkolu~\ref{task:ODR1} tak, aby fungoval pro libovolně velkou soustavu obyčejných diferenciálních rovnic.
     Využijte k tomu funkce pro práci s řadami z knihovny \file{numpy} popsané v sekci~\ref{sec:numpy}.
@@ -1423,8 +1423,8 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Vyřešte nelineární soustavu tří diferenciálních rovnic pro jednoduchý Lorenzův model vedení tepla v atmosféře
     \begin{align}
         \derivative{x}{t}&=\sigma(y-x),\nonumber\\
+        \label{eq:Lorenz}
         \derivative{y}{t}&=x(\rho-z)-y,\\
-    \label{eq:Lorenz}
         \derivative{z}{t}&=xy-\beta z\nonumber
     \end{align}
     s hodnotami parametrů $\sigma=10$, $\rho=28$ a $\beta=8/3$, počátečními podmínkami $(x_0, y_0, z_0)=(1,1,1)$ (na počátečních podmínkách zase tolik nezáleží), s krokem $\Delta t=0.01$ a na časovém intervalu $t\in\langle0,100\rangle$.
@@ -1447,6 +1447,26 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     \end{figure}
 \end{solution}
 
+\subsection{Shrnutí}
+\begin{itemize}
+\item 
+    Řešitelé obyčejných diferenciálních rovnic převážně pracují se soustavami diferenciálních rovnic prvního řádu.
+    Na tento tvar není obtížné diferenciální rovnici vyššího řádu převést.
+
+\item
+    Nejčastěji se používají jednokrokové metody, jejichž hlavní výhoda je v možnosti jednoduše dle potřeby měnit délku kroku (metody s adaptivním krokem).
+
+\item 
+    Přesnost řešení závisí na řádu metody $p$ a na délce integračního kroku $\Delta t$.
+    Čím je řád metody vyšší, tím rychleji klesá chyba se zmenšujícícm se krokem.
+    V praxi, pokud nechcete svěřit svůj probém černé skříňce ve formě nějaké hotové knihovny, se velmi často používá Runge-Kuttova metoda 4. řádu, která je jednoduchá na implementaci, je stabilní a rychlá.
+
+\item
+    Symplektické metody, z nichž nejběžnější je Verletova metoda, jsou výhodné k modelování fyzikálních systémů zachovávajících energii.
+    Pro nekonzervativní systémy nejsou vhodné. 
+\end{itemize}
+A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a nakreslit průběh goniometrické funkce sinus.
+
 
 \section{Náhodná procházka}\label{sec:NahodnaProchazka}
     Náhodná procházka je jeden ze základních prostředků, jak simulovat velké množství nejen fyzikálních procesů (například pohyb Brownovské částice, fluktuace akciového trhu, cestu opilce z~hospody atd.).
@@ -1461,8 +1481,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 
     Základní funkce a postupy pro generování náhodných čísel v Pythonu jsou uvedeny v sekci~\ref{sec:PseudonahodnaCisla}.
 
-    \newpage
-    {\color{red}\subsection*{Domácí úkol na 6.4.2021}}
+    {\color{red}\subsection{Domácí úkol na 6.4.2021}}
     \begin{task}
         Naprogramujte náhodnou procházku ve 2D rovině.
         Délku kroku volte konstantní $s=1$, směr volte náhodně.
@@ -1481,4 +1500,115 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         Zamyslete se nad tím, jak byste realizovali náhodnou procházku s konstantní délkou kroku v $d>2$ rozměrech, a zkuste své řešení naprogramovat.
         Zásadní je dodržet požadavek, aby pohyb do jakéhokoliv směru nastával se stejnou pravděpodobností (esence úlohy tedy spočívá v generování náhodného směru v $d$-rozměrném prostoru).
     \end{task}
+
+
+\section{Hledání minima funkce}
+    Náhodnou procházku lze úspěšně použít k hledání minima funkce obecně více proměnných.
+    Představte si funkci dvou proměnných jako zvlněnou \uv{krajinu} v noci.
+    Potřebujete se vrátit k chatě, která se nachází pod vámi hluboko v úkolí.
+    Je tma a nevidíte jakým směrem se vydat.
+    Zkusíte tedy udělat náhodný krok a pokud povede dolů, vykročíte.
+    Pokud by však krok vedl nahoru, zůstanete na místě a zkusíte nový směr.
+
+    Jednoduchá náhodná procházka funguje dobře pro funkce s jedním minimem.
+    V obecném případě ale může mít funkce více lokálních minim a právě uvedený algoritmus skončí náhodně v jednom z nich, ze kterého se již nedokáže dostat ven.
+    Přitom rozhodně nemusí jít o minimum nejhlubší (globální).
+    
+    Hledání globálního minima funkce mnoha proměnných je obecně velmi komplexní problém.
+    Dva nejjednodušší postupy, kterými můžeme vylepšit stávající metodu pomocí náhodné procházky, jsou následující:
+    \begin{itemize}
+        \item Provedeme několik náhodných procházek, které obecně dojdou do různých lokálních minim.
+            Následně porovnáme konečné funkční hodnoty a vybereme to minimum, které má hodnotu nejnižší.
+        \item Provedeme jednu náhodnou procházku doplněnou o \emph{Metropolisův algoritmus}. 
+    \end{itemize}
+
+\subsection{Metropolisův algoritmus}
+    Metropolisův algoritmus rozšiřuje náhodnou procházku o konečnou teplotu.
+    Je inspirován termodynamickým Boltzmannových rozdělením energie: 
+    máme tepelnou energii, díky které můžeme při náhodné procházce s určitou pravděpodobností udělat krok i \uv{do kopce}, avšak čím je kopec strmější, tím bude pravděpodobnost takovéhoto kroku menší.
+    
+    Předpokládejme, že jsme na vrstevnici s funkční hodnotou $f$ a nová funkční hodnota po provedení kroku náhodné procházky by byla $f_{\text{nová}}>f$.
+    Při minimalizaci pomocí obyčejné náhodné procházky bychom tento krok neprovedli.
+    V Metropolisově algoritmu krok provedeme s pravděpodobností
+    \begin{equation}
+        p=\e^{\frac{f-f_{\text{nová}}}{T}},
+    \end{equation}
+    kde $T$ je parametr, který má roli \uv{teploty}: pokud $T=0$, žádný tepelný pohyb neexistuje, krok do kopce nikdy neprovedeme a vracíme se tak k obyčejné minimalizaci.
+    Pokud $T\rightarrow\infty$, uděláme krok do kopce s pravděpodobností $p=1$,
+    což znamená, že tepelný pohyb zcela převládá, my se pohybujeme zcela náhodně a potenciál pod sebou vůbec necítíme.
+    
+    V praxi je největší umění zvolit správnou hodnotu teploty.
+    Pokud zvolíme teplotu nízkou, skončíme v lokálním minimu a už se z něj nedostaneme, pokud naopak příliš vysokou, budeme chaoticky procházet krajinou naší funkce a žádné minimum nenajdeme.
+    Dobrá volba je začít spíš s~vyšší teplotou a teplotu postupně snižovat.
+    Jakmile se ocitneme zaseklí v nějakém minimu, můžeme teplotu zase trochu zvýšit a tím vyzkoušet, zda se nepřesuneme do nějakého minima hlubšího.
+
+\subsection{Minimalizace pomocí knihovny SciPy}
+    Python obsahuje funkci pro hledání minima \code{\href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html}{minimize}} v knihovně \file{scipy.optimize}.
+    
+\newpage
+{\color{red}\subsection{Domácí úkol na 13.4.2021}}
+\begin{task}
+    Rozšiřte sv;j program z minulého cvičení pro náhodnou procházku tak, aby hledal minimum funkce dvou proměnných $f(x,y)$.
+    Otestujte svůj program pro kvadratickou funkci
+    \begin{equation}\label{eq:Minimizef}
+        f(x,y)=x^{2}+y^{2}
+    \end{equation}
+    a pro \href{https://en.wikipedia.org/wiki/Rosenbrock_function}{Rosenbrockovu funkci}
+    \begin{equation}\label{eq:Minimizeg}
+        g(x,y)=(a-x)^{2}+b\left(y-x^{2}\right)^{2}        
+    \end{equation}
+    vypadající jako velmi pozvolna klesající hluboké údolí ve tvaru paraboly.
+    Tato funkce se používá k~testování rychlosti a efektivity minimalizačních algoritmů.
+    Její minimum se nachází v~bodě $\left(a,a^{2}\right)$ a hodnoty parametrů nejčastěji se volí $a=1,b=100$.   
+    
+    Implementujte vhodným způsobem ukončení náhodné procházky, tj. okamžik, kdy jste již dorazili do minima funkce.
+\end{task}
+
+\begin{task}
+    Náhodnou procházku zakreslete jako čáru do grafu společně s konturovým grafem potenciálu.
+    Návod na nakreslení konturového grafu v Pythonu pomocí funkce \code{matplotlib.pyplot.contourf} naleznete
+    v souboru \ghfile{python/basics/}{contourf.py}.
+\end{task}
+
+\begin{task}
+    Použijte kód pro vícerozměrnou náhodnou procházku a najděte pomocí něho minimum funkce čtyř proměnných
+    \begin{align}
+        h(s,t,u,v)
+            &=\frac{1}{4}\left(s^{2}+t^{2}+u^{2}+v^{2}\right)\nonumber\\
+            &\quad-\frac{1}{2}\left[\left(s^{2}+t^{2}\right)\left(2-s^{2}-t^{2}-u^{2}-v^{2}\right)+\left(su-tv\right)^{2}\right]\\
+            &\quad+\frac{s}{2}\sqrt{2-s^{2}-t^{2}-u^{2}-v^{2}}\nonumber.
+        \end{align}
+\end{task}
+
+\begin{task}
+    Naprogramujte Metropolisův algoritmus a odlaďte ho na případu funkce
+    \begin{equation}\label{eq:Minimizer}
+        r(x,y)=x^{4}-2x^{2}+x+y^{2}.
+    \end{equation}
+    Tato funkce má dvě lokální minima (jedná se o vzorovou funkci ze souboru \file{Contourf.py}).
+\end{task}
+
+\begin{task}
+    Prostudujte \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html}{dokumentaci} k funkci \code{minimize} a vytvořte kód, který tuto funkci využije k najití minima všech doposud studovaných funkcí dvou a více proměnných.
+    Pokud programujete v jiném programovacím jazyku, nalezněte odpovídající minimalizační funkci či knihovnu a použijte ji.
+\end{task}
+
 \end{document}
+
+\subsection{Shrnutí}
+    \begin{itemize}
+        \item 
+            Jeden z nejjednodušších algoritmů na hledání minima (maxima) funkce je pomocí náhodné procházky.
+            K její implementaci stačí mít generátor náhodných čísel.
+
+        \item 
+            Úspěch algoritmů založených na náhodné procházce je podmíněn tím, že každý krok procházky musí vést do libovolného směru se stejnou pravděpodobností.
+            Při procházce v rovině toho lze docílit náhodným generováním úhlu.
+            Ve vícerozměrné procházce je nejvýhodnější použít algoritmus založený na Gaussovském náhodném vektoru (za předpokladu, že umíme generovat čísla z Gaussovského rozdělení; jeden jednoduchý takový generátor bude obsahem dalších cvičení).   
+        
+        \item 
+            Obecná funkce může mít více lokálních minim, přičemž náhodná procházka nás zavede do jednoho z nich, které nemusí být nejhlubší (globální).
+            K nalezení globálního minima lze využít Metropolisův algoritmus, který k náhodné procházce přidá tepelný pohyb, a tím umožní \uv{vyskočit} z mělkého lokálního minima.  
+
+            Metropolisův algoritmus se využívá i pro jiné termodynamické úlohy, například k modelování spinových systémů při konečné teplotě, čímž lze studovat fázový přechod feromagnet $\leftrightarrow$ paramagnet.
+    \end{itemize}
