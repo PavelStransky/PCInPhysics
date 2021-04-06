@@ -17,6 +17,7 @@
 \usepackage{listings}
 \usepackage{comment}
 \usepackage{titlesec}
+\usepackage{underscore}
 %\usepackage{showlabels}
 
 \hypersetup{
@@ -428,7 +429,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Nejdříve se ale podíváme na stav repozitáře:    
     \begin{center}\includegraphics[width=0.7\linewidth]{GitStatusChange2.png}\end{center}
     Soubor \file{ode.py} se změnil, soubor \file{relaxation.py} byl vytvořen a zatím je ve stavu nesledován.
-    Navíc se ještě vytvořila celá složka \file{\_\_pycache\_\_/}.\footnote{
+    Navíc se ještě vytvořila celá složka \file{__pycache__/}.\footnote{
         Pro urychlení provádění celého programu ukládá do tohoto adresáře interpret Pythonu speciálně předpřipravené používané moduly.
     }
     Jedná se o pomocnou složku, kterou verzovat nechceme.
@@ -586,7 +587,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         Pokud byl nějaký soubor v poslední revizi vytvořen, je smazán.
         Toto je nejnebezpečnější příkaz, proto používejte jen v opravdu odůvodněných případech.
         \item \code{git reset 946cb25} se vrátí na zapsání, jehož hash začíná uvedeným číslem.
-        \item \code{git reset ORIG\_HEAD} se vrátí na tu zapsanou verzi, na které jsme byli bezprostředně před použitím posledního příkazu \code{git reset}.
+        \item \code{git reset ORIG_HEAD} se vrátí na tu zapsanou verzi, na které jsme byli bezprostředně před použitím posledního příkazu \code{git reset}.
         \item \code{git checkout -b oldrev 946cb25} vytvoří novou větev nazvanou \uv{oldrev}, ve které budou soubory ve stavu, kdy bylo provedeno zapsání s uvedeným hashem (hash zjistíme například pomocí \code{git log -{}-oneline} popsaného v sekci~\ref{sec:gitlog}).
         \item \code{git checkout 946cb25} vrátí se do tohoto zapsání, ale ponechá historii tak, jak je.\footnote{Tzv. Detached HEAD state.}.
             K návratu zpět stačí použít příkaz pro přepnutí do hlavní větve \code{git switch main}.
@@ -816,9 +817,9 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     }
     \begin{itemize}
         \item
-            \emph{Proměnné a funkce} se doporučuje pojmenovávat malými písmeny a jednotlivá slova spojovat podtržítky, tzv. underscore style (například \code{pocet\_bodu}).
+            \emph{Proměnné a funkce} se doporučuje pojmenovávat malými písmeny a jednotlivá slova spojovat podtržítky, tzv. underscore style (například \code{pocet_bodu}).
         \item
-            \emph{Konstanty} se doporučuje pojmenovávat velkými písmeny a jednotlivá slova spojovat podtržítky (například \code{PLANCKOVA\_KONSTANTA}).
+            \emph{Konstanty} se doporučuje pojmenovávat velkými písmeny a jednotlivá slova spojovat podtržítky (například \code{PLANCKOVA_KONSTANTA}).
         \item
             \emph{Třídy} se doporučuje pojmenovávat tak, že jednotlivá slova názvu začínají velkým písmenem a mezi nimi není žádný znak, tzv. Pascal style (například \code{PostovniAdresa}).
         \item
@@ -884,7 +885,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
             Pro pokročilejší použití je knihovna \file{\href{https://numpy.org/doc/stable/reference/random/index.html}{numpy.random}}.
             Ta umožňuje zvolit vlastní generátor pseudonáhodných čísel, generovat čísla z celé řady \href{https://numpy.org/doc/stable/reference/random/generator.html}{statistických rozdělení} a generovat naráz celé vektory či matice.
             \begin{itemize}
-                \item \code{generator = default\_rng()}: Inicializuje standardní generátor pseudonáhodných čísel.
+                \item \code{generator = default_rng()}: Inicializuje standardní generátor pseudonáhodných čísel.
                 \item \code{generator = Generator(PCG64())}: Inicializuje specifický generátor pseudonáhodných čísel (v~tomto případě PCG-64, což je O'Neillův permutační kongruenční generátor).
                 \item \code{generator.random(size=10)}: vektor délky 10 s elementy z rovnoměrného rozdělení z~intervalu $\langle 0;1)$.
                 \item \code{generator.normal(size=10)}: vektor délky 10 s elementy z normálního Gaussova rozdělení se střední hodnotou $0$ a směrodatnou odchylkou $1$.
@@ -1086,18 +1087,18 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         Modul napsaný maximálně obecně, aby ho bylo možné použít na řešení libovolné diferenciální rovnice, a také soustav diferenciálních rovnic probíraných v sekci~\ref{sec:ODRn}.
         
         \begin{itemize}
-        \item \code{euler\_1}: 
+        \item \code{euler_1}: 
             Integrační krok Eulerovy metody 1. řádu.
-        \item \code{euler\_2}: 
+        \item \code{euler_2}: 
             Integrační krok Eulerovy metody 2. řádu.
-        \item \code{runge\_kutta\_4}: 
+        \item \code{runge_kutta_4}: 
             Integrační krok Runge-Kuttovy metody 4. řádu.
-        \item \code{ode\_solve}: 
-            Integruje diferenciální rovnici danou pravou stranou prvního parametru \code{model} s počáteční podmínkou předanou parametrem \code{initial\_condition}. 
+        \item \code{ode_solve}: 
+            Integruje diferenciální rovnici danou pravou stranou prvního parametru \code{model} s počáteční podmínkou předanou parametrem \code{initial_condition}. 
             Integrační metodu lze specifikovat parametrem \code{integrator}, což je vlastně funkce $\phi(y_{i}, t_{i})$ z rovnice~\eqref{eq:phi}. 
             Délku kroku udává parametr \code{dt}.
             Funkce vrací pole hodnot řešení rovnice (soustavy rovnic) v jednotlivých časech a pole časů.
-        \item \code{scipy\_ode\_solve}: 
+        \item \code{scipy_ode_solve}: 
             Integruje diferenciální rovnici pomocí funkce \code{odeint} z knihovny \code{sci\-py.integrate}. 
             Pozor, parametr \code{dt} zde neznačí integrační krok, nýbrž časový krok výsledného pole.
             Funkce \code{odeint} používá sofistikovaný řešitel diferenciálních rovnic s proměnným krokem.
@@ -1107,16 +1108,16 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     \item \ghfile{python/ode/}{graphs.py}: 
         Vykresluje grafy srovnávající různé metody nebo různé kroky výpočtu.
         \begin{itemize}
-        \item \code{plot\_solution\_error}:
+        \item \code{plot_solution_error}:
             Vykreslí graf řešení diferenciální rovnice.
-            Parametr \code{analytical\_solution} je odkaz na přesné řešení dané diferenciální rovnice. 
+            Parametr \code{analyti\-cal_solution} je odkaz na přesné řešení dané diferenciální rovnice. 
             Je-li zadán, vykreslí se do grafu dva panely: jeden s hodnotami numerického řešení, druhý s rozdílem řešení numerického a přesného $\epsilon$ (akumulovaná diskretizační chyba dle  rovnice~\eqref{eq:AkumulovanaChyba}).
-        \item \code{plot\_compare\_methods}:
+        \item \code{plot_compare_methods}:
             Vykreslí do jednoho obrázku řešení zadané diferenciální rovnice různými metodami.
             Z důvodu efektivnějšího kódu se v této funkci používá trochu složitější práce s panely, než jak je uvedeno ve vzorovém souboru \ghfile{python/basics/}{plot.py}.
-        \item \code{plot\_compare\_steps}:
+        \item \code{plot_compare_steps}:
             Vykreslí do jednoho obrázku řešení zadané diferenciální rovnice s různými integračními kroky.
-        \item \code{plot\_cummulative\_errors}:
+        \item \code{plot_cummulative_errors}:
             Řešení úlohy~\ref{task:KumulovanaChyba}.
         \end{itemize}
 
@@ -1157,7 +1158,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         \label{fig:relaxace_chyba}
     \end{figure}
 
-    Řešení této úlohy vykreslí funkce \code{plot\_cummulative\_error} z modulu \ghfile{python/ode/}{graphs.py}. Graf je zobrazen na obrázku~\ref{fig:relaxace_chyba}.
+    Řešení této úlohy vykreslí funkce \code{plot_cummulative_error} z modulu \ghfile{python/ode/}{graphs.py}. Graf je zobrazen na obrázku~\ref{fig:relaxace_chyba}.
     Body log-log grafu byla proložena přímka pomocí funkce lineární regrese \code{linregress} z knihovny \file{scipy.stats}.
     Nafitovaná směrnice $\alpha$ je uvedena v obrázku.
 \end{solution}
@@ -1281,9 +1282,9 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Soubor \ghfile{python/ode/}{ho.py} obsahuje pravé strany diferenciálních rovnic harmonického oscilátoru (funkce \code{ho}) a volá všechny výpočetní a vykreslovací funkce.
     Navíc obsahuje následující funkce:
     \begin{itemize}
-    \item \code{ho\_solution}:
+    \item \code{ho_solution}:
         Přesné řešení pohybové rovnice harmonického oscilátoru s počáteční podmínkou $x_{0}=0,x'_{0}=1,t_{0}=0$, jímž je funkce $x(t)=\sin t$.
-    \item \code{ho\_energy}:
+    \item \code{ho_energy}:
         Pro vstupní polohu a rychlost (nebo pole poloh a rychlostí) vrátí energii harmonického oscilátoru.
     \end{itemize}
 
@@ -1337,7 +1338,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Toto vzorové řešení bude fungovat \emph{jen} pro jednu pohybovou rovnici, tj. pro jednu diferencální rovnici původně druhého řádu přepsanou na dvě diferenciální rovnice prvního řádu, přičemž první rovnice musí být pro souřadnici, druhá pro rychlost. 
     Řešení lze samozřejmě rozšířit na více pohybových rovnic.
 
-    V souboru \ghfile{python/ode/}{symplectic.py} je i funkce \code{plot\_energy}, která vykreslí graf závislosti $E(t)$.
+    V souboru \ghfile{python/ode/}{symplectic.py} je i funkce \code{plot_energy}, která vykreslí graf závislosti $E(t)$.
     Energie je znázorněna v panelech na třetím řádku na obrázku~\ref{fig:HO}.
     Harmonický oscilátor je konzervativní systém (zachovává energii), pozorovaná rostoucí energie je způsobena nepřesností integračních metod.
     U symplektických algoritmů energie slabě osciluje okolo střední hodnoty, která však i pro velmi dlouhé časy zůstává na přesné hodnotě $E=\frac{1}{2}$.
@@ -1363,7 +1364,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 
 \begin{solution}
     \uv{Vylepšené} Eulerovy metody jsou naprogramovány v souboru \ghfile{python/ode/}{symplectic.py}.
-    Metoda s předbíhající se souřadnicí je označena \code{euler\_1\_modified\_x}, metoda s předbíhající rychlostí pak \code{euler\_1\_modified\_v}.
+    Metoda s předbíhající se souřadnicí je označena \code{euler_1_modified_x}, metoda s předbíhající rychlostí pak \code{euler_1_modified_v}.
     Obě metody dávají velmi podobné výsledky, v grafech je proto uvedena jen první z nich.
 
     Řešení diferenciální rovnice harmonického osciátoru je znázorněno v pravém sloupci obrázku~\ref{fig:HO}.
@@ -1490,16 +1491,106 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         Nakonec trajektorii vykreslete do~grafu.
     \end{task}
 
+    \begin{solution}
+        Řešení je naprogramováno v souboru \ghfile{python/randomwalk/}{2d.py}.
+        \begin{itemize}
+            \item \code{random_direction_2d} vrátí náhodný směr ve 2D rovině [generuje náhodný úhel $\phi$, směr je dán jednotkovým vektorem se složkami $(\cos\phi,\sin\phi)$].
+            \item \code{random_walk_2d} vykreslí do grafu náhodnou procházku s \code{num_steps} kroky omezenou ve čtverci rozměru $2*$\code{box_size}$\times2*$\code{box_size} a náhodnou procházku vrátí.
+            \item \code{random_walk_2d_interactive} generuje náhodnou procházku a vykresluje ji do grafu krok po kroku.
+                Musí být zapnutý interaktivní mód vykreslování \code{plt.ion()} a v prostředí Spyder vypnuto použítí inline grafů příkazem \code{\%matplotlib auto} v konzoli REPL.
+                Tato funkce implementuje i cyklické okrajové podmínky.
+        \end{itemize}
+        Vzorový kód je napsán takovým způsobem, aby mohl být přímočaře rozšířen pro vícerozměrnou náhodnou procházku.
+    \end{solution}
+    
     \begin{task}
         Upravte náhodnou procházku tak, aby počítala s cyklickými okrajovými podmínkami.
         To znamená, že pokud opustíte oblast čtverce jednou jeho stranou, objevíte se na straně protilehlé (jako kdybyste okraje čtverce zavinuli a slepili).
         Výpočet ukončete poté, co uděláte $n$ kroků.
     \end{task}
 
+    \begin{solution}
+        Cyklické okrajové podmínky jsou naprogramovány ve funkci \code{random_walk_2d_inter\-active} v souboru \ghfile{python/randomwalk/}{2d.py}.
+        Stejně je lze naprogramovat i do funkce \code{random_walk_2d}, výsledný graf však nebude vypadat příliš hezky.
+    \end{solution}
+
     \begin{task}\label{task:NahodnaProchazka}
         Zamyslete se nad tím, jak byste realizovali náhodnou procházku s konstantní délkou kroku v $d>2$ rozměrech, a zkuste své řešení naprogramovat.
         Zásadní je dodržet požadavek, aby pohyb do jakéhokoliv směru nastával se stejnou pravděpodobností (esence úlohy tedy spočívá v generování náhodného směru v $d$-rozměrném prostoru).
     \end{task}
+
+    \begin{solution}
+        Zatímco pro směr ve 2D rovině stačí náhodě generovat jeden úhel (předchozí úloha), vícerozměrné úlohy jsou komplikovanější.
+        Přímé rozšíření 2D případu do 3D (či do vyšších dimenzí) za generování více úhlů a použití (hyper-)sférických souřadnic k cíli nevede --- takto otrocky generované směry upřednostňují okolí pólů před rovníkem (rozmyslete).
+        K úspěšnému generování náhodného kroku je nutné využít jeden z následujících algoritmů:
+        \begin{enumerate}
+            \item Hyperkoule vepsaná v hyperkrychli.
+                \begin{enumerate}
+                    \item Nagenerujeme bod v hyperkrychli o hraně délky $2$, tj. generujeme vektor $\vector{v}$ s $d$ složkami, přičemž každá složka je náhodné číslo z rovnoměrného rozdělení $(-1,1)$.
+                    \item Zkontrolujeme, zda bod leží uvnitř vepsané jednotkové koule například tak, že spočítáme jeho normu $v=\abs{\vector{v}}$ a porovnáme, zda $n\leq1$.
+                    \item Pokud ne, opakujeme postup od začátku.
+                        Pokud ano, nagenerovaný bod promítneme na~jednotkovou kouli (jinými slovy vektor $\vector{v}$ nanormujeme) a získaný jednotkový vektor $\vector{\hat{v}}\equiv\vector{v}/v$ udává hledaný směr. 
+                \end{enumerate}
+                Tato metoda je nesmírně neefektivní, pokud je dimenze $d$ vysoká, poněvadž v tom případě většina nagenerovaných bodů leží vně vepsané hyperkoule a je zahozena.
+                Poměr celkového počtu nagenerovaných bodů ku úspěšným zásahům vnitřku hyperkoule lze snadno spočítat.
+                Objem hyperkrychle o hraně délky $2$ je
+                \begin{equation}
+                    V_{d}^{(\text{krychle})}=2^{d},
+                \end{equation}
+                objem vepsané hyperkoule o poloměru $1$ je
+                \begin{equation}
+                    V_{d}^{(\text{koule})}=\frac{\pi^{\frac{d}{2}}}{\Gamma\left(\frac{d}{2}+1\right)},
+                \end{equation}
+                kde $\Gamma$ je Eulerova gama funkce.
+                Vzájemný poměr
+                \begin{equation}
+                    \eta_{d}\equiv\frac{V_{d}^{(\text{krychle})}}{V_{d}^{(\text{koule})}}=\left(\frac{2}{\sqrt{\pi}}\right)^{d}\Gamma\left(\frac{d}{2}+1\right)
+                \end{equation}
+                udává, kolik bodů musíme průměrně nagenerovat, abychom se trefili do hyperkoule (reciproká hodnota $1/\eta_{d}$ určuje pravděpodobnost, že se do hyperkoule trefíme).
+                Zatímco pro $d=3$ je $\eta_{3}\approx1.91$, pro $d=10$ již $\eta_{10}\approx401$, tj. pro nalezení jednoho náhodného směru v desetirozměrném prostoru musíme nagenerovat v průměru přes $4000$ náhodných čísel.
+                Z posledního vztahu je vidět, že s rostoucí dimenzí roste $\eta_{d}$ exponenciálně.
+
+                Z tohoto výpočtu také vyplývá, že pokud bychom nezahazovali body ležící mimo hyperkouli, pak bychom ve výsledné procházce výrazně upřednosťnovali pohyb podél diagonál, a to tím více, čím vyšší je dimenzionalita procházky (u $d=10$ bychom podél diagonál vyrazili s více než $99\%$ pravděpodobností).
+                
+            \item Náhodný Gaussovský vektor.
+                \begin{enumerate}
+                    \item Nagenerujeme vektor $\vector{n}$ s $d$ složkami, přičemž každá složka je číslo z normálního Gaussovského rozdělení $N(0,1)$.
+                    \item Vektor nanormujeme a získáme hledaný náhodný směr $\vector{\hat{n}}\equiv\vector{n}/n$. 
+                \end{enumerate}
+                Tato metoda je mnohem přímočařejší než předchozí, předpokladem je jen mít k dispozici generátor čísel vybraných z normálního rozdělení.
+
+                Důkaz, že tato metoda dává opravdu náhodný směr v $d$ dimenzích, a další informace o metodě se nalézá v článcích~\cite{Muller1959,Marsaglia1972}.
+
+            \item Speciální případ $d=3$ (náhodný let).
+                \begin{enumerate}
+                    \item Generujeme dvě náhodná čísla $\xi_{1,2}$ z rovnoměrného rozdělení na intervalu $\langle0;1)$.
+                    \item Sférické úhly jednotkového směru jsou pak
+                        \begin{align}
+                            \phi&=2\pi\xi_{1},\nonumber\\
+                            \theta&=\arccos\left(1-2\xi_{2}\right),
+                        \end{align}
+                        takže hledaný jednotkový vektor $\vector{\hat{n}}$ do náhodného směru má komponenty
+                        \begin{align}
+                            \hat{n}_{x}
+                                &=\sin\theta\cos\phi
+                                =\sqrt{1-\left(1-2\xi_{2}\right)^{2}}\cos2\pi\xi_{1},\nonumber\\
+                            \hat{n}_{y}
+                                &=\sin\theta\sin\phi
+                                =\sqrt{1-\left(1-2\xi_{2}\right)^{2}}\sin2\pi\xi_{1},\\
+                            \hat{n}_{z}
+                                &=\cos\theta
+                                =1-2\xi_{2}.\nonumber
+                        \end{align}
+                        Ve více rozměrech je tento přístup prakticky nerealizovatelný (vede na problém inverzních funkcí k funkcím daným řadou goniometrických funkcí).
+                \end{enumerate}
+            \end{enumerate}
+
+            Náhodná procházka v $d$-rozměrném prostoru je naprogramována v souboru \ghfile{python/randomwalk/}{nd.py}.
+            Funkce \code{ran\-dom_direction} generuje směr pomocí 1. metody, funkce \code{random_direction_gaussian} pomocí 2. metody.
+            Spočítejte si náhodnou procházku pro $d=10$ oběma metodami.
+            Uvidíte, že i~pro takto relativně \uv{malou} dimenzi je rozdíl ve výpočetních časech je dramatický.
+    \end{solution}
+
 
 
 \section{Hledání minima funkce}
@@ -1592,6 +1683,14 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     Prostudujte \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html}{dokumentaci} k funkci \code{minimize} a vytvořte kód, který tuto funkci využije k najití minima všech doposud studovaných funkcí dvou a více proměnných.
     Pokud programujete v jiném programovacím jazyku, nalezněte odpovídající minimalizační funkci či knihovnu a použijte ji.
 \end{task}
+
+\begin{thebibliography}{99}
+    \bibitem{Muller1959} M.E. Muller, {\it A note on a method for generating points uniformly on n-dimensional spheres},
+    Communications of the Asociation for Computing Machinery {\bf 2}, 19 (1959).
+    \bibitem{Marsaglia1972} G. Marsaglia, {\it Choosing a Point from the Surface of a Sphere},
+    The Annals of Mathematical Statistics {\bf 43}, 645 (1972).
+    \bibitem{GW16} B. P. Abbott {\it et al.} (LIGO Scientific Collaboration and Virgo Collaboration), {\it Observation of Graviational Waves from a Binary Black Hole Merger}, Physical Review Letters {\bf 116}, 061102 (2016).
+\end{thebibliography}
 
 \end{document}
 
