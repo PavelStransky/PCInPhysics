@@ -10,7 +10,7 @@ def random_direction_2d():
     return np.array([np.cos(phi), np.sin(phi)])
     
 
-def random_walk_2d(num_steps=1000, step_size=1, box_size=100, initial_condition=[0,0]):
+def random_walk_2d(num_steps=1000, step_size=1, box_size=10, initial_condition=[0,0]):
     """ Generates and plots a random walk in a 2D plane.
         If the trajectory leaves the given box, the calculation is interrupted.
     """    
@@ -41,7 +41,7 @@ def random_walk_2d(num_steps=1000, step_size=1, box_size=100, initial_condition=
     return path
 
 
-def random_walk_2d_interactive(num_steps=1000, step_size=1, box_size=100, initial_condition=[0,0], cyclic=False):
+def random_walk_2d_interactive(num_steps=1000, step_size=1, box_size=10, initial_condition=[0,0], cyclic=False):
     """ Generates and interactivelly plots a random walk in a 2D plane.
     """    
     position = np.array(initial_condition)
@@ -84,4 +84,5 @@ def random_walk_2d_interactive(num_steps=1000, step_size=1, box_size=100, initia
     path = np.array(path)
     return path
 
-random_walk_2d_interactive(step_size=10)
+#random_walk_2d()
+random_walk_2d_interactive(cyclic=True)

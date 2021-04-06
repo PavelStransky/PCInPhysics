@@ -29,7 +29,7 @@ def random_direction_gaussian(dimension):
     return random_vector_gaussian / np.linalg.norm(random_vector_gaussian)
     
 
-def random_walk(dimension=3, num_steps=1000, step_size=1, box_size=100, initial_condition=0, direction=random_direction, cyclic=False):
+def random_walk(dimension=3, num_steps=1000, step_size=1, box_size=10, initial_condition=0, direction=random_direction, cyclic=False):
     """ Generates and plots a random walk in an arbitrary dimension.
         If the trajectory leaves the given box, the calculation is interrupted.
     """
