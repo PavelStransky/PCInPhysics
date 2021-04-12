@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 generator = np.random.default_rng()
 #generator.seed(0)
@@ -56,4 +57,21 @@ def random_walk(dimension=3, num_steps=1000, step_size=1, box_size=10, initial_c
     path = np.array(path)
     return path
 
+
+def histogram_circle(direction=random_direction, dimension=3, iterations=30000, axis1=0, axis2=1, bins=60):
+    """ Visualize the probabilty density on a circle in the plane given by axis1, axis2. (thanks to Samuel J.) """
+    angles = []
+    for _ in range(iterations):
+        step = direction(dimension)
+        angles.append(np.arctan2(step[axis1], step[axis2]))
+        
+    plt.hist(angles, bins=bins, label=f"dim={dimension}, axes=({axis1},{axis2})")
+    plt.legend()
+    plt.show()
+
+
 print(random_walk(dimension=10, num_steps=100))
+
+histogram_circle(dimension=2)
+histogram_circle(dimension=3)
+histogram_circle(dimension=3, axis1=1, axis2=2)
