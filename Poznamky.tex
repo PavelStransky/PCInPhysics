@@ -1684,6 +1684,290 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     Pokud programujete v jiném programovacím jazyku, nalezněte odpovídající minimalizační funkci či knihovnu a použijte ji.
 \end{task}
 
+\section{Histogram}
+    V tomto cvičení budeme pokračovat s náhodnými čísly, se kterými již pracovali při programování náhodné procházky v \ref{sec:NahodnaProchazka}. sekci.
+    Zde se podíváme hlouběji na jejich vlastnosti, naučíme se zobrazit hustotu pravděpodobnosti jejich rozdělení (histogram), vytvoříme triviální generátor čísel z Gaussovského normálního rozdělení a generátor čísel z libovolného rozdělení zadaného hustotou pravděpodobnosti nebo distribuční funkcí.
+       
+    Histogram je jeden z klíčových objektů v mnoha oblastech fyziky, kde se pracuje s náhodnými veličinami.
+    To je vpodstatě celá kvantová mechanika, a tudíž obory jako je atomová, jaderná, či subjaderná fyzika.
+    S náhodnými veličinami se setkáte samozřejmě také v klasické statistické fyzice, ale také například v meteorologii či dalších oborech.
+    Stojí proto za to se s ním seznámit podrobně.
+
+    \subsection{Základní definice a tvrzení z teorie pravděpodobnosti}
+    \label{sec:Pravdepodobnost}
+        V následujícím textu budeme značit $X$ spojitou náhodnou veličinu\footnote{
+            V teorii pravděpodobnosti se náhodné veličiny značí obvykle velkým písmenem.
+        } s hodnotami v intervalu $x\in\langle a,b\rangle$\footnote{
+            Náhodná veličina $X$ je ve skutečnosti velmi abstraktní objekt.
+            Obecně se definuje na měřitelném prostoru $(\mathcal{X},\mathcal{A},\mu)$, kde $\mathcal{X}$ je množina možných hodnot náhodné veličiny $X$, $\mathcal{A}$ je $\sigma$-algebra nad množinou $\mathcal{X}$ (neprázdný systém množin uzavřený na spočetné sjednocení a obsahující prázdnou množinu a množinu $\mathcal{X}$) a $\mu$ je míra množiny $\mathcal{M}\subset\mathcal{X}$ (nezáporná $\sigma$-aditivní množinová funkce nulová pro prázdnou množinu a jednotková pro celou množinu $\mathcal{X}$).
+            Tato definice v sobě zahrnuje jak náhodné veličiny s diskrétními možnými hodnotami (jako je například hod kostkou), tak náhodné veličiny se spojitými možnými hodnotami, kterým se věnujeme v této sekci.
+        }.
+        Důležité pojmy a vztahy pro nás budou:
+        \begin{itemize}
+            \item {\bf Hustota pravděpodobnosti  $\rho(x)$:}
+                Pravděpodobnost, že náhodná veličina $X$ bude nabývat hodnoty z intervalu $\left\langle x_{1},x_{2}\right\rangle\subset\langle a,b\rangle$, je
+                \begin{equation}
+                    \probability{x_{1}\le X\le x_{2}}=\int_{x_{1}}^{x_{2}}\rho(x)\d x.
+                \end{equation}
+                Hustota pravděpodobnosti je normalizovaná na definičním oboru,
+                \begin{equation}\label{eq:rhoNorm}
+                    \int_{a}^{b}\rho(x)\d x=1
+                \end{equation}
+                (pravděpodobnost, že bude náhodná veličina nabývat libovolné ze svých povolených hodnot, je $1=$ jistý jev).
+                Hustotu pravděpodobnosti lze vždy rozšířit na celou množinu $\mathbb{R}$, pokud dodefinujeme $\rho(x)=0$ pro $x<a$ a $x>b$.
+
+            \item {\bf Distribuční funkce (kumulovaná hustota pravděpodobnosti) $F(x)$:} 
+                Neklesající spojitá funkce s oborem hodnot $\langle 0,1\rangle$ daná integrálem hustoty pravděpodobnosti\footnote{
+                    Nebo obráceně, hustota pravděpodobnosti je derivace distribuční funkce,
+                    \begin{equation}
+                        \label{eq:rhoF}
+                        \rho(x)=\derivative{F}{x}.
+                    \end{equation}
+                }
+                \begin{equation}
+                    F(x)=\int_{a}^{x}\rho(x')\d x'.
+                \end{equation}
+                Platí tedy díky normalizaci~\eqref{eq:rhoNorm}
+                \begin{align*}
+                    F(a)&=0,\\
+                    F(b)&=1.
+                \end{align*}
+                Rozšíříme-li obor hodnot náhodné veličiny na všechna reálná čísla stejným způsobem, jako jsme naznačili u hustoty pravděpodobnosti, platí navíc
+                \begin{align*}
+                    F(x<a)&=0,\\
+                    F(x>b)&=1.
+                \end{align*}
+                Pravděpodobnost, že náhodná veličina $X$ bude nabývat hodnoty z intervalu $\left\langle x_{1},x_{2}\right\rangle$, je pak jednoduše
+                \begin{equation}
+                    \probability{x_{1}\le X\le x_{2}}=F(x_{2})-F(x_{1}).
+                \end{equation}
+
+            \item {\bf Střední hodnota:}\footnote{{\bf E}xpectation value}
+                \begin{equation}
+                    \label{eq:Expectation}
+                    \expectation{X}=\int_{-\infty}^{\infty}x\rho(x)\d x.
+                \end{equation}
+
+            \item {\bf Rozptyl:}
+                \begin{equation}
+                    \label{eq:Dispersion}
+                    \dispersion{X}
+                        =\expectation{X^{2}}-\expectation{X}^{2}
+                        =\int_{-\infty}^{\infty}x^{2}\rho(x)\d x-\left[\int_{\infty}^{\infty}x\rho(x)\d x\right]^{2}.
+                \end{equation}
+
+            \item {\bf Výběrová střední hodnota:} 
+                Pokud máme soubor $n$ hodnot náhodné veličiny $X$, které označíme $\left\{x_{1},x_{2},\dotsc,x_{n}\right\}$ (výběr), pak výběrová střední hodnota je dána aritmetickým průměrem,
+                \begin{equation}
+                    \overline{X}=\frac{1}{n}\sum_{j=1}^{n}x_{n}.
+                \end{equation}
+                Čím mohutnější máme výběr, tím lépe výběrová střední hodnota aproximuje střední hodnotu,
+                \begin{equation}
+                    \overline{X}\xrightarrow{n\rightarrow\infty}\expectation{X}.
+                \end{equation}
+
+            \item {\bf Histogram:}
+                Graf (obvykle sloupcový), který aproximuje distribuční funkci náhodné veličiny $X$ na základě hodnot výběru $\mathcal{V}=\{x_{j},j=1,\dotsc,n\}$.
+                Graf se skládá z $N\ll n$ intervalů (sloupců) obvykle konstantní šířky pokrývající obor hodnot náhodné veličiny $\langle a,b\rangle$, přičemž výška sloupce na konkrétním intervalu je rovna počtu hodnot z výběru $\mathcal{V}$, které do intervalu padnou.
+                Pokud histogram správně nanormujeme, získáme (poněkud zubatou) aproximaci distribuční funkce.
+
+            \item{\bf Nezávislé náhodné veličiny:}
+                Dvě náhodné veličiny $X$ a $Y$ jsou nezávislé, pokud jedna neovlivňuje druhou.
+                Sdružená hustota pravděpodobnosti nezávislých náhodných veličin je dána součinem dílčích hustot pravděpodobnosti,
+                \begin{equation}
+                    \rho_{X,Y}(x,y)=\rho(x)\rho(y).
+                \end{equation}
+                Například věk a výška náhodně vybrané osoby nejsou nezávislé veličiny (pro děti bude rozdělení jejich výšek jiné než pro dospělé), zatímco věk osoby a její krevní skupina nezávislé veličiny jsou.
+
+            \item {\bf Součet dvou náhodných veličin:} 
+                Pokud máme náhodnou veličinu $X$ s hustotou pravděpodobnosti $\rho_{X}(x)$ a náhodnou veličinu $Y$ s hustotou pravděpodobnosti $\rho_{Y}(y)$, přičemž obě náhodné veličiny jsou nezávislé, pak náhodná veličina
+                \begin{equation}
+                    Z=X+Y
+                \end{equation}
+                bude mít hustotu pravděpodobnosti $\rho_{Z}$ danou \emph{konvolucí} hustot $\rho_{X}$ a $\rho_{Y}$,
+                \begin{equation}
+                    \label{eq:SumDensity}
+                    \rho_{Z}(z)=\int_{-\infty}^{\infty}\rho_{X}(\xi)\rho_{Y}(z-\xi)\d\xi.
+                \end{equation}
+                Střední hodnota a rozptyl náhodné veličny $Z$ jsou dány součtem 
+                \begin{align}
+                    \expectation{Z}&=\expectation{X}+\expectation{Y},\nonumber\\
+                    \dispersion{Z}&=\dispersion{X}+\dispersion{Y}.
+                \end{align}
+
+            \item {\bf Centrální limitní věta:}
+                Je-li náhodná veličina $Y$ daná součtem $m$ vzájemně nezávislých náhodných veličin $X^{(1)},X^{(2)},\dotsc,X^{(m)}$ se shodným rozdělením s hustotou pravděpodobnosti $\rho(x)=\rho_{X^{(j)}}(x)$, jehož střední hodnota je $\mu\equiv\expectation{X^{(j)}}<\infty$ a $\sigma^{2}\equiv\dispersion{X^{(j)}}<\infty$, $j=1,\dotsc,m$,
+                pak 
+                \begin{equation}
+                    \label{eq:CLT}
+                    Y\sim N(m\mu,m\sigma^{2}),
+                \end{equation}
+                kde $N(\mu,\sigma^{2})$ je Gausovské normální rozdělení se střední hodnotu $\mu$ a rozptylem $\sigma^{2}$.
+                Zcela ekvivalentně lze zavést náhodnou veličinu $U$ jako přeškálovanou veličinu $Y$ a psát
+                \begin{equation}
+                    \label{eq:CLT1}
+                    U\equiv\frac{Y-m\mu}{\sqrt{m\sigma^{2}}}\xrightarrow{n\rightarrow\infty}N(0,1).
+                \end{equation}
+                Hustota pravděpodobnosti normálního rozdělení je dána vzorcem~\eqref{eq:NormalDistribution}.
+        \end{itemize}
+
+    \subsection{Příklady náhodných veličin}
+        \begin{itemize}
+            \item {\bf Rovnoměrné rozdělení $R(a,b)$ na intervalu $\langle a,b\rangle$:}
+                \begin{align}
+                    \label{eq:UniformDistribution}
+                    \rho_{R}(x)&=\frac{1}{b-a}=\text{konst.}\\
+                    \label{eq:ExpectationR}
+                    \expectation{R}&=\frac{a+b}{2}\\
+                    \label{eq:DispersionR}
+                    \dispersion{R}&=\frac{(b-a)^{2}}{12}.
+                \end{align} 
+
+            \item {\bf Gaussovo normální rozdělení $N\left(\mu,\sigma^{2}\right)$:}
+                \begin{align}
+                    \label{eq:NormalDistribution}
+                    \rho_{N}(x)&=\frac{1}{\sqrt{2\pi\sigma^{2}}}\e^{-\frac{(x-\mu)^{2}}{2\sigma^{2}}}\\
+                    \expectation{N}&=\mu\\
+                    \dispersion{N}&=\sigma^{2}.
+                \end{align} 
+
+            \item {\bf Poissonovo rozdělení:}
+                Diskrétní rozdělení udávající počet nezávislých jevů $k$ v zadaném intervalu (například počet lidí, které potkáme na mostě cestou z Holešovic do Troji, nebo počet rozpadů radioaktivního prvku ve vzorku za jednotku času).  
+                Rozdělení pravděpodobnosti je
+                \begin{align}
+                    \label{eq:Poisson}
+                    P_{k}&=\frac{\lambda^{k}}{k!}\e^{-\lambda},\\
+                    \label{eq:ExpectationP}
+                    \expectation{P}&=\lambda,\\
+                    \label{eq:DispersionP}
+                    \dispersion{P}&=\lambda,
+                \end{align}
+                přičemž parametr $\lambda$ udává zároveň střední hodnotu a zároveň rozptyl rozdělení.
+        \end{itemize}
+
+    \begin{voluntary}
+        Dokažte vztahy~\eqref{eq:ExpectationR}--\eqref{eq:DispersionR} a \eqref{eq:ExpectationP}--\eqref{eq:DispersionR}.
+    \end{voluntary}
+
+    \begin{solution}
+        K dokázání~\eqref{eq:ExpectationR}--\eqref{eq:DispersionR} vyjdeme z definičních vztahů pro střední hodnotu a rozptyl~\eqref{eq:Expectation}--\eqref{eq:Dispersion}:
+        \begin{align}
+            \expectation{R}
+                &=\int_{a}^{b}\frac{x}{b-a}\d x
+                =\frac{1}{b-a}\left[\frac{x^{2}}{2}\right]_{a}^{b}
+                =\frac{1}{b-a}\frac{b^{2}-a^{2}}{2}
+                =\frac{a+b}{2},\\
+            \dispersion{R}
+                &=\int_{a}^{b}\frac{x^{2}}{b-a}\d x-\left(\frac{a+b}{2}\right)^{2}
+                =\frac{1}{b-a}\frac{b^{3}-a^{3}}{3}-\frac{(a+b)^{2}}{4}\nonumber\\
+                &=\frac{a^{2}+ab+b^{2}}{3}-\frac{a^{2}+2ab+b^{2}}{4}
+                =\frac{a^{2}-2ab+b^{2}}{12}=\frac{(b-a)^{2}}{12}.
+        \end{align}
+
+        Poissonovo rozdělení je diskrétní, je tudíž nutné použít diskrétní analogii vztahů~\eqref{eq:Expectation}--\eqref{eq:Dispersion} (nahrazení integrálů sumami):
+        \begin{align}
+            \expectation{P}
+                &=\sum_{k=0}^{\infty}kP_{k}
+                =\sum_{k=1}^{\infty}\frac{\lambda^{k}}{(k-1)!}\e^{-\lambda}
+                =\left|\begin{array}{c}\text{substituce} \\ l=k-1\end{array}\right|
+                =\sum_{l=0}^{\infty}\frac{\lambda^{l+1}}{l!}\e^{-\lambda}=\lambda,\\
+            \dispersion{P}
+                &=\sum_{k=0}^{\infty}k^{2}P_{k}-\lambda^{2}
+                =\sum_{k=1}^{\infty}\frac{k\lambda^{k}}{(k-1)!}\e^{-\lambda}-\lambda^{2}\nonumber\\
+                &=\sum_{k=1}^{\infty}\frac{(k-1)\lambda^{k}}{(k-1)!}\e^{-\lambda}+\sum_{k=1}^{\infty}\frac{\lambda^{k}}{(k-1)!}\e^{-\lambda}-\lambda^{2}\nonumber\\
+                &=\sum_{k=2}\frac{\lambda^{k}}{(k-2)!}\e^{-\lambda}+\lambda-\lambda^{2}
+                =\lambda^{2}+\lambda-\lambda^{2}=\lambda.
+        \end{align}
+    \end{solution}
+
+    \subsection{Výběr z neznámého rozdělení}\label{sec:SelectDistribution}
+        V praxi se můžeme setkat se situací, kdy máme zadanou hustotu pravděpodobnosti či distribuční funkci nějakého komplikovaného rozdělení a chceme generovat výběr z tohoto rozdělení.
+
+        \begin{itemize}
+            \item {\bf Známe-li hustotu pravděpodobnosti rozdělení $\rho(x)$:}
+                Nejjednodušší metoda v tomto případě je vepsat funkci $\rho(x)$ do obdélníku $\langle a,b\rangle\times\langle c,d\rangle$\footnote{
+                    Hustota pravděpodobnosti bývá obvykle definovaná na neomezeném intervalu.
+                    Pak je nutné určitou část funkce $\rho(x)$ oříznout.
+                    To funguje dobře v případě náhodných veličin s rychle ubývající hustotou pravděpodobnosti, jako je například Gaussovo rozdělení $N(0,1)$, kde při oříznutí $x\in\langle-3\sigma,3\sigma\rangle=\langle-3,3\rangle$ zanedbáme jen 3\textperthousand{} možných hodnot.
+                    V~případě dlouhodosahových rozdělení, jako je například lognormální rozdělení nebo Gamma rozdělení, musíme obdélník volit velmi dlouhý, čímž se tato metoda stává velmi neefektivní.
+                }, nagenerovat číslo rovnoměrně z tohoto obdélníku, a pokud padne pod křivku $\rho(x)$, vezmeme ho, v opačném případě ho zahodíme (tzv. \emph{hit-and-miss metoda}, se kterou se ještě potkáme u metody Monte-Carlo).
+
+            \item {\bf Známe-li distribuční funkcí $F(x)$:}
+                V tomto případě využijeme skutečnosti, že obor hodnot distribuční funkce je $F(x)\in\langle0,1\rangle$. 
+                Stačí tedy generovat náhodné číslo $y$ z rovnoměrného rozdělení na intervalu $\langle0,1\rangle$ a číslo 
+                \begin{equation}
+                    \label{eq:xF}
+                    x=F^{-1}(y),
+                \end{equation}
+                kde $F^{-1}$ je inverzní funkce k $F$, bude z rozdělení s danou $F$.
+                Pokud neznáme inverzní funkci, řešíme numericky rovnici
+                \begin{equation}
+                    F(x)=y,
+                \end{equation}
+                která však s ohledem na vlastnosti distribuční funkce popsané v sekci~\ref{sec:Pravdepodobnost} má téměř vždycky jedno a pouze jedno řešení.
+
+                Matematičtěji zapsáno: je-li $R=R(0,1)$ náhodná veličina s rovnoměrným rodělením na intervalu $\langle0,1\rangle$, pak
+                \begin{equation}
+                    X=F^{-1}(R)
+                \end{equation}
+                je náhodná veličina s rozdělením daným distribuční funkcí $F$.
+        \end{itemize}
+
+\newpage
+{\color{red}\subsection{Domácí úkol na 20.4.2021}}
+        \begin{task}
+            Naprogramujte funkci pro výpočet histogramu: na vstupu bude pole hodnot (výběr z nějakého rozdělení) a počet intervalů histogramu; na výstupu bude pole, jehož každý prvek bude odpovídat jednomu intervalu histogramu a ponese počet hodnot, které do tohoto intervalu padnou ze vstupního pole.
+            Nejefektivnějšímu algoritmu stačí jeden průchod vstupním polem (jeden cyklus). 
+            Pokuste se na něj přijít.
+    
+            Výstupní pole funkce vykreslete jako čárový graf.\footnote{
+                Knihovna \code{matplotlib} obsahuje funkce na přímé vykreslení sloupcového histogramu, například \code{\href{https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html}{hist}}.
+            }
+        \end{task}
+    
+        \begin{task}\label{task:Distribution}
+            Otestujte funkci z předchozího úkolu na následujících vstupních datech:
+            \begin{enumerate}
+                \item
+                    Výběr z rovnoměrného rozdělení na intervalu $\langle 0,1\rangle$ (v Pythonu generované pomocí \code{random()} z knihovny \file{random}, resp. pomocí \code{generator.random()} z knihovny \file{numpy.random}, jak je shrnuto v sekci~\ref{sec:PseudonahodnaCisla}).
+                \item
+                    Výběr ze {\bf součtu dvou} rovnoměrných rozdělení na intervalu $\langle 0,1\rangle$.
+                    Hustota pravděpodobnosti výsledného rozdělení je dána konvolucí~\eqref{eq:SumDensity}.
+                    Vypočítejte analyticky pomocí tohoto vzorce, jak bude hustota pravděpodobnosti vypadat, a porovnejte se získaným histogramem.
+                \item
+                    Výběr ze {\bf součtu $m$} rovnoměrných rozdělení na intervalu $\langle 0,1\rangle$.
+                    Přesvědčte se, že již pro celkem malé $m$ platí centrální limitní věta~\eqref{eq:CLT} a výsledné rozdělení se blíží normálnímu rozdělení $N(\mu,\sigma)$.
+                    Jaká bude střední hodnota $\mu$ a rozptyl $\sigma$ tohoto rozdělení?
+            \end{enumerate}
+            Pro pěkné grafy volte alespoň $n=10000$ (počet prvků výběru) a $N=100$ (počet intervalů histogramu).
+        \end{task}
+    
+        \begin{task}\label{task:NormalDistribution}
+            Na základě centrální limitní věty~\eqref{eq:CLT1} vytvořte jednoduchý generátor čísel s normálním Gaussovským rozdělením $N(0,1)$.
+            Jaké je optimální hodnota $m$, abychom získali dostatečně přesnou aproximaci normálního rozdělení, a přitom použili co nejméně algebraických operací?
+        \end{task}
+                
+        \begin{task}
+            Nakreslete histogram pro rozdělení hodnot v jednotlivých intervalech histogramů z úlohy \ref{task:Distribution}.
+            Jaké očekáváte statistické rozdělení v tomto případě?
+        \end{task}
+        
+        \begin{task}\label{task:GeneratorTime}
+        Pomocí právě popsané metody vytvořte generátor čísel s Gaussovským normálním rozdělením daným hustotou pravděpodobnosti~\eqref{eq:NormalDistribution}.
+        Porovnejte jeho rychlost s generátorem založeným na centrální limitní větě, který jste naprogramovali v úloze~\ref{task:NormalDistribution} a s generátorem z některé z knihoven.\footnote{Porovnání můžete provést tak, že nagenergujete větší množství čísel různými metodami, například $n=10^{6}$, a změříte dobu výpočtu.} 
+    \end{task}
+
+    \begin{task}
+        Vytvořte generátor čísel z rozdělení daném distribuční funkcí
+        \begin{equation}
+            \label{eq:F}
+            F(x)=\frac{1}{2}\left(1+\frac{2}{\pi}\arctan{x}\right).
+        \end{equation}
+        Jak vypadá analyticky hustota pravděpodobnosti?
+        Nakreslete histogram a porovnejte.
+    \end{task}
+
+
 \begin{thebibliography}{99}
     \bibitem{Muller1959} M.E. Muller, {\it A note on a method for generating points uniformly on n-dimensional spheres},
     Communications of the Asociation for Computing Machinery {\bf 2}, 19 (1959).
