@@ -69,9 +69,9 @@ def histogram_circle(direction=random_direction, dimension=3, iterations=30000, 
     plt.legend()
     plt.show()
 
+if __name__ == "__main__":
+    print(random_walk(dimension=10, num_steps=100))
 
-print(random_walk(dimension=10, num_steps=100))
-
-histogram_circle(dimension=2)
-histogram_circle(dimension=3)
-histogram_circle(dimension=3, axis1=1, axis2=2)
+    histogram_circle(dimension=2)
+    histogram_circle(dimension=3)
+    histogram_circle(dimension=3, axis1=1, axis2=2)

@@ -739,12 +739,18 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Z vzorového kódu bych vypíchl následující body:
     \begin{enumerate}
         \item 
-            \emph{Základní datové typy a operátory}: Zaměřte se na možnosti formátování řetězců. 
+            \emph{Základní datové typy a operátory:}
             Python obsahuje jen dva základní číselné typy: \code{int} a \code{float}.
             Zbytek je podobný jako v jiných programovacích jazycích.
 
         \item
-            \emph{Proměnné a kolekce}: 
+            \emph{Formátování řetězců:}
+            Python umožňuje několik různých způsobů, jak formátovat řetězce (vkládat do nich čísla či jiné proměnné).
+            Doporučuji se seznámit s velmi čitelným způsobem pomocí f-řetězce.            
+            Pro více informací k formátování řetězců doporučuji tento výborný \href{https://pyformat.info}{návod}.
+    
+        \item
+            \emph{Proměnné a kolekce:} 
             Důležité standardní kolekce jsou \emph{seznam} (list) [...] a \emph{slovník} (dicctionary) \{...\}.
             Dále existuje typ \emph{n-tice} (tuple) (...) a \emph{množina} (set) \{...\}.
             O jaký typ kolekce se jedná poznáte podle typu závorek, kterými je uzavřena.
@@ -1641,11 +1647,11 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
 \begin{task}
     Rozšiřte sv;j program z minulého cvičení pro náhodnou procházku tak, aby hledal minimum funkce dvou proměnných $f(x,y)$.
     Otestujte svůj program pro kvadratickou funkci
-    \begin{equation}\label{eq:Minimizef}
+    \begin{equation}\label{eq:Minimumf}
         f(x,y)=x^{2}+y^{2}
     \end{equation}
     a pro \href{https://en.wikipedia.org/wiki/Rosenbrock_function}{Rosenbrockovu funkci}
-    \begin{equation}\label{eq:Minimizeg}
+    \begin{equation}\label{eq:Minimumg}
         g(x,y)=(a-x)^{2}+b\left(y-x^{2}\right)^{2}        
     \end{equation}
     vypadající jako velmi pozvolna klesající hluboké údolí ve tvaru paraboly.
@@ -1655,11 +1661,89 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     Implementujte vhodným způsobem ukončení náhodné procházky, tj. okamžik, kdy jste již dorazili do minima funkce.
 \end{task}
 
+\begin{solution}
+    Vzorový kód naleznete v souboru \ghfile{python/randomwalk/}{minimize.py} a vychází z~náhodné vícerozměrné procházky z modulu \ghfile{python/randomwalk/}{nd.py} (z tohoto modulu kód využívá funkci \code{random_direction_gaussian}).
+    K minimalizaci jsou v kódu dvě různé metody:
+    \begin{itemize}
+        \item \code{minimize}: 
+            Hledá minimum funkce \code{function} z počátečního bodu daného parametrem \code{initial_condition}.
+            Pokud tento parametr není specifikován, zvolí se počáteční bod náhodně z \code{dimen\-sion}-rozměrné hyperkrychle se středem v počátku a délkou hrany $2*$\code{initial_condition_box}.
+            Výpočet je ukončen, pokud se kódu \code{max_failed_steps}-krát po sobě nepodaří udělat úspěšný krok (krok směrem k menší funkční hodnotě).
+            Každý náhodný krok má konstantní délku danou parametrem \code{step_size}.  
+        \item \code{minimize_adaptive}:
+            Předchozí metoda hledání minima má chybu $\Delta x_{i}\approx\ $\code{step_size}.
+            Pro zmenšení chyby je v ní nutné zmenšit délku kroku náhodné procházky.
+            Pokud tak učiníme, výpočetní čas $T$ se výrazně prodlouží (desetkrát za každý řád zpřesnění výsledku, tj. $T\propto1/$\code{step_size}).
+            Mnohem vhodnější je začít s velkým krokem a krok zmenšovat postupně.
+            Tak postupuje tato funkce: začne s krokem \code{initial_step_size} a pokaždé, když se jí nepodaří \code{max_failed_steps}-krát provést úspěšný krok, zmenší délku kroku na polovinu.
+            Výpočet probíhá do chvíle, dokud je délka kroku větší než \code{final_step_size}.
+            Konečná chyba je tedy $\Delta x_{i}\approx\ $\code{final_step_size} a doba výpočtu roste pouze logaritmicky se zmenšováním této chyby, tj. $T\propto1/\log\ $\code{final_step_size}.
+    \end{itemize}
+    Obě funkce vracejí řadu s celou náhodnou procházkou.
+    Nalezené minimum je tedy v posledním bodě této řady.
+
+    Minimalizace konkrétních funkcí $f(x,y)$ a $g(x,y)$ ze zadání úlohy je provedena v souboru \file{min_functions.py}.
+\end{solution}
+
 \begin{task}
     Náhodnou procházku zakreslete jako čáru do grafu společně s konturovým grafem potenciálu.
     Návod na nakreslení konturového grafu v Pythonu pomocí funkce \code{matplotlib.pyplot.contourf} naleznete
     v souboru \ghfile{python/basics/}{contourf.py}.
 \end{task}
+
+\begin{solution}
+    \begin{figure}[!htb]
+        \centering
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=quadratic_minimum.eps,width=\linewidth}
+            \caption{\code{MultiplePaths(f)}}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=rosenbrock_minimum.eps,width=\linewidth}
+            \caption{\code{MultiplePaths(g)}}
+        \end{subfigure}
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=quadratic_minimum_adaptive,width=\linewidth}
+            \caption{\code{MultiplePathsAdaptive(f)}}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=rosenbrock_minimum_adaptive.eps,width=\linewidth}
+            \caption{\code{MultiplePathsAdaptive(g)}}
+        \end{subfigure}
+
+        \caption{
+            \protect\small
+            Minimalizace kvadratické funkce~\eqref{eq:Minimumf} a Rosenbrockovy funkce~\eqref{eq:Minimumg} pomocí náhodné procházky a deseti trajektorií náhodně vybraných ze čtverce \code{initial_box_size}$\ =2$.
+            \emph{1.~řádek:} Minimalizace metodou \code{minimize} s délkou kroku \code{step_size}$\ =0.01$ a kritériem ukončení \code{max_failed_steps}$\ =100$.
+            Chyba určení minima je $\Delta x,y\approx0.01$. 
+            V případě Rosenbrockova minima je chyba velká: Rosenbrockovo \uv{údolí} je velmi pozvolné podél a strmé napříč, což způsobuje, že trajektorie končí v širokém okolí skutečného minima $(x_{\mathrm{min}},y_{\mathrm{min}})=(1,1)$.
+            Počet kroků, než je výpočet ukončen, je zde $\approx1000$.
+            \emph{2.~řádek:} Minimalizace vylepšeným algoritmem s postupně se zmenšující krokem.
+            Na~počátku je krok velký, \code{initial_step_size}$\ =0.1$, ale postupně se zmešuje až k \code{final_step_size}$\ =10^{-6}$.
+            To stačí i pro přesné nalezení minima Rosenbrockovy funkce.
+            Počet nutných kroků zde je $\approx3000$.
+        }	
+        \label{fig:Minimalizacefg}
+    \end{figure}
+
+    Vzorový kód je v souboru \ghfile{python/minimize/}{min_functions.py} a využívá jako modul \ghfile{python/minimize/}{minimize.py}.
+    Obsahuje následující funkce:
+    \begin{itemize}
+        \item \code{show_graph}: 
+            Vykreslí konturový graf funkce \code{function} a do něj zakreslí křivky (náhodné procházky) z parametru \code{paths}.
+            Pokud tento parametr není specifikován, vykreslí pouze konturový graf s funkcí.
+            Meze funkce pro vykreslení jsou dány parametrem \code{box_size}.
+
+        \item \code{multiple_paths}:
+            Vypočítá celkem \code{num_paths} náhodně vybraných jednoduchých minimalizačních procházek a vykreslí je v grafu společně s konturovým grafem minimalizované funkce.
+            Parametrem \code{method} lze určit minimalizaci s pevným krokem nebo s adaptivním krokem.
+        \item \code{multiple_paths}:
+    \end{itemize}
+
+    Výsledky pro funkce $f$ a $g$ ze zadání jsou zobrazeny na obrázku~\ref{fig:Minimalizacefg}.
+\end{solution}
 
 \begin{task}
     Použijte kód pro vícerozměrnou náhodnou procházku a najděte pomocí něho minimum funkce čtyř proměnných
@@ -1671,18 +1755,96 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         \end{align}
 \end{task}
 
+\begin{solution}
+    Volání funkce \code{minimize.minimize_adaptive(h, dimension=4)} vypočítá minimum v bodě
+    \begin{align}
+        s_{\text{min}}&\approx-0.913\nonumber\\
+        t_{\text{min}}=u_{\text{min}}=v_{\text{min}}&\approx0.000\\
+        h_{\text{min}}\equiv h(s_{\text{min}},t_{\text{min}},u_{\text{min}},v_{\text{min}})&\approx-0.771.\nonumber
+    \end{align}
+    V případě minimalizace této funkce je nutné ošetřit odmocninu, pod kterou se může během náhodné procházky objevit záporné číslo, což způsobí konec výpočtu s chybou.
+    V kódu je to vyřešeno tak, že v případě kroku do této \uv{nedovolené oblasti} vrátí funkce \code{h} hodnotu $\infty$ (v Pythonu \code{float("inf")}), která je větší než všechna možná jiná čísla, a tím tento krok zakáže.
+    Důležitá podmínka však je, že počáteční bod náhodné procházky musí ležet v definičním oboru funkce $h$.
+\end{solution}
+
 \begin{task}
     Naprogramujte Metropolisův algoritmus a odlaďte ho na případu funkce
-    \begin{equation}\label{eq:Minimizer}
+    \begin{equation}\label{eq:Minimumr}
         r(x,y)=x^{4}-2x^{2}+x+y^{2}.
     \end{equation}
-    Tato funkce má dvě lokální minima (jedná se o vzorovou funkci ze souboru \file{Contourf.py}).
+    Tato funkce má dvě lokální minima (jedná se o vzorovou funkci ze souboru \ghfile{python/basics/}{contourf.py}).
 \end{task}
+
+\begin{solution}
+    Pro ukázku, že standardní minimalizace pomocí náhodné procházky vede náhodně do~různých lokálních minim, slouží obrázek~\ref{fig:MetropolisMinimalizacea}.
+
+    \begin{figure}[!htb]
+        \centering
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=double_well_minimum.eps,width=\linewidth}
+            \caption{\centering\code{multiple_paths(r, method=minimize.minimize)}}
+            \label{fig:MetropolisMinimalizacea}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=double_well_minimum_metropolis.eps,width=\linewidth}
+            \caption{\centering\code{multiple_paths(r, method=metropolis.minimize)}}
+            \label{fig:MetropolisMinimalizaceb}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.5\linewidth}
+            \centering\epsfig{file=double_well_minimum_metropolis_adaptive,width=\linewidth}
+            \caption{\centering\code{multiple_paths(r, method=metropolis.minimize_adaptive)}}
+            \label{fig:MetropolisMinimalizacec}
+        \end{subfigure}
+        \hfill
+
+        \caption{
+            \protect\small
+            Porovnání různých metod minimalizace dvoujámové funkce~\eqref{eq:Minimumr}.
+            \subref{fig:MetropolisMinimalizacea} Minimalizace obyčejnou náhodnou procházkou, která dokonverguje do náhodného lokálního minima.
+            Následně je možné vybrat to minimum, které je hlubší.
+            \subref{fig:MetropolisMinimalizaceb} Metropolisův algoritmus s konstantní teplotou $T=1$.
+            Kvůli vysoké teplotě dráha výrazně fluktuuje, avšak postupně dokonverguje k okolí hlubšího globálního minima.
+            \subref{fig:MetropolisMinimalizacec} Metropolisův algoritmus s postupně se zmenšujícím krokem a teplotou.
+            Zde do globálního minima postupně zkonvergují všechny trajektorie.
+            Počet použitých kroků je $2000$.
+        }	
+        \label{fig:MetropolisMinimalizace}
+    \end{figure}
+    
+    Metropolisův algoritmus je naprogramován v souboru \ghfile{python/randomwalk/}{metropolis.py}.
+    \begin{itemize}
+        \item \code{minimize}: 
+            Minimalizuje funkci \code{function} se zadanou teplotou \code{temperature} a s fixní délkou kroku \code{step_size}. 
+            Výpočet je ukončen přesně po \code{max_steps} krocích.
+            Kritérium ukončení výpočtu z metody bez teploty zde nebude fungovat, jelikož konečná teplota způsobuje neustálý \uv{tepelný pohyb}, nikdy tedy nedojde k úplnému zastavení, ani pokud dosáhneme minima funkce.
+
+            Výsledek je zobrazen na obrázku~\ref{fig:MetropolisMinimalizaceb}.
+            Je vidět, že oproti případu bez teploty se dostaneme častěji k okolí globálního minima, avšak důsledkem celkem vysoké teploty nalezená poloha výrazně fluktuuje.
+            Navíc, a to zde není zobrazeno, výsledek velmi silně závisí na kombinaci teploty a délky kroku.
+            
+        \item \code{minimize_adaptive}:
+            Vylepšení spočívající v postupném zmenšování teploty a zároveň kroku.
+            Výpočet začne s krokem \code{initial_step_size} a teplotou \code{initial_temperature} a po každých \code{num_steps_change} krocích déku kroku i teplotu vydělí dvěma.
+            Výpočet je ukončen po dosažení délky kroku \code{final_step_size}.
+            Příklad realizovaných procházek pro funkci~\eqref{eq:Minimumr} je na obrázku~\ref{fig:MetropolisMinimalizacec}.
+
+    \end{itemize}
+\end{solution}
 
 \begin{task}
     Prostudujte \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html}{dokumentaci} k funkci \code{minimize} a vytvořte kód, který tuto funkci využije k najití minima všech doposud studovaných funkcí dvou a více proměnných.
     Pokud programujete v jiném programovacím jazyku, nalezněte odpovídající minimalizační funkci či knihovnu a použijte ji.
 \end{task}
+
+\begin{solution}
+    Knihovní funkci voláme příkazem \code{minimize(f, initialCondition)}, kde parametr \code{initialCondition} je $n$-tice udávající počáteční bod, ze kterého minimalizační procedura vystartuje.
+
+    V případě funkce s více lokálními minimy tato knihovní funkce nenajde nutně minimum globální.
+    Lze však pomocí volitelného parametru \code{method} vybrat metodu minimalizace, která bude úspěšnější.
+    Pokročilá varianta Metropolisova algoritmu je v knihovně \file{scipy.optimize} naprogramována pod názvem \code{\href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.basinhopping.html}{basinhopping}}.
+\end{solution}
 
 \section{Histogram}
     V tomto cvičení budeme pokračovat s náhodnými čísly, se kterými již pracovali při programování náhodné procházky v \ref{sec:NahodnaProchazka}. sekci.
