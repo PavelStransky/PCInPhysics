@@ -1842,6 +1842,26 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     Pokročilá varianta Metropolisova algoritmu je v knihovně \file{scipy.optimize} naprogramována pod názvem \code{\href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.basinhopping.html}{basinhopping}}.
 \end{solution}
 
+
+\subsection{Shrnutí}
+    \begin{itemize}
+        \item 
+            Jeden z nejjednodušších algoritmů na hledání minima (maxima) funkce je pomocí náhodné procházky.
+            K její implementaci stačí mít generátor náhodných čísel.
+
+        \item 
+            Úspěch algoritmů založených na náhodné procházce je podmíněn tím, že každý krok procházky musí vést do libovolného směru se stejnou pravděpodobností.
+            Při procházce v rovině toho lze docílit náhodným generováním úhlu.
+            Ve vícerozměrné procházce je nejvýhodnější použít algoritmus založený na Gaussovském náhodném vektoru (za předpokladu, že umíme generovat čísla z Gaussovského rozdělení; jeden jednoduchý takový generátor bude obsahem dalších cvičení).   
+        
+        \item 
+            Obecná funkce může mít více lokálních minim, přičemž náhodná procházka nás zavede do jednoho z nich, které nemusí být nejhlubší (globální).
+            K nalezení globálního minima lze využít Metropolisův algoritmus, který k náhodné procházce přidá tepelný pohyb, a tím umožní \uv{vyskočit} z mělkého lokálního minima.  
+
+            Metropolisův algoritmus se využívá i pro jiné termodynamické úlohy, například k modelování spinových systémů při konečné teplotě, čímž lze studovat fázový přechod feromagnet $\leftrightarrow$ paramagnet.
+    \end{itemize}
+
+
 \section{Histogram}
     V tomto cvičení budeme pokračovat s náhodnými čísly, se kterými již pracovali při programování náhodné procházky v \ref{sec:NahodnaProchazka}. sekci.
     Zde se podíváme hlouběji na jejich vlastnosti, naučíme se zobrazit hustotu pravděpodobnosti jejich rozdělení (histogram), vytvoříme triviální generátor čísel z Gaussovského normálního rozdělení a generátor čísel z libovolného rozdělení zadaného hustotou pravděpodobnosti nebo distribuční funkcí.
@@ -2125,6 +2145,196 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         Nakreslete histogram a porovnejte.
     \end{task}
 
+\section{Monte-Carlo metoda}
+    Pod Monte-Carlo metodou se rozumí, že namísto systematického (a obvykle zdlouhavého) procházení nějakého parametrického prostoru využíváme náhodně generované body a hledané vlastnosti našeho systému určíme statisticky.\footnote{
+        Monte Carlo je oblast Monaka, ve kterém se nacházely a doposud nacházejí slavná kasina.
+        Odtud název.
+    }
+    V tomto cvičení zúročíme veškeré dosavadní zkušenosti s náhodnými čísly a budeme ze zabývat zejména integrací Monte-Carlo.
+
+    Možná jste se již setkali se problémem tzv. \href{https://cs.wikipedia.org/wiki/Buffonova_jehla}{Buffonovy jehly}: ppomocí náhodného házení jehly (či jakékoliv tyčky) na síť rovnoběžných čar nakreslenou na zemi lze určit číslo $\pi$, 
+    \begin{equation}
+        \pi\approx\frac{2l}{h}\frac{N_{\text{zásah}}}{N_\text{celkem}},
+    \end{equation}
+    kde $h$ je vzdálenost čar, $l\leq h$ délka jehly, $N_{\text{celkem}}$ celkový počet hodů a $N_{\text{zásah}}$ počet hodů, při kterých jehla po dopadu kříží nějakou z čar.
+    Buffonova jehla je názorné experimentální použití metody Monte-Carlo, konkrétně varianty nazývané hit-and-miss.
+    Té jsme se již dotkli v sekci~\ref{sec:SelectDistribution} a nyní si rozebereme podrobněji.
+    
+    \begin{task}
+        Metodou Monte-Carlo vyřešte tzv. narozeninový problém: Uvažujte skupinu $n$ lidí. 
+        Jaká je pravděpodobnost, že dva lidi ve skupině budou mít narozeniny ve stejný den?
+        Úloha se samozřejmě dá vyřešit \href{https://cs.wikipedia.org/wiki/Narozeninov%C3%BD_probl%C3%A9m}{exaktně}, ale zkuste si úlohu vyřešit metodou Monte-Carlo:
+        Pokud nagenerujete náhodně $N_{\text{celkem}}$-krát narozeniny $n$ lidí a označíte $N_{\text{zásah}}$ případy, kdy alespoň dvoje narozeniny padnou na stejný den, bude podle zákona velkých čísel hledaná pravděpodobnost rovna
+        \begin{equation}
+            p\approx\frac{N_{\text{zásah}}}{N_{\text{celkem}}}
+        \end{equation}
+        (rovnost by nastala pro $N_{\text{celkem}}\rightarrow\infty$).
+        Naprogramujte tuto úlohu a určete,
+        \begin{enumerate}
+            \item jaká je pravděpodobnost pro skupinu $30$ lidí a
+            \item jak velkou skupinu potřebujete, aby byla pravděpodobnost alespoň $30\%$.
+        \end{enumerate}
+    \end{task}
+
+    \subsection{Hit-And-Miss}
+        Tato metoda spočívá v jednoduché aplikaci zákona velkých čísel.
+        Její esence je načrtnuta na obrázku~\ref{fig:HitAndMiss}.
+        Uvažujme nejprve, že chceme změřit plochu $s$ černého obrazce složitého tvaru znázorněného na panelu (a).
+        Obrazec vepíšeme do jiného jednoduchého obrazce, jehož plochu $S$ známe (nejčastěji obdélník, případně kruh).
+        Poté do tohoto obrazce $S$ náhodně \uv{házíme} body (křížky) a počítáme, kolikrát se trefíme do černého obrazce (červené křížky).
+        Neznámá hledaná plocha $s$ je pak při již použitém značení
+        \begin{equation}
+            \label{eq:MCS}
+            s\approx S\frac{N_{\text{zásah}}}{N_{\text{celkem}}}.
+        \end{equation}
+
+        \begin{figure}[!htbp]
+            \begin{subfigure}{0.44\linewidth}
+                \centering\includegraphics[width=\linewidth]{hit_and_miss.png}
+                \caption{}
+            \end{subfigure}
+            \hfill
+            \begin{subfigure}{0.54\linewidth}
+                \centering\includegraphics[width=\linewidth]{hit_and_miss_int.png}
+                \caption{}
+            \end{subfigure}
+            \caption{
+                \protect\small
+                Metoda hit-and-miss (a) pro výpočet plochy složitého obrazce a (b) pro výpočet integrálu jednorozměrné funkce.
+                Podrobnosti k obrázku jsou uvedeny v textu. 
+            }
+            \label{fig:HitAndMiss}
+        \end{figure}
+
+        Analogicky postupujeme při integrování, což je ukázáno na panelu (b).
+        Integrál v mezích $(a,b)$ je plocha pod křivkou funkce $f(x)$  (na obrázku černě vyšrafovaná plocha ohraničená zespodu osou $x$, shora funkcí $f(x)$ a ze stran modrými čarami $x=a$ a $x=b$).
+        Uvedenou oblast vepíšeme do obdélníku o hranách $l=b-a$ a $h$ s plochou $S=(b-a)h$ a stejnou metodou jako u panelu (a) a pomocí stejného vzorce jako je~\eqref{eq:MCS} vypočítáme hodnotu integrálu:
+        \begin{equation}
+            \label{eq:MCSInt}
+            \int_{a}^{b}f(x)\d x\approx S\frac{N_{\text{zásah}}}{N_{\text{celkem}}}=(b-a)h\frac{N_{\text{zásah}}}{N_{\text{celkem}}}.
+        \end{equation}
+
+        \subsubsection{Chyba}
+            Počet zásahů je vlastně počet nezávislých \uv{hodů}, kterými se trefíme do oblasti, jejíž plochu $S$ hledáme.
+            Pokud budeme opakovat metodu hit-and-miss s fixním $N_{\text{celkem}}$, bude mít náhodná veličina $N_{\text{zásah}}$ Poissonovo rozdělení se střední hodnotou~\eqref{eq:ExpectationP} a rozptylem~\eqref{eq:DispersionP}
+            \begin{equation}
+                \lambda=\expectation{N_{\text{zásah}}}=\dispersion{N_{\text{zásah}}}.
+            \end{equation}
+            Budeme-li mít jen jednu realizaci s dostatkem zásahů, můžeme střední hodnotu odhadnout pomocí této realizace, $\expectation{N_{\text{zásah}}}\approx N_{\text{zásah}}$ a absolutní chybu odhadneme směrodatnou odchylkou
+            \begin{equation}
+                \Delta N_{\text{zásah}}=\sqrt{\dispersion{N_\text{zásah}}}\approx\sqrt{N_{\text{zásah}}}.
+            \end{equation}
+            Relativní chyba pak je
+            \begin{equation}
+                \label{eq:MCRelative}
+                \delta N_{\text{zásah}}=\frac{\Delta N_{\text{zásah}}}{N_{\text{zásah}}}\approx\frac{1}{\sqrt{N_{\text{zásah}}}}.
+            \end{equation}
+            Tento vzorec platí i pro relativní chybu ve výpočtu plochy~\eqref{eq:MCS} či integrálu~\eqref{eq:MCSInt}.
+
+            Jelikož $N_{\text{zásah}}\propto N_{\text{celkem}}$, z uvedených úvah vyplývá, že
+            \begin{itemize}
+                \item relativní chyba klesá jako převrácená hodnota odmocniny celkového počtu pokusů $N_{\text{celkem}}$ a
+                \item chceme-li zpřesnit výsledek získaný touto metodou desetkrát, musíme zestonásobit počet pokusů.
+            \end{itemize}
+            V praxi za použití běžných výpočetních prostředků lze dosáhnout nanejvýš $N_{\text{celkem}}\approx10^{10}$, což dá výsledek s relativní chybou minimálně $\delta\approx10^{-5}$, tj. pět desetinných míst.
+
+        \subsubsection{Použití}
+            Integrace pomocí metody hit-and-miss se nepoužívá, jelikož je příliš neefektivní. 
+            K jejímu úspěšnému použití totiž musíme znát maximum funkce na zadaném intervalu, abychom efektivně určili výšku obdélníku $h$, a obecně je $N_{\text{zásah}}/N_{\text{celkem}}$ velmi malé číslo (funkce mají dlouhý chvost nebo jsou příliš vysoké), většina \uv{hodů} jde tedy mimo a i při jejich velkém množství získáme málo zásahů, a tudíž velkou chybu podle vztahu~\eqref{eq:MCRelative}.
+
+            Na druhou stranu se tato metoda hodí k výpočtu povrchů, objemů či hyperobjemů v případě vícerozměrných objektů.
+            
+            \begin{task}
+                Vytvořte program na výpočet objemu $d$-rozměrné jednotkové koule metodou Monte-Car\-lo.\footnote{
+                    Pod $1$-rozměrnou jednotkovou koulí rozumíme úsečku délky 2, pod $2$-rozměrnou jednotkovou koulí jednotkový kruh.
+                    Povrch jednotkového kruhu je $S=\pi$, výsledek lze tedy použít i k určení čísla $\pi$, aniž byste museli házet Buffonovou jehlou.
+                }
+                Pro jakou dimenzi bude tento objem největší číslo?
+            \end{task}
+
+    \subsection{Monte-Carlo integrace}
+    \begin{figure}[!htbp]
+        \begin{subfigure}{0.49\linewidth}
+            \centering\includegraphics[width=\linewidth]{int1.png}
+            \caption{}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.49\linewidth}
+            \centering\includegraphics[width=\linewidth]{int2.png}
+            \caption{}
+        \end{subfigure}
+        \caption{
+            \protect\small
+            Monte-Carlo integrace.
+            Vysvětlení je v hlavním textu.
+        }
+        \label{fig:MCIntegral}
+    \end{figure}
+
+    Pro hledání integrálu je mnohem efektivnější metoda, již lze vysvětlit pomocí obrázku~\ref{fig:MCIntegral}.
+    Uvažujme neprve, že známe pár hodnot $(x_{j},f(x_{j}))$, nic víc, nic míň.
+    Na základě těchto hodnot můžeme učinit pouze velmi hrubý odhad integrálu, a to jako plochu červeně vyšrafovaného obdélníku jako na panelu (a),
+    \begin{equation}
+        \int_{a}^{b}f(x)\d x\approx (b-a)f(x_{j}).
+    \end{equation}
+    Pokud budeme mít párů hodnot $(x_{j},f(x_{j}))$ více, jak je znázorněno na panelu (b), vezmeme za odhad hodnoty integrálu průměr ploch takovýchto obdélníků,
+    \begin{equation}
+        \label{eq:MCInt}
+        \int_{a}^{b}f(x)\d x
+            \approx \frac{1}{N}\sum_{j=1}^{N}(b-a)f(x_{j})
+            =\frac{b-a}{N}\sum_{j=1}^{N}f(x_{j}).
+    \end{equation}
+    V právě uvedeném postupu tkví je podstata integrace Monte-Carlo.
+    Obecně platí, že pokud hodnoty $x_{j}$ vybíráme z rozdělení s hustotou pravděpodobnosti $\rho(x)$, je integrál odhadnutý výrazem
+    \begin{equation}
+        \int_{a}^{b}f(x)\d x
+            \approx\frac{1}{N}\sum_{j=1}^{N}\frac{f(x_{j})}{\rho(x_{j})},
+    \end{equation} 
+    přičemž nejvhodnější je volit takové pravděpodobnostní rozdělení, jehož hustota pravděpodobnosti co nejlépe kopíruje integrovanou funkci.\footnote{
+        Tento postup se nazývá \emph{importance sampling}.
+    }
+    V praxi, jelikož na funkci nejčastěji pohlížíme jako na \uv{černou skříňku} a o jejím průběhu nic nevíme, se jako nevhodnější jeví volit rovnoměrné rozdělení s hustotou pravděpodobnosti~\eqref{eq:UniformDistribution}, která po dosazení dá předchozí vzorec~\eqref{eq:MCInt}.
+
+    Chybu metody integrace lze odhadnout pomocí směrodatné odchylky
+    \begin{align}
+        \Delta\equiv\sigma&=\sqrt{\overline{f^{2}}-\overline{f}^{2}},\\
+        \overline{f^{2}}&=\frac{1}{N}\sum_{j=1}^{N}f^{2}(x_{j}),\nonumber\\
+        \overline{f}^{2}&=\left[\frac{1}{N}\sum_{j=1}^{N}f(x_{j})\right]^{2}.\nonumber
+    \end{align}
+
+    \begin{task}
+        Metodou Monte-Carlo spočítejte integrály
+        \begin{align}
+            I_{1}&\equiv\int_{0}^{2\pi}\e^{-x}\sin{x}\,\d x,
+            \label{eq:I1}\\
+            I_{2}&\equiv\int_{0}^{\sqrt{10\pi}}\frac{\sin{x^{2}}}{\sqrt{1+x^{4}}}\d x.
+        \end{align}
+        První integrál má analytické vyjádření, které si můžete odvodit a porovnat s hodnotou získanou Monte-Carlo integrací; druhý integrál lze spočítat pouze numericky.
+        Metodu můžete otestovat i na jiných známých integrálech.
+    \end{task}
+
+    Síla metody Monte-Carlo se naplno projeví při výpočtu vícerozměrných integrálů.
+    Jak bylo ukázáno, chyba metody závisí jen na celkovému počtu pokusů $N=N_{\text{celkem}}$.
+    Zatímco u jiných metod při požadování určité dané přesnosti výsledku drasticky narůstá časová složitost integrace s rostoucí dimenzí integrované funkce, u Monte-Carla časová složitost na dimenzi závisí jen nepatrně.
+    Ve více rozměrech bývá navíc integrační oblast složitější, k čemuž lze využít metodu hit-and-miss.
+    To se nejlépe ukáže na příkladu.
+
+    \begin{task}
+        Spočítejte čtyřrozměrný integrál
+        \begin{equation}
+            I_{3}\equiv\int_{\Omega}\sin{\sqrt{\ln\left(x+y+z+w+2\right)}}\,\d x\,\d y\,\d z\,\d w,
+            \label{eq:I3}
+        \end{equation}
+        kde integrační oblast je hyperkoule
+        \begin{equation}
+            \Omega: \left(x-\frac{1}{2}\right)^{2}+\left(y-\frac{1}{2}\right)^{2}+\left(z-\frac{1}{2}\right)^{2}+\left(w-\frac{1}{2}\right)^{2}\leq\frac{1}{4}.
+        \end{equation} 
+        Při výpočtu postupujte tak, že nejprve danou hyperkouli vepíšete do hyperkvádru (či hyperkrychle) známých rozměrů, a tudíž známého objemu $V$.
+        Poté pro náhodně zvolený bod v hyperkvádru určíte, zda se trefí do hyperkoule $\Omega$ či nikoliv.
+        Pokud ano, spočítáte funkční hodnotu integrandu v tomto bodě.
+        Jedná se tedy o kombinaci integrace~\eqref{eq:MCInt} a metody hit-and-miss.
+        Budete-li si uchovávat počet hodů $N_{\text{celkem}}$ a počet zásahů $N_{\text{zásah}}$, získáte jako vedlejší produkt objem integrační hyperoblasti pomocí vzorce~\eqref{eq:MCS}.
+    \end{task}
 
 \begin{thebibliography}{99}
     \bibitem{Muller1959} M.E. Muller, {\it A note on a method for generating points uniformly on n-dimensional spheres},
@@ -2135,21 +2345,3 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
 \end{thebibliography}
 
 \end{document}
-
-\subsection{Shrnutí}
-    \begin{itemize}
-        \item 
-            Jeden z nejjednodušších algoritmů na hledání minima (maxima) funkce je pomocí náhodné procházky.
-            K její implementaci stačí mít generátor náhodných čísel.
-
-        \item 
-            Úspěch algoritmů založených na náhodné procházce je podmíněn tím, že každý krok procházky musí vést do libovolného směru se stejnou pravděpodobností.
-            Při procházce v rovině toho lze docílit náhodným generováním úhlu.
-            Ve vícerozměrné procházce je nejvýhodnější použít algoritmus založený na Gaussovském náhodném vektoru (za předpokladu, že umíme generovat čísla z Gaussovského rozdělení; jeden jednoduchý takový generátor bude obsahem dalších cvičení).   
-        
-        \item 
-            Obecná funkce může mít více lokálních minim, přičemž náhodná procházka nás zavede do jednoho z nich, které nemusí být nejhlubší (globální).
-            K nalezení globálního minima lze využít Metropolisův algoritmus, který k náhodné procházce přidá tepelný pohyb, a tím umožní \uv{vyskočit} z mělkého lokálního minima.  
-
-            Metropolisův algoritmus se využívá i pro jiné termodynamické úlohy, například k modelování spinových systémů při konečné teplotě, čímž lze studovat fázový přechod feromagnet $\leftrightarrow$ paramagnet.
-    \end{itemize}
