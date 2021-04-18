@@ -86,6 +86,9 @@ minimize.minimize(h, dimension=4)
 minimize.minimize_adaptive(h, dimension=4)
 
 print("Graphs:")
+multiple_paths(f)
+multiple_paths(f, method=minimize.minimize_adaptive)
+
 multiple_paths(g)
 multiple_paths(g, method=minimize.minimize_adaptive)
 
