@@ -50,7 +50,12 @@
 
 \lstdefinestyle{TinyPython}{
     language=Python,
-    basicstyle=\ttfamily\footnotesize
+    basicstyle=\normalfont\ttfamily\footnotesize
+}
+
+\lstdefinestyle{NormalPython}{
+    language=Python,
+    basicstyle=\normalfont\ttfamily
 }
 
 \lstdefinestyle{console}{
@@ -2093,47 +2098,225 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
 
 \newpage
 {\color{red}\subsection{Domácí úkol na 20.4.2021}}
-        \begin{task}
-            Naprogramujte funkci pro výpočet histogramu: na vstupu bude pole hodnot (výběr z nějakého rozdělení) a počet intervalů histogramu; na výstupu bude pole, jehož každý prvek bude odpovídat jednomu intervalu histogramu a ponese počet hodnot, které do tohoto intervalu padnou ze vstupního pole.
-            Nejefektivnějšímu algoritmu stačí jeden průchod vstupním polem (jeden cyklus). 
-            Pokuste se na něj přijít.
-    
-            Výstupní pole funkce vykreslete jako čárový graf.\footnote{
-                Knihovna \code{matplotlib} obsahuje funkce na přímé vykreslení sloupcového histogramu, například \code{\href{https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html}{hist}}.
+    \begin{task}
+        Naprogramujte funkci pro výpočet histogramu: na vstupu bude pole hodnot (výběr z nějakého rozdělení) a počet intervalů histogramu; na výstupu bude pole, jehož každý prvek bude odpovídat jednomu intervalu histogramu a ponese počet hodnot, které do tohoto intervalu padnou ze vstupního pole.
+        Nejefektivnějšímu algoritmu stačí jeden průchod vstupním polem (jeden cyklus). 
+        Pokuste se na něj přijít.
+
+        Výstupní pole funkce vykreslete jako čárový graf.\footnote{
+            Knihovna \code{matplotlib} obsahuje funkce na přímé vykreslení sloupcového histogramu, například \code{\href{https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html}{hist}}.
+        }
+    \end{task}
+
+    \begin{solution}
+        Vzorový výpočet histogramu je naprogramován v souboru \ghfile{python/histogram/}{histogram.py} ve funkci \code{histogram}.
+        Klíčové jsou dva řádky:
+
+        \begin{lstlisting}[style=NormalPython]
+    index = int((d - min_value) / bin_width
+    histogram[index] += 1\end{lstlisting}
+        Hodnota, kterou chceme zařadit do příslušného okénka histogramu, se nachází v proměnné \code{d}.
+        Z ní spočítáme celočíselný index v intervalu mezi $0\leq\mathtt{index}<\mathtt{num_bins}$ a pak v poli histogram na příslušném indexu přidáme jedničku.
+        Histogramované pole hodnot \code{data} tedy stačí procházet jen jednou, algoritmus má tudíž časovou náročnost $\mathcal{O}(N)$.
+        Nutným předpokladem pro použití tohoto algoritmu je, že všechna okénka histogramu musejí mít stejnou šířku.
+        Funkce \code{histogram} pak vrací pole s $x$-ovými hodnotami (středy histogramů) a pole s hotovým histogramem.
+        Pro snazší porovnání s hustotami pravděpodobnosti lze navíc nastavit parametr \code{normalize=True}, výsledný histogram pak bude splňovat
+        \begin{equation}
+            \sum_{i=1}^{\mathtt{num\_bins}}h_{i}w_{i}=1,
+        \end{equation}
+        kde $h_{i}$ je hodnota histogramu v $i$-tém okénku a $w_{i}\equiv\mathtt{bin\_width}$ šířka okénka.
+
+        \begin{figure}[!htbp]
+            \begin{subfigure}{0.49\linewidth}
+                \centering\epsfig{file=uniform.eps,width=\linewidth}
+                \caption{}
+            \end{subfigure}
+            \hfill
+            \begin{subfigure}{0.49\linewidth}
+                \centering\epsfig{file=uniform2.eps,width=\linewidth}
+                \caption{}
+            \end{subfigure}
+            \caption{
+                \protect\small
+                Srovnání histogramu získaného z $n=10^{5}$ hodnot vybraných z daného rozdělení a porovnání s teoretickou hustotou pravděpodobnosti (a) rovnoměrného rozdělení~\eqref{eq:UniformDistribution} ($a=0,b=1$) a (b) součtu dvou rovnoměrných rozdělení~\eqref{eq:2UniformDistribution}.
+                Počet intervalů histogramu je v obou případech $N=100$.
             }
-        \end{task}
-    
-        \begin{task}\label{task:Distribution}
-            Otestujte funkci z předchozího úkolu na následujících vstupních datech:
-            \begin{enumerate}
-                \item
-                    Výběr z rovnoměrného rozdělení na intervalu $\langle 0,1\rangle$ (v Pythonu generované pomocí \code{random()} z knihovny \file{random}, resp. pomocí \code{generator.random()} z knihovny \file{numpy.random}, jak je shrnuto v sekci~\ref{sec:PseudonahodnaCisla}).
-                \item
-                    Výběr ze {\bf součtu dvou} rovnoměrných rozdělení na intervalu $\langle 0,1\rangle$.
-                    Hustota pravděpodobnosti výsledného rozdělení je dána konvolucí~\eqref{eq:SumDensity}.
-                    Vypočítejte analyticky pomocí tohoto vzorce, jak bude hustota pravděpodobnosti vypadat, a porovnejte se získaným histogramem.
-                \item
-                    Výběr ze {\bf součtu $m$} rovnoměrných rozdělení na intervalu $\langle 0,1\rangle$.
-                    Přesvědčte se, že již pro celkem malé $m$ platí centrální limitní věta~\eqref{eq:CLT} a výsledné rozdělení se blíží normálnímu rozdělení $N(\mu,\sigma)$.
-                    Jaká bude střední hodnota $\mu$ a rozptyl $\sigma$ tohoto rozdělení?
-            \end{enumerate}
-            Pro pěkné grafy volte alespoň $n=10000$ (počet prvků výběru) a $N=100$ (počet intervalů histogramu).
-        \end{task}
-    
-        \begin{task}\label{task:NormalDistribution}
-            Na základě centrální limitní věty~\eqref{eq:CLT1} vytvořte jednoduchý generátor čísel s normálním Gaussovským rozdělením $N(0,1)$.
-            Jaké je optimální hodnota $m$, abychom získali dostatečně přesnou aproximaci normálního rozdělení, a přitom použili co nejméně algebraických operací?
-        \end{task}
-                
-        \begin{task}
-            Nakreslete histogram pro rozdělení hodnot v jednotlivých intervalech histogramů z úlohy \ref{task:Distribution}.
-            Jaké očekáváte statistické rozdělení v tomto případě?
-        \end{task}
+            \label{fig:Distributions}
+        \end{figure}
         
-        \begin{task}\label{task:GeneratorTime}
+        Příklady histogramů a jejich vykreslení do grafu jsou v řešení následujícího úkolu a na obrázku~\ref{fig:Distributions}.
+    \end{solution}
+
+    \begin{task}\label{task:Distributions}
+        Otestujte funkci z předchozího úkolu na následujících vstupních datech:
+        \begin{enumerate}
+            \item
+                Výběr z rovnoměrného rozdělení na intervalu $\langle 0,1\rangle$ (v Pythonu generované pomocí \code{random()} z knihovny \file{random}, resp. pomocí \code{generator.random()} z knihovny \file{numpy.random}, jak je shrnuto v sekci~\ref{sec:PseudonahodnaCisla}).
+            \item
+                Výběr ze {\bf součtu dvou} rovnoměrných rozdělení na intervalu $\langle 0,1\rangle$.
+                Hustota pravděpodobnosti výsledného rozdělení je dána konvolucí~\eqref{eq:SumDensity}.
+                Vypočítejte analyticky pomocí tohoto vzorce, jak bude hustota pravděpodobnosti vypadat, a porovnejte se získaným histogramem.
+            \item
+                Výběr ze {\bf součtu $m$} rovnoměrných rozdělení na intervalu $\langle 0,1\rangle$.
+                Přesvědčte se, že již pro celkem malé $m$ platí centrální limitní věta~\eqref{eq:CLT} a výsledné rozdělení se blíží normálnímu rozdělení $N(\mu,\sigma)$.
+                Jaká bude střední hodnota $\mu$ a rozptyl $\sigma$ tohoto rozdělení?
+        \end{enumerate}
+        Pro pěkné grafy volte alespoň $n=10000$ (počet prvků výběru) a $N=100$ (počet intervalů histogramu).
+    \end{task}
+    
+    \begin{solution}
+        Testování funkce \code{histogram} pro různá rozdělení je v souboru \ghfile{python/histogram/}{distributions.py}.
+        \begin{enumerate}
+            \item 
+                Hustota pravděpodobnosti rovnoměrného rozdělení je zobrazena funkcí \code{uniform}.
+                Výsledný graf je na obrázku~\ref{fig:Distributions}.
+
+            \item
+                Hustota pravděpodobnosti součtu dvou rovnoměrných rozdělení je podle~\eqref{eq:SumDensity}
+                \begin{align}
+                    \rho_{2}(z)
+                        =\int_{0}^{1}\rho_{1}(\xi)\rho_{1}(z-\xi)\d\xi
+                        =\int\rho_{1}(z-\xi)\d\xi,
+                \end{align}
+                kde $\rho_{1}(\xi)=1$ pro $0\leq\xi\leq1$ a $\rho_{1}(\xi)=0$ jinde,
+                čímž se v integrálu zbavíme faktoru $\rho_{1}(\xi)$, neboť je rovný $1$ na celém integračním intervalu.
+                Integraci nyní rozdělíme na čtyři intervaly:
+                \begin{align}
+                    z&<0: &
+                    \rho_{2}(z)&=0,\nonumber\\
+                    0&<z<1: &
+                    \rho_{2}(z)&=\int_{0}^{z}\d\xi=z,\nonumber\\
+                    1&<z<2: &
+                    \rho_{2}(z)&=\int_{z-1}^{z}\d\xi=1-(1-z)=2-z,\nonumber\\
+                    z&>2: &
+                    \rho_{2}(z)&=0.\nonumber
+                \end{align}
+                To lze zapsat zjednodušeně jako
+                \begin{equation}
+                    \label{eq:2UniformDistribution}
+                    \rho_{2}(z)=\left\{\begin{array}{ll}
+                        1-\abs{1-z} & 0<z<2, \\
+                        0 & \text{jinak}.
+                    \end{array}\right.
+                \end{equation}
+                Rozdělení má trojúhelníkový tvar, což odráží skutečnost, že při součtu dvou rovnoměrně rozdělených čísel na intervalu $\langle0,1\rangle$ je mnohem více možností, jak realizovat součet okolo $1$, než součet na krajích intervalu (stejně jako při hodu dvěma kostkami je největší pravděpodobnost součtu rovna $7$, jak vědí všichni hráči deskové hry \href{https://cs.wikipedia.org/wiki/Osadn%C3%ADci_z_Katanu}{Osadníci z Katanu}  a je větší než pravděpodobnost součtu $12$, neboť součet $7$ můžeme realizovat šesti způsoby z $36$ celkových možných výsledků hodu dvěma kostkami, zatímco součet $12$ jen jedním způsobem).
+                Hustota pravděpodobnosti se počítá funkcí \code{sum_2_uniform} a výsledný graf je zobrazen na obrázku~\ref{fig:Distributions}.
+            
+            \item  
+                Výpočet hustoty pravděpodobnosti součtu více rovnoměrných rozdělení je naprogramován ve funkci \code{sum_m_uniform} a porovnání se správně nanormovanou Gaussovkou je na obrázku~\ref{fig:Gaussian}. 
+        \end{enumerate}
+
+        \begin{figure}[!htb]
+            \begin{subfigure}{0.33\linewidth}
+                \centering\epsfig{file=uniform3.eps,width=\linewidth}
+                \caption{}
+            \end{subfigure}
+            \begin{subfigure}{0.33\linewidth}
+                \centering\epsfig{file=uniform4.eps,width=\linewidth}
+                \caption{}
+            \end{subfigure}
+            \begin{subfigure}{0.33\linewidth}
+                \centering\epsfig{file=uniform20.eps,width=\linewidth}
+                \caption{}
+            \end{subfigure}
+            \caption{
+                \protect\small
+                Srovnání histogramu získaného z $n=10^{5}$ hodnot daných součtem (a) $m=3$, (b) $m=4$ a (c) $m=20$ rovnoměrně rozdělených náhodných čísel, s Gaussovskou hustotou pravděpodobnosti. 
+                Již pro $m=3$ je shoda velmi dobrá a centrální limitní věta~\eqref{eq:CLT} je přibližně splněna.
+                V případě $m=20$ je již rozdíl od Gaussovského rozdělení prakticky nepozorovatelný.
+                Počet intervalů histogramu je ve všech případech $N=100$.
+            }
+            \label{fig:Gaussian}
+        \end{figure}    
+    \end{solution}
+
+    \begin{task}\label{task:NormalDistribution}
+        Na základě centrální limitní věty~\eqref{eq:CLT1} vytvořte jednoduchý generátor čísel s normálním Gaussovským rozdělením $N(0,1)$.
+        Jaké je optimální hodnota $m$, abychom získali dostatečně přesnou aproximaci normálního rozdělení, a přitom použili co nejméně algebraických operací?
+    \end{task}
+
+    \begin{solution}
+        Ideální počet sečtených čísel z rovnoměrného rozdělení pro získání velmi dobré aproximace čísla z normálního Gaussova rozdělení je $m=12$, neboť pro tuto hodnotu:
+        \begin{itemize}
+            \item Rozptyl výsledného rozdělení je $\sigma=1$ díky vztahům~\eqref{eq:CLT1} a~\eqref{eq:DispersionR}.
+            \item Hodnota nagenerovaného čísla je v intervalu $\langle0,12\rangle$, se střední hodnotou $6$.
+                Pokud tuto střední hodnotu odečteme dle vzorce~\eqref{eq:CLT1}, obdržíme rozdělení se střední hodnotou $0$ a zahrnující interval $6\sigma$, který pokrývá $99.9999998\%$ Gaussovského rozdělení.
+        \end{itemize}
+        Generátor je naprogramován v souboru \ghfile{python/histogram/}{gaussian.py}, funkce \code{generator_clt}.
+        Srovnání generátoru s odpovídající Gaussovkou je na obrázku \ref{fig:GaussianGenerator}(a).
+
+        \begin{figure}[!htb]
+            \begin{subfigure}{0.49\linewidth}
+                \centering\epsfig{file=gaussian_sum12.eps,width=\linewidth}
+                \caption{}
+            \end{subfigure}
+            \begin{subfigure}{0.49\linewidth}
+                \centering\epsfig{file=gaussian_hit_and_miss.eps,width=\linewidth}
+                \caption{}
+            \end{subfigure}
+            \caption{
+                \protect\small
+                Srovnání jednoduchých generátorů Gaussovsky rozdělených náhodných čísel. 
+                (a) Generátor založený na použití Centrální limitní věty~\eqref{eq:CLT1}: Gaussovské náhodné číslo je získáno jako součet $m=12$ rovnoměrně rozdělených náhodných čísel.
+                (b) Generátor založený na hit-and-miss metodě použité na hustotu pravděpodobnosti Gaussovského rozdělení.
+                V obou případech je pro zobrazovaný histogram použito  $n=10^{6}$ náhodných čísel a počet intervalů histogramu je $N=100$.
+                U generátoru (a) je pozorována drobná odchylka v okolí maxima hustoty pravděpodobnosti, u generátoru (b) žádná odchylka pozorována není.
+                Nutno zdůraznit, že generátor (a) je zhruba o řád rychlejší než generátor (b), jak je ukázáno v úloze~\ref{task:GeneratorTime}.
+            }
+            \label{fig:GaussianGenerator}
+        \end{figure}    
+    \end{solution}
+    
+    \begin{task}
+        Nakreslete histogram pro rozdělení hodnot v jednotlivých intervalech histogramů z úlohy \ref{task:Distributions}.
+        Jaké očekáváte statistické rozdělení v tomto případě?
+    \end{task}
+
+    \begin{solution}
+        Počet hodnot v jednotlivých intervalech splňuje předpoklady pro Poissonovo rozdělení, očekáváme tedy Poissonovo rozdělení se parametrem
+        \begin{equation}
+            \lambda=\frac{\mathtt{num\_values}}{\mathtt{num\_bins}},
+        \end{equation}
+        který udává zároveň střední hodnotu~\eqref{eq:ExpectationP} a zároveň rozptyl~\eqref{eq:DispersionP}.
+        Chceme-li toto rozdělení zobrazit, je potřeba jisté delikátnosti.
+        \begin{itemize}
+            \item 
+                Počty hodnot v okénkách (nenormovaného) histogramu jsou přirozená čísla.
+                Pro zobrazení jejich rozdělení je tedy vhodné volit sekundární histogram se šířkou intervalu 1 (nebo s jinou celočíselnou šířkou).
+            \item
+                Hezčí rozdělení získáme pro malé parametry $\lambda$ (pro $\lambda$ velké se Poissonovo rozdělení blíží Gaussovskému rozdělení).
+                V kódu volím hodnoty tak, aby $\lambda=10$.
+        \end{itemize}
+        Srovnání příslušného histogramu s teoretickým rozdělením~\eqref{eq:Poisson} je vypočteno funkcí \code{poisson} ze souboru \ghfile{python/histogram/}{distributions.py} a je vykresleno na obrázku~\ref{fig:Poisson}.
+
+        \begin{figure}[!htb]
+            \centering\epsfig{file=poisson.eps,width=0.6\linewidth}
+            \caption{
+                \protect\small
+                Poissonovo rozdělení, získané z fluktuací počtu hodnot histogramu s $N=10^{5}$ intervaly a $n=10^{6}$ rovnoměrně rozdělenými vstupními čísly.
+                Střední hodnota a rozptyl takto získaného Poissonova rozdělení je $\lambda=10$. 
+            }
+            \label{fig:Poisson}
+        \end{figure}
+    \end{solution}
+    
+    \begin{task}\label{task:GeneratorTime}
         Na základě známé hustoty pravděpodobnosti~\eqref{eq:NormalDistribution} vytvořte generátor čísel s Gaussovským normálním rozdělením.
         Porovnejte jeho rychlost s generátorem založeným na centrální limitní větě, který jste naprogramovali v úloze~\ref{task:NormalDistribution} a s generátorem z některé z knihoven.\footnote{Porovnání můžete provést tak, že nagenergujete větší množství čísel různými metodami, například $n=10^{6}$, a změříte dobu výpočtu.} 
     \end{task}
+
+    \begin{solution}
+        Generátor je naprogramován v souboru \ghfile{python/histogram/}{gaussian.py}, funkce \code{generator_hm}, a porovnání histogramu takto nagenerovaných náhodných hodnot s teoretickou hustotou pravděpodobnosti je na obrázku~\ref{fig:GaussianGenerator}(b). 
+        Nagenerování $10^6$ Gaussovsky rozdělených náhodných čísel trvá na mém PC\footnote{
+            Pokud k nagenerování $n$ hodnot použijeme knihovní funkci s počtem v argumentu, \code{generator.normal(1000000)}, výpočet trvá zlomek vteřiny.
+            Velká část výpočetního času je tudíž způsobena voláním funkcí a prováděním cyklu. 
+        }
+        \begin{itemize}
+            \item {\bf 4s}: funkce \code{generator.normal()} z knihovny \file{numpy},
+            \item {\bf 16s}: součet 12 rovnoměrně rozdělených čísel,
+            \item {\bf 111s}: hit-and-miss metoda.
+        \end{itemize}
+    \end{solution}
 
     \begin{task}
         Vytvořte generátor čísel z rozdělení daném distribuční funkcí
@@ -2144,6 +2327,37 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         Jak vypadá analyticky hustota pravděpodobnosti?
         Nakreslete histogram a porovnejte.
     \end{task}
+
+    \begin{solution}
+        Hustota pravděpodobnosti je dána derivací distribuční funkce podle vztahu~\eqref{eq:rhoF}, tj.
+        \begin{equation}
+            \label{eq:Cauchy}
+            \rho(x)=\derivative{F}{x}=\frac{1}{\pi}\derivative{}{x}\arctan{x}=\frac{1}{\pi}\frac{1}{1+x^{2}}.
+        \end{equation}
+        Toto rozdělní se nazývá \emph{Cauchyho} či v kvantové fyzice \emph{Breit-Wignerovo}. 
+        Popisuje šířku energetických hladin exponenciálně se rozpadajících systémů.
+
+        Ke generování čísel z tohoto rozdělení využijeme vztahu~\eqref{eq:xF}.
+        Musíme tedy určit funkci inverzní k distribuční funkci~\eqref{eq:F}, která je
+        \begin{equation}
+            F^{-1}(y)=\tan\left[\frac{\pi}{2}\left(2y-1\right)\right],
+        \end{equation}
+        a za $y$ dosazovat čísla z rovnoměrného rozdělení na intervalu $\langle0,1\rangle$.
+
+        Histogram čísel nagenerovaných z Cauchyho rozdělení a srovnání s hustotou pravděpodobnosti~\eqref{eq:Cauchy} je počítán funkcí \code{cauchy} souboru \ghfile{python/histogram/}{distributions.py} a je zobrazen na obrázku~\ref{fig:F}.
+        Rozdělení má dlouhý dosah, s rostoucím $x$ klesá jen polynomiálně k nule, pravděpodobnost nagenerování hodnoty daleko od maxima je tudíž velká. 
+        V obrázku proto zobrazuji jen okno $x\in\langle-10,10\rangle$.
+
+        \begin{figure}[!htb]
+            \centering\epsfig{file=f.eps,width=0.6\linewidth}
+            \caption{
+                \protect\small
+                Cauchyho (Breit-Wignerovo) rozdělení nagenerované z distribuční funkce~\eqref{eq:F} a porovnané s teoretickou hustotou pravděpodobnosti~\eqref{eq:Cauchy}.
+                Počet hodnot pro histogram je $n=10^5$, počet intervalů $N=500$.
+            }
+            \label{fig:F}
+        \end{figure}    
+    \end{solution}
 
 \section{Monte-Carlo metoda}
     Pod Monte-Carlo metodou se rozumí, že namísto systematického (a obvykle zdlouhavého) procházení nějakého parametrického prostoru využíváme náhodně generované body a hledané vlastnosti našeho systému určíme statisticky.\footnote{
