@@ -56,7 +56,7 @@ def sum_m_uniform(m=2, num_values=100000):
         sigma = np.sqrt(m / 12)
         return gaussian.gaussian_distribution((x - m / 2) / sigma) / sigma
 
-    plot_histogram(data, f"Součet {n} rovnoměrně rozdělených čísel", distribution_function, normalize=True)
+    plot_histogram(data, f"Součet {m} rovnoměrně rozdělených čísel", distribution_function, normalize=True)
 
 
 def gaussian_generator_clt(num_values=1000000):
@@ -99,7 +99,7 @@ def cauchy(num_values=100000):
     def distribution_function(x):
         return 1 / (np.pi * (1 + x**2))
 
-    plot_histogram(data, "Cauchyho rozdělení", distribution_function, normalize=True, min_value=-10, max_value=10, num_bins=500)
+    plot_histogram(data, "Cauchyho rozdělení", distribution_function, normalize=True, min_value=-100, max_value=100, num_bins=500)
 
 uniform()
 sum_2_uniform()
