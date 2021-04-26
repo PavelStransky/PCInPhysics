@@ -2550,6 +2550,187 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         Budete-li si uchovávat počet hodů $N_{\text{celkem}}$ a počet zásahů $N_{\text{zásah}}$, získáte jako vedlejší produkt objem integrační hyperoblasti pomocí vzorce~\eqref{eq:MCS}.
     \end{task}
 
+    \section{Paralelizace}
+    Rychlost výpočtu lze v zvyšovat dvěma základními způsoby:
+    \begin{enumerate}
+        \item Zvyšováním rychlosti procesoru.
+        \item Zvětšováním počtu procesorů.
+    \end{enumerate}
+    Zatímco první způsob již narazil na fyzikální limity a kupředu postupuje jen zvolna,\footnote{
+        Maximální dosažitelná rychlost procesorů je dnes přibližně $5$ GHz, tj. řádově miliardy strojových cyklů za vteřinu, a během posledních let se nemění. 
+        Strojová instrukce většinou trvá několik cyklů a jejich provádění je navíc zpomalováno přístupem programu do operační paměti, proto dnešní procesory zvládnou řádově nanejvýš stovky milionů instrukcí za vteřinu.
+        Jeden jednoduchý příkaz v Pythonu může vyžadovat stovky až tisíce procesorových instrukcí, takže Python vykoná řádově maximálně stovky tísíc příkazů za vteřinu.
+        Ke zrychlení procesoru se využívají nejrůznější sofistikované metody. 
+        Procesor například odhaduje, kam se program vydá, a instrukce se snaží předpočítávat dopředu. 
+        Pokud se v odhadu trefí, dojde ke zrychlení.
+        Jiný způsob je vytváření nových strojových instrukcí, které zrychlují určitý často používaný typ úloh (například instrukce rychlá Fourierova transformace, která se intenzivně používá při dekódování videa a při práci s obrázky).
+    } 
+    druhý způsob lze použít takřka neomezeně.
+    V dnešní době mají procesory osobních počítačů, ale i mobilních telefonů či dalších zařízení běžně dva až čtyři plnocenné podprocesory nazývané jádra, přičemž některé procesory navíc umožňují na každém jádře spustit dvě vlákna (technologie \emph{hyperthreading}\footnote{
+        Technologie spočívá v tom, že v každém procesorovém jádře jsou různé výpočetní jednotky, které zpracovávají různé typy procesorových instrukcí.
+        Zatímco se tedy v jednom vlákně násobí dvě čísla s desetinnou čárkou, v jiném vlákně na tomtéž jádře se může zpracovávat například cyklus přes celočíselný index.
+    }).
+    To znamená, že můžeme na procesoru spustit několik výpočtů najednou a výpočty budou probíhat paralelně.
+    
+    Jeden probíhající výpočet se běžně nazývá \emph{vlákno} (thread) nebo \emph{proces}.\footnote{
+        Ve skutečnosti je to složitější, jeden proces může obsahovat i více vláken, ale v těchto zápiscích budu předpokládat, že v každém procesu běží jen jedno vlákno, a tudíž budu obě označení brát jako synonyma.
+    }
+    V moderních operačních systémech je počet současně běžících procesů neomezený.
+    Pokud je procesů více, než dostupných procesorových jader, tak operační systém velmi rychle přepíná mezi prováděním procesu, čímž se zdá, že všechny procesy probíhají zároveň (tzv. \emph{preemptivní multitasking}).
+    Přepínání samozřejmě stojí určitý výpočetní čas.
+    Optimální situace tedy je, pokud se počet procesů přesně rovná počtu procesorových jader.
+    Pak jsou všechna jádra vytížena, a přitom operační systém není zatěžován nutností přepínat mezi jednotlivými vlákny. 
+    Toto je demonstrováno na obrázku~\ref{fig:Duration}.
+    
+    Nejtriviálnější způsob paralelizace spočívá v tom, že spustíme nezávisle více programů najednou.
+    Operační systém automaticky využije veškerá dostupná procesorová jádra.
+    My jen počkáme na výsledky a ty pak zpracujeme.
+    Tento způsob vpodstatě vylučuje jakoukoliv komunikaci mezi jednotlivými vlákny, a úlohy proto musejí být zcela nezávislé.
+    Z vnějšku lze také jen velmi omezeně řídit provádění vláken, například spustit nový výpočet po doběhnutí konkrétního vlákna. 
+
+    Pokročilejší postup je ten, kdy danou úlohu rozsekáme na nezávislé samostatné úseky, ty pak z našeho programu (tzv. \emph{hlavního vlákna}) pošleme ke zpracování na více procesorů, počkáme na výsledky a ty následně zpracujeme.
+    Takto lze jednoduše paralelizovat metodu Monte-Carlo: výpočet $N$ Monte-Carlo bodů spustíme současně v $p$ vláknech, a poté všechny výpočty spojíme dohromady tak, že jednoduše spočítáme aritmetický průměr výsledků jednotlivých vláken, přičemž tato hodnota odpovídá jednomu Monte-Carlo výpočtu s $pN$ body.
+    Jednotlivá vlákna výpočtu se sebou nemusejí nijak komunikovat, nemusejí sdílet žádnou část paměti, není tudíž potřeba řešit jejich vzájemnou sychronizaci (v anglické terminologii se pro takovýto typ problémů používá označení \uv{embarassingly parallel}, trapně paralelní).\footnote{
+        Ve striktně funkcionálním programování není dovoleno funkcím měnit hodnoty proměnných, a proto lze čistě funkcionální programy triviálně paralelizovat.
+    }
+    
+    V úplně obecném případě je nutné řešit vzájemnou sychronizaci vláken, což přesahuje rámec tohoto kurzu. 
+    Pro ilustraci uvedu jen jeden z nejzákladnějších příkladů: 
+    Představte si, že dvě vlákna sdílejí některé proměnné, a tedy přistupují do stejné části paměti. 
+    Pak je nutné zabránit tomu, aby obě vlákna k jedné proměnné přistupovala zároveň (například jedno z proměnné četlo, zatímco druhé do ní zapisovalo).
+    To by totiž vedlo k nejednoznačnému výsledku, protože nelze a priori říci, které vlákno bude operaci provádět dříve. 
+    K vyřešení kolize se používají tzv. \emph{zámky} (lock).
+    Než vlákno přistoupí ke sdílené proměnné, zamkne si ji pro sebe, provede svoji operaci a poté proměnnou odemkne.
+    Pokud by mezitím k zamčené proměnné chtělo přistoupit jiné vlákno, jeho provádění se zastaví a vlákno čeká, než bude proměnná odemčena.
+    Z toho ihned vyplývá, že při velkém počtu sdílených proměnných či při častém přístupu k nim dochází k významnému zpomalení paralelního zpracování, neboť velkou část výpočetního času vlákna čekají na přístup k momentálně zamčeným proměnným.
+
+    Zamykání proměnných s sebou nese problémy a potenciální obtížně odhalitelné chyby.
+    Může se stát, že zapomeneme proměnnou odemknout, čímž zastavíme všechna ostatní vlákna, která chtějí k proměnné přístupovat.
+    K zablokování programu může dojít i tak, že provádění vlákna skončí chybou ve chvíli, kdy má pro sebe nějakou proměnná zamčenou. 
+
+    Jiný možný způsob zablokování paralelního výpočtu kvůli zámkům je tzv. \emph{gridlock}: Jedno vlákno chce například sečíst hodnotu proměnných \code{a} a \code{b}.
+    Zamkne proměnnou \code{a} a chce zamknout i proměnnou \code{b}, avšak tu má zrovna zamčenou druhé vlákno.
+    Pokud v tu chvíli druhé vlákno potřebuje přistoupit k proměnné \code{a}, není mu to povoleno, protože tato proměnná je zamčena prvním vláknem.
+    První vlákno tedy čeká na odemčení proměnné \code{b} aby mohlo odemknout proměnnou \code{a}, zatímco to druhé na odemčení proměnné \code{a}, bez čehož neuvolní proměnnou \code{b}. 
+    Obě vlákna jsou do sebe zakleslá, čekají a k uvolnění nedojde nikdy.    
+
+    Pro pěkný podrobný úvod do paralelního programování doporučuji \url{https://computing.llnl.gov/tutorials/parallel_comp/}.
+
+    V Pythonu existují dvě základní knihovny pro zpracování programu ve více vláknech: \file{\href{https://docs.python.org/3/library/threading.html}{threading}} a \file{\href{https://docs.python.org/3/library/multiprocessing.html}{multiprocessing}}.
+    První z nich obsahuje více funkcionalit, avšak spouští všechna vlákna jen na jednom procesoru (jádře), k paralelnímu provádění výpočtů se tedy nehodí.\footnote{
+        Použití knihovny \file{threading} je vhodné v případě, kdy provádíme úlohy, ve kterých se obvykle čeká na výsledek.
+        Chceme například stáhnout webovou stránku z nějakého serveru, což může trvat nedefinovaně dlouho, a nechceme přitom, aby náš program přestal po dobu čekání reagovat.
+    }
+
+    Paralelizace na více výpočetních jádrech je v Pythonu implementována v knihovně \file{\href{https://docs.python.org/3/library/multiprocessing.html}{mul\-ti\-pro\-ces\-sing}}.
+    Zde si ukážeme využití objektů \code{Pool}, \code{Process} a \code{Value} z této knihovny na příkladu paralelní integrace metodou. Monte-Carlo.
+    Vzorový kód je naprogramován v souboru \ghfile{python/basics/}{multiprocessing.py}.
+    \begin{itemize}
+        \item \code{integrate_1D_Pool}:
+            Nejjednodušší způsob paralelizace je pomocí objektu \code{Pool}. 
+            Při vytváření instance tohoto objektu mu předáme parametr \code{processes} udávající maximální počet procesů, které bude objekt obsluhovat.\footnote{
+                Pokud parametr \code{processes} nezadáme, Python použije všechna dostupná jádra procesoru, dostupná také v globální proměnné \code{os.cpu\_count()}.
+            }
+            Následně zavoláme jeho metodu \code{starmap}, jejíž první parametr je funkce, kterou chceme spustit v jednotlivých procesech, a druhý parametr je seznam, jehož každý element obsahuje n-tici s argumenty naší funkce.
+            Metoda \code{starmap} spustí postupně naši funkci se všemi dostupnými n-ticemi parametrů ze seznamu, přičemž použije všechny dostupné procesy objektu \code{Pool},
+            počká na výsledky z jednotlivých vláken a shromáždí je do seznamu, který přiřazujeme proměnné \code{results}.\footnote{
+                Pokud je n-tic s argumenty víc než počet dostupných procesů, bude objekt \code{Pool} spouštět volání postupně.
+            }
+            Průměr ze všech hodnot dá finální hodnotu integrace Monte-Carlo.
+
+            Pokud by naše funkce měla jen jeden argument, namísto metody \code{starmap} bychom použili jednodušší metodu \code{map}.
+            Ve vzorovém příkladu však spouštěné funkci \code{integrate_1D} musíme předat argumenty čtyři, proto volíme složitější \code{starmap}.
+
+            Při vytvoření instance objektu \code{Pool} jsme použili konstrukci s klíčovým slovem \code{with}.
+
+        \item \code{integrate_1D_process}:
+            Složitější, avšak univerzálnější je použití objektů \code{Process}.\footnote{
+                Podobným způsobem se používá knihovna \file{pthread} v programovacím jazyce C++.
+            }
+            Ty vyžadují vykonání tři kroků:
+            \begin{enumerate}
+                \item 
+                    Vytvoříme instanci objektu typu \code{Process}.
+                    Při tom musíme specifikovat parametr \code{target}, jímž předáme funkci, kterou chceme v procesu spustit, a parametr \code{args}, který obsahuje její argumenty.
+                \item
+                    Výpočet v procesu spustíme pomocí metody \code{start}.
+                    Výpočet se spustí asynchronně, naše hlavní vlákno programu tedy nečeká, než se výpočet v novém procesu dokončí.
+                \item
+                    Chceme-li počkat na výsledek, využijeme metodu \code{join}.
+                    Zavoláme-li ji pro daný proces, bude hlavní vlákno programu čekat na dokončení příslušného procesu.
+                    My chceme počkat na dokončení všech procesů, proto si musíme po vytvoření a nastartování procesy uschovat (ve vzorovém kódu je uschováváme v proměnné \code{processes}) a poté zavolat \code{join} pro všechny.
+            \end{enumerate}
+
+            Při použití objektu \code{Process} {\bf není možné získat návratovou hodnotu volané funkce}.
+            Proto musíme program ještě trochu zesložitit a volanou funkci vrátit ve sdílené proměnné --- instanci objektu \code{Value}.
+            Tento objekt slouží k přenosu hodnot mezi hlavním vláknem a ostatními procesy i mezi procesy navzájem.
+            První parametr při vytváření instance objektu \code{Value} udává typ (\code{'d'} pro číslo s desetinnou čárkou, \code{'i'} pro celočíselný typ), druhý parametr počáteční hodnotu.
+            Hodnota proměnné je uložena v atributu \code{value}.
+            Vytvoříme takovouto proměnnou pro každý jednotlivý proces.
+            Navíc musíme naprogramovat pomocnou funkci (\emph{wrapper}), kterou pojmenujeme \code{integrate_1D_parallel}  a která nám zavolá naši funkci \code{integrate_1D} a její návratovou hodnotu uloží do sdílené proměnné.
+            Naší funkci \code{integrate_1D} chceme předat beze změny všechny parametry, které pomocná funkce \code{integrate_1D_parallel} dostane.
+            K tomu slouží konstrukce \code{*args, **kwargs}.
+            
+            Objekt \code{Value} má v sobě implementovaný zámek.
+            Stačilo by tedy použít jen jednu instanci \code{Value} pro všechny procesy a výsledky dílčích integrací do ní přičítat.
+            Průměr bychom nakonec získali vydělením počtem procesů.
+    \end{itemize}
+
+    \begin{figure}[!htb]
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=multiprocessing_time_total.eps,width=\linewidth}
+            \caption{}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=multiprocessing_time.eps,width=\linewidth}
+            \caption{}
+        \end{subfigure}
+        \caption{
+            \protect\small
+            Výpočetní čas integrace metodou Monte-Carlo při použití různého počtu paralelních procesů $p$, přičemž v každém vlákně je spuštěn výpočet integrálu $I_{1}$~\eqref{eq:I1} s $N=10^{6}$.
+            Výpočet byl prováděn na PC se 4-jádrovým procesorem Intel se zapnutou technologií hyperthreading.
+            Celková doba výpočtu je $T$, doba výpočtu vztažená na jádro je $t\equiv T/p$.
+            Pozorujeme, že celková doba výpočtu se pro $p\leq4$ téměř nemění, protože každý proces běží na svém vlastním jádře.
+            Pro $4\leq p\leq8$ začíná narůstat celkový výpočetní čas, protože procesy se již musejí dělit o dostupná jádra, avšak výpočetní čas na vlákno stále nepatrně klesá díky hyperthreadingu.
+            Pro $p\geq8$ se již procesor saturuje a zvětšování počtu procesů nepřináší žádný efekt.
+            Pro $p\gg8$ bychom pozorovali naopak zhoršování času výpočtu na vlákno, protože by si pro sebe více a více výpočetního času brala režie operačního systému, aby všechna vlákna obhospodařila.
+        }
+        \label{fig:Duration}
+    \end{figure}
+
+    {\bf Důležité poznámky:}
+    \begin{itemize}
+        \item
+            Python postupuje tak, že v jednotlivých procesech spouští celé moduly obsahující spouštěnou funkci.
+            V našem případě je v každém procesu spuštěn celý modul \ghfile{python/montecarlo/}{multiprocessing.py}.
+            Tento modul obsahuje globální část kódu, která v našem případě spouští funkce, které spouštějí víceprocesorové zpracování, a došlo by tedy k zacyklení programu.
+            Abychom tomuto zabránili, je nutné tu část kódu, která smí být spuštěna jen z hlavního vlákna, vložit do podmínky\\
+            \code{if \_\_name\_\_ == "\_\_main\_\_":}
+
+        \item
+            Ve Windows ve vývojovém prostředí IDLE nefunguje funkce \code{print}, pokud ji používáme z jiného než z hlavního vlákna (nic nevypíše).
+            V jiných prostředích či operačních systémech by to mělo fungovat.
+    \end{itemize}
+
+    Efekty paralelizace lze vidět pomocí funkce \code{plot_integrate_1D_duration}.
+    Tato funkce spouští postupně paralelní výpočet pro různé počty navzájem běžících paralelních vláken,
+    a výsledky zobrazí do grafů, které jsou vykresleny v obrázku~\ref{fig:Duration}.  
+    Pozorujeme, že nejlepší přesnosti (nejvyššího poštu Monte-Carlo bodů $pN$) za jednotku času dosáhneme, pokud vytížíme všechna dostupná jádra. 
+
+    \newpage
+    \subsection{Domácí úkol na 4.5.2021}
+    \begin{task}
+        Prostudujte si vzorový příklad v souboru \ghfile{python/montecarlo/}{multiprocessing.py} a na jeho základě vytvořte kód, který bude počítat hodnotu integrálu $I_{3}$~\eqref{eq:I3} ve více vláknech.
+        Zjistěte si, kolik výpočetních jader má procesor na vašem počítači, a spusťe výpočet tak, aby zaměstnal všechna jádra.
+    \end{task}
+
+    \begin{task}
+        Časově náročný, a přitom jednoduše paralelizovatelný je výpočet součinu dvou matic.
+        Jelikož metoda \code{starmap} pracuje jednoduše jen s vektory, naprogramujte paralelní výpočet součinu matice a vektoru (výsledkem je vektor).
+    \end{task}
+
+
 \begin{thebibliography}{99}
     \bibitem{Muller1959} M.E. Muller, {\it A note on a method for generating points uniformly on n-dimensional spheres},
     Communications of the Asociation for Computing Machinery {\bf 2}, 19 (1959).
