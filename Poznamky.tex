@@ -2533,7 +2533,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     Ve více rozměrech bývá navíc integrační oblast složitější, k čemuž lze využít metodu hit-and-miss.
     To se nejlépe ukáže na příkladu.
 
-    \begin{task}
+    \begin{task}\label{task:I3}
         Spočítejte čtyřrozměrný integrál
         \begin{equation}
             I_{3}\equiv\int_{\Omega}\sin{\sqrt{\ln\left(x+y+z+w+2\right)}}\,\d x\,\d y\,\d z\,\d w,
@@ -2624,7 +2624,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
 
     Paralelizace na více výpočetních jádrech je v Pythonu implementována v knihovně \file{\href{https://docs.python.org/3/library/multiprocessing.html}{mul\-ti\-pro\-ces\-sing}}.
     Zde si ukážeme využití objektů \code{Pool}, \code{Process} a \code{Value} z této knihovny na příkladu paralelní integrace metodou. Monte-Carlo.
-    Vzorový kód je naprogramován v souboru \ghfile{python/basics/}{multiprocessing.py}.
+    Vzorový kód je naprogramován v souboru \ghfile{python/montecarlo/}{parallelization.py}.
     \begin{itemize}
         \item \code{integrate_1D_Pool}:
             Nejjednodušší způsob paralelizace je pomocí objektu \code{Pool}. 
@@ -2703,7 +2703,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     \begin{itemize}
         \item
             Python postupuje tak, že v jednotlivých procesech spouští celé moduly obsahující spouštěnou funkci.
-            V našem případě je v každém procesu spuštěn celý modul \ghfile{python/montecarlo/}{multiprocessing.py}.
+            V našem případě je v každém procesu spuštěn celý modul \ghfile{python/montecarlo/}{parallelization.py}.
             Tento modul obsahuje globální část kódu, která v našem případě spouští funkce, které spouštějí víceprocesorové zpracování, a došlo by tedy k zacyklení programu.
             Abychom tomuto zabránili, je nutné tu část kódu, která smí být spuštěna jen z hlavního vlákna, vložit do podmínky\\
             \code{if \_\_name\_\_ == "\_\_main\_\_":}
@@ -2721,7 +2721,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     \newpage
     \subsection{Domácí úkol na 4.5.2021}
     \begin{task}
-        Prostudujte si vzorový příklad v souboru \ghfile{python/montecarlo/}{multiprocessing.py} a na jeho základě vytvořte kód, který bude počítat hodnotu integrálu $I_{3}$~\eqref{eq:I3} ve více vláknech.
+        Prostudujte si vzorový příklad v souboru \ghfile{python/montecarlo/}{parallelization.py} a na jeho základě vytvořte kód, který bude počítat ve více vláknech hodnotu integrálu $I_{3}$~\eqref{eq:I3} z úkolu~\ref{task:I3}.
         Zjistěte si, kolik výpočetních jader má procesor na vašem počítači, a spusťe výpočet tak, aby zaměstnal všechna jádra.
     \end{task}
 
