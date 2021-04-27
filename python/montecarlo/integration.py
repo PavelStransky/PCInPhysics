@@ -11,7 +11,7 @@ def f1(x):
 
 
 def f2(x):
-    return np.sin(x)**2 / np.sqrt(1 + x**4)
+    return np.sin(x**2) / np.sqrt(1 + x**4)
 
 
 def integrate_1D(n, function, a, b):
@@ -44,8 +44,8 @@ def integral3(n):
             hits += 1
             result += np.sin(np.sqrt(np.log(x + y + z + w + 2)))
 
-    result = result / hits
     volume = hits / n
+    result = result / hits * volume
 
     print(f"I3 = {result} (number of hits: {hits}, volume of the integration region: {volume})")
 
@@ -63,20 +63,22 @@ def f3(X):
     return np.sin(np.sqrt(np.log(x + y + z + w + 2)))
 
 
-def integral_ND(n, function, is_inside_region, dimension):
-    """ Monte-Carlo integration of a general-dimensional function. """
+def integral_ND(n, function, is_inside_region, dimension, box_min=0, box_max=1):
+    """ Monte-Carlo integration of a general-dimensional function.
+        box_min and box_max specify the position of the hypercube from which the program draws the random numbers
+    """
     hits = 0
     result = 0
 
     for _ in range(n):
-        X = generator.random(dimension)
+        X = generator.uniform(box_min, box_max, dimension)
         
         if is_inside_region(X):
             hits += 1
             result += function(X)
 
-    result = result / hits
     volume = hits / n
+    result = result / hits * volume
 
     print(f"I3 = {result} (number of hits: {hits}, volume of the integration region: {volume})")
 
