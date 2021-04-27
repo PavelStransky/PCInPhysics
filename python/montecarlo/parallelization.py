@@ -6,7 +6,6 @@ import time
 from multiprocessing import Pool, Process, Value
 from integration import *
 
-generator = np.random.default_rng()
 
 def integrate_1D_Pool(p, n, function, a, b):
     """ Using Pool and map to perform the Monte-Carlo integration """
@@ -65,6 +64,7 @@ def integrate_1D_Process(p, n, function, a, b):
 
     results = [result.value for result in results]
     return sum(results)
+
 
 if __name__ == "__main__":
     print(integrate_1D_Pool(8, 100000, f1, 0, 2 * np.pi))
