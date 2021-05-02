@@ -63,7 +63,7 @@ def integrate_1D_Process(p, n, function, a, b):
         process.join()
 
     results = [result.value for result in results]
-    return sum(results)
+    return sum(results) / len(results)
 
 
 if __name__ == "__main__":
