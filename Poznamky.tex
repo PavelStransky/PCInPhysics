@@ -2954,6 +2954,71 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         \end{itemize}    
 
 
+\section{Symbolické výpočty}
+    Symbolické výpočty znamenají výpočty s celými algebraickými výrazy: jejich upravování, integrování, derivování a podobně.\footnote{
+        Programy pro symbolické výpočty se také nazývají \emph{Computer Algebra Systems}, CAS.
+    }
+    V Pythonu sice existuje knihovna \href{https://www.sympy.org}{sympy}\footnote{
+        Tuto knihovnu začal vyvíjet v roce 2005 tehdy ještě student fyziky MFF UK Ondřej Čertík.
+    } 
+    pro symbolické manipulace, avšak pro rozsáhlejší výpočty jsou optimalizovanější a jednodušší k použití komerční produkty \href{https://www.wolfram.com/mathematica/}{Mathematica} či \href{https://www.maplesoft.com/products/Maple/}{Maple}.
+    My se v tomto cvičení seznámíme s nejjedoduššími základy práce v produktu Mathematica.\footnote{
+        Pěkné srovnání funkcionalit a syntaxe knihovny \file{sympy} a programu Mathematica najdete na \url{https://github.com/sympy/sympy/wiki/SymPy-vs.-Mathematica}
+    }
+
+    \subsection{Mathematica}
+    Program Wolfram Mathematica má za sebou již více než 30 let vývoje. 
+    Lze ho použít jako rozšířenou kalkulačku pro jednoduché výpočty a vykreslování grafů,
+    ale jeho skutečná síla je v efektivním skloubení možnosti práce se symbolickými výrazy spolu s numerickými výpočty v libovolné přesnosti.
+    Mathematica obsahuje nepřeberné množství funkcí, které zahrnují velkou část klasické i moderní matematiky (řešení algebraických i diferenciálních rovnic, teorie čísel, neuronové sítě, strojové učení, statistické nástroje, pokročilé metody vizualizace, interaktivní grafy, analýza časových řad a další).
+    Umožňuje psát vlastní rozsáhlé programy v optimalizovaném (i když co se syntaxe týče trochu neobvyklém) programovacím jazyku.
+    Všechny výpočty lze spouštět buď lokálně, nebo na velkých výpočetních clusterech.
+
+    Mathematica je sice placený produkt, avšak MFF UK má zakoupenou hromadnou licenci, kterou může používat každý náš student nebo zaměstnanec (\href{https://www.karlin.mff.cuni.cz/cs/node/14}{návod na instalaci}).
+    Existuje verze zdarma pro počítače Raspberry Pi s operačním systémem Raspbian.
+
+    V \href{https://github.com/PavelStransky/PCInPhysics}{repozitáři} naleznete soubor \ghfile{mathematica/}{mathematica.nb},
+    který obsahuje jednoduchý úvod se základními funkcemi programu Mathematica.
+    Projděte si ho příkaz po příkazu, pomůže vám naučit se syntaxi a zároveň vás seznámí s nejdůležitějšími a nejpoužívanějšími funkcemi a příkazy.
+    Pro začátek je důležité vědět, že příkazy se spustí klávesovou kombinací \code{CTRL + Enter}
+    (je to stejné jako v pythonovském programovacím prostředí Jupyter).
+    Na příkladu tohoto vzorového souboru vypracujte následující úlohy.
+
+    \begin{task}
+        Spočítejte limitu
+        \begin{equation}
+            \lim_{x\rightarrow a}\left(\frac{\sin{x}}{\sin{a}}\right)^{\frac{1}{x-a}}.
+        \end{equation}
+    \end{task}
+
+    \begin{task}
+        Nalezněte primitivní funkci
+        \begin{equation}
+            F(x)=\int\sqrt{1+x^4}\,\d x
+        \end{equation}
+        a vykreslete její graf pro $x\in\langle0,2\rangle$.
+    \end{task}
+
+    \begin{task}
+        Vyřešte diferenciální rovnici pro matematické kyvadlo s velkou výchylkou
+        \begin{equation}
+            y''(t)=-\sin y(t)
+        \end{equation}
+        s počátečními podmínkami
+        \begin{equation}
+            y(0)=0,
+            \qquad
+            y'(0)=1
+        \end{equation}
+        a srovnejte v grafu s řešením linearizované rovnice
+        \begin{equation}
+            y''(t)=-y(t).
+        \end{equation}
+    \end{task}
+
+    Pokud se chcete s možnostmi programu Mathematica seznámit hlouběji a dozvědět se více o pokročilých možnostech programování, které nabízí, můžete navštěvovat dedikovanou přednášku Dr. Tomáše Ledvinky \href{https://is.cuni.cz/studium/predmety/index.php?tid=&do=predmet&kod=NTMF048}{Použití systémů počítačové algebry ve fyzice}.
+
+
 \begin{thebibliography}{99}
     \bibitem{Muller1959} M.E. Muller, {\it A note on a method for generating points uniformly on n-dimensional spheres},
     Communications of the Asociation for Computing Machinery {\bf 2}, 19 (1959).
