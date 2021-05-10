@@ -47,7 +47,7 @@ def integral3(n):
     volume = hits / n
     result = result / hits * volume
 
-    print(f"I3 = {result} (number of hits: {hits}, volume of the integration region: {volume})")
+    #print(f"I3 = {result} (number of hits: {hits}, volume of the integration region: {volume})")
 
     return result
 
