@@ -855,7 +855,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Použití \emph{docstringu} usnadní i tvorbu a správu doprovodné dokumentace k celému projektu.
     Existují například nástroje, které vám z těchto komentářů vytvoří strukturované webové stránky.
 
-\subsubsection{Řady (knihovna numpy)}
+\subsubsection{Řady, vektory, matice (knihovna numpy)}
 \label{sec:numpy}
     Jak bylo zmíněno v předchozí sekci, definice jazyka Python neobsahuje typ \emph{řada}, tj. jedno či vícerozměrně pole hodnot stejného typu.
 
@@ -3152,7 +3152,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             Imaginární jednotka v Pythonu je \code{1j}, komplexní číslo $3+4\im$ se tedy zapíše ve tvaru \code{3 + 4j}. 
         \end{task}
 
-        \begin{task}
+        \begin{task}\label{task:3f}
             Vytvořte časovou řadu délky $N=2000$ se vzorkovací frekvencí $f_{s}=2000\,\text{Hz}$ (signál tedy bude trvat přesně $1\,\text{s}$) danou součtem tří harmonických funkcí:
             \begin{equation}
                 h_{j}=\sum_{n=1}^{3}a_{n}\sin\left(2\pi F_{n} t_{j}\right),
@@ -3205,7 +3205,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         V Pythonu naleznete funkci počítající rychlou Fourierovu transformaci ze zadané časové řady v balíku \file{numpy}. Jmenuje se \href{https://numpy.org/doc/stable/reference/generated/numpy.fft.fft.html}{fft.fft}.
     
         \begin{task}
-            Spočítejte Fourierovu transformaci pomocí funkce naprogramované v úkolu~\ref{task:FT} a pomocí knihovní funkce \code{numpy.fft.fft} pro jednu z hlásek z úkolu~\ref{task:Vowels}. 
+            Spočítejte Fourierovu transformaci (i) pomocí funkce naprogramované v úkolu~\ref{task:FT} a (ii) pomocí knihovní funkce \code{numpy.fft.fft} buď pro signál z úkolu~\ref{task:3f}, nebo pro jednu z hlásek z úkolu~\ref{task:Vowels}.
             V grafu porovnejte získané amplitudy.
             Měly by být stejné.
         \end{task}
