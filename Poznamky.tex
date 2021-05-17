@@ -900,6 +900,40 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
             \end{itemize}            
     \end{itemize}
 
+\subsubsection{Práce se zvukem}
+\label{sec:Zvuk}
+    V Pythonu existuje velké množství knihoven, které umějí pracovat se zvukem.
+    Pro naše účely postačí jednoduchá knihovna \href{https://python-sounddevice.readthedocs.io}{sounddevice}.\footnote{
+        Další knihovny pro přehrávání a nahrávání zvuku jsou uvedeny na \url{https://realpython.com/playing-and-recording-sound-python}.
+    }
+    Pokud ji nemáte nainstalovanou, doinstalujete ji příkazem
+    \begin{align*}
+        &\texttt{python -m pip install sounddevice}
+        &&\text{Windows}\\
+        &\texttt{pip install sounddevice}
+        &&\text{Linux, Mac}
+    \end{align*}
+    Z této knihovny využijeme následující funkce:
+    \begin{itemize}
+        \item \code{play(data, fs)} 
+            přehraje časovou řadu uloženou v poli \code{data} při vzorkovací frekvenci \code{fs}.
+            Jsou-li elementy přehrávané řady typu \code{float}, jejich hodnoty musejí ležet v rozmezí $h_{j}\in\langle-1,1\rangle$, jinak bude zvuk přebuzený a zkreslený.
+            Vzorkovací frekvence zvukových souborů bývají nejčastěji násobky či podíly 44100 Hz nebo 48000 Hz.\footnote{
+                44100 Hz je vzorkovací frekvence používaná na CD, 48000 Hz na DVD.
+            }
+                            
+        \item 
+            Přehrávání probíhá asynchronně. 
+            Chceme-li počkat, než bude přehrávání dokončeno, použijeme funkci \code{wait()}. 
+
+        \item \code{stop()} okamžitě zastaví přehrávání.
+        
+        \item \code{rec(numsamples, samplerate=fs, channels=2)} nahraje časovou řadu s \code{numsamples} hodnotami. \code{channels=1} pro mono signál, \code{channels=2} pro stereo signál.
+    \end{itemize}
+    Jelikož zde budeme pracovat se zvukovými soubory typu WAV, budeme potřebovat ještě knihovnu \href{https://pysoundfile.readthedocs.io}{soundfile} k jejich načtení.
+
+    V \href{https://github.com/PavelStransky/PCInPhysics}{repozitáři} je ukázkový soubor \ghfile{python/basics/}{sound.py}, který načte zadaný WAV soubor a přehraje ho. 
+
 
 \section{Obyčejné diferenciální rovnice 1. řádu}
 \label{sec:ODR1}
@@ -3018,6 +3052,163 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
 
     Pokud se chcete s možnostmi programu Mathematica seznámit hlouběji a dozvědět se více o pokročilých možnostech programování, které nabízí, můžete navštěvovat dedikovanou přednášku Dr. Tomáše Ledvinky \href{https://is.cuni.cz/studium/predmety/index.php?tid=&do=predmet&kod=NTMF048}{Použití systémů počítačové algebry ve fyzice}.
 
+    \section{Fourierova transformace}
+    Fourierova transformace je jednou z nejčastěji používaných metod ke zpracování signálu.
+    Spočívá v převodu časově závislé funkce $h(t)$ na funkci spektra harmonických frekvencí $H(\omega)$.
+    S Fourierovou transformací analytických funkcí se seznámíte v matematické analýze a v teorii distribucí. 
+    My se zde budeme zabývat diskrétní verzí této transformace, která se používá pro numerické zpracování naměřených signálů.
+    
+    \subsection{Diskrétní Fourierova transformace}
+        Transformace a případná zpětná transformace $h_{j}\leftrightarrow H_{k}$ se provádějí předpisem
+        \begin{align}
+            H_{k}&=\frac{1}{N}\sum_{j=0}^{N-1}h_{j}\e^{-\frac{2\pi\im jk}{N}},\nonumber\\
+            h_{j}&=\sum_{k=0}^{N-1}H_{k}\e^{+\frac{2\pi\im jk}{N}},
+            \label{eq:FT}
+        \end{align}
+        kde
+        \begin{itemize}
+            \item $h_{j}$, $j=0,1,\dotsc,N-1$ je \emph{vstupní signál (časová řada)} délky $N$ naměřený v ekvidistantních okamžicích odpovídajících časům 
+            \begin{equation}
+                t_{j}=\frac{j}{f_{s}}.
+                \label{eq:FTtime}
+            \end{equation}
+            \item $f_{s}$ je \emph{vzorkovací frekvence} a odpovídá počtu měření za sekundu.
+            \item $H_{k}$, $k=-\frac{N-1}{2},\dotsc,0,\frac{N-1}{2}$ (pro $N$ liché) je spektrální rozklad vstupního signálu, kde 
+            \begin{equation}
+                f_{k}=\abs{k}\frac{f_{s}}{N-1}
+                \label{eq:FTfrequency}
+            \end{equation} je frekvence odpovídajícího příspěvku.
+            Níže ukážeme, že k jedné frekvenci existují dvě komponenty $H_{k}$ a $H_{-k}$, které se liší jen fází.
+            Jelikož díky periodičnosti platí $H_{k}=H_{k+N}$, je při programování praktičtější uvažovat index $k=0,\dotsc,N-1$.
+            Pak $H_{k}$ a $H_{N-k}$ odpovídají stejné frekvenci.
+            \item Nejvyšší frekvence, kterou jsme schopni ze vstupního signálu určit, nezávisí na délce signálu $N$ a je určena pouze vzorkovací frekvencí: $f_{\text{max}}=f_{s}/2$. Nazývá se \emph{Nyquistova frekvence}.
+            \item Nejnižší frekvence, kterou ze signálu vyextrahujeme, je $f_{\text{min}}=\frac{f_{s}}{N-1}$.
+                Pro signály velmi nízkých frekvencí potřebujeme tedy dlouhé vstupní časové řady. 
+            \item Frekvence $f_{0}$ odpovídá tzv. \emph{stejnosměrnému příspěvku} a odpovídající komponenta $H_{0}$ udává střední hodnotu signálu.
+        \end{itemize}
+        Přímá a zpětná transformace se liší jen znaménkem a normalizačním faktorem $1/N$, jehož umístění do zpětné Fourierovy transformace je věcí konvence.\footnote{
+            Jiná často používaná konvence je tento faktor rozdělit symetricky mezi obě transformace: pak bude před oběma sumami ve vztazích~\eqref{eq:FT} stát $\frac{1}{\sqrt{N}}$ a Fourierova transformace bude unitární transformací mezi vektory $\vector{h}=(h_{j})$ a $\vector{H}=(H_{k})$ (unitární transformace zachovává délku komplexního vektoru).
+        }
+
+        \begin{voluntary}
+            Dokažte, že provedením Fourierovy transformace a zpětné Fourierovy transformace dostanete původní časovou řadu.
+        \end{voluntary}
+
+        Z předpisu~\eqref{eq:FT} vyplývá, že výsledek Fourierovy transformace je obecně sekvence \emph{komplexních} čísel.
+        Rozepsáním komplexní exponenciály dostaneme
+        \begin{align}
+            H_{k}^{R}&=\frac{1}{N}\sum_{j=0}^{N-1}\left(h_{j}^{R}\cos\frac{2\pi jk}{N}+h_{j}^{I}\sin\frac{2\pi jk}{N}\right),\nonumber\\
+            H_{k}^{I}&=\frac{\im}{N}\sum_{j=0}^{N-1}\left(-h_{j}\sin\frac{2\pi jk}{N}+h_{j}^{I}\cos\frac{2\pi jk}{N}\right),
+        \end{align}
+        kde
+        \begin{align}
+            h_{j}&=h_{j}^{R}+\im h_{j}^{I},\nonumber\\
+            H_{k}&=H_{k}^{R}+\im H_{k}^{I}
+        \end{align}
+        je rozklad na reálnou a imaginární část.
+        Analogický vztah bychom získali pro zpětnou Fourierovu transformaci.
+            
+        Za předpokladu, že vstupní časová řada $h_{j}$ je reálná (obecně reálná být nemusí, ale v praxi obvykle bývá), můžeme pro reálnou a imaginární složku spektrálního rozkladu $H_{k}$ psát
+        \begin{equation}
+            H_{k}=\frac{1}{N}\sum_{j=0}^{N-1}h_{j}\cos\frac{2\pi jk}{N}-\frac{\im}{N}\sum_{j=0}^{N-1}h_{j}\sin\frac{2\pi jk}{N}.
+        \end{equation}
+        Ze sudosti cosinu a lichosti sinu plyne, že $H_{k}^{R}=H_{-k}^{R}$ a $H_{k}^{I}=-H_{-k}^{I}$.
+
+        Komponenty $H_{k}$ lze také rozepsat pomocí jiných dvou reálných čísel: velikosti $\abs{H_{k}}$ a fáze $\phi_{k}$,
+        \begin{align}
+            H_{k}&=\abs{H_{k}}\e^{i\phi_{k}},\\
+            \abs{H_{k}}&=\sqrt{\left(H_{k}^{R}\right)^{2}+\left(H_{k}^{I}\right)^{2}},\nonumber\\
+            \phi_{k}&=\arctan\frac{H_{k}^{I}}{H_{k}^{R}}.
+        \end{align}
+        V praxi je nejdůležitější údaj velikost příspěvku $k$-té frekvence 
+        \begin{equation}
+            A_{k}=\abs{H_{k}}+\abs{H_{-k}}=2\abs{H_{k}},\qquad k=1,\dotsc,\frac{N-1}{2},
+        \end{equation}
+        který udává amplitudu odpovídající harmonické vlny.
+        Místo amplitudy se také často používá kvadrát
+        \begin{equation}
+            S_{k}\equiv\abs{A_{k}}^{2},
+        \end{equation}
+        který se nazývá \emph{výkonové spektrum} a udává, jak již název napovídá, výkon, který do signálu vnáší $k$-tá harmonická vlna.
+
+        Fourierova transformace tedy vyjadřuje signál jako součet prostých harmonických vln (sinů a cosinů) s frekvencemi $f_{k}$ a amplitudami $A_{k}$.
+        Hudební terminologií se jedná o rozklad souzvuku několika tónů na jednotlivé jednoduché tóny.
+
+    \subsection{Použití Fourierovy transformace}
+        \begin{itemize}
+            \item Získání dominantních frekvencí neznámého signálu (například délky slunečního cyklu, vlastních frekvencí kmitů složitého objektu atd.).
+            \item Rozpoznávání hlasu.
+            \item Filtrování signálu, odstranění šumu (signál očekáváme na určitých frekvencích, šumu se zbavíme, pokud komponenty $H_{k}$ od ostatních frekvencí vynulujeme).
+            \item Komprese signálu: uchováme jen složky signálu s několika největšími příspěvky $H_{k}$.
+                Toho se využívá v kompresi zvukového signálu (například MP3) i obrazového signálu (formát JPEG). 
+        \end{itemize}
+
+        My si vyzkoušíme Fourierovu transformaci na zvukovém souboru.
+        Práce se zvukovými soubory v Pythonu je popsána v sekci~\ref{sec:Zvuk}
+
+        \begin{task}\label{task:FT}
+            Naprogramujte Fourierovu transformaci a zpětnou Fourierovu transformaci podle vzta\-hů~\eqref{eq:FT}.
+            Můžete počítat buď nezávisle reálnou a imaginární část, nebo využít toho, že funkce knihovny \file{numpy} rozumějí komplexním číslům.
+            Imaginární jednotka v Pythonu je \code{1j}, komplexní číslo $3+4\im$ se tedy zapíše ve tvaru \code{3 + 4j}. 
+        \end{task}
+
+        \begin{task}
+            Vytvořte časovou řadu délky $N=2000$ se vzorkovací frekvencí $f_{s}=2000\,\text{Hz}$ (signál tedy bude trvat přesně $1\,\text{s}$) danou součtem tří harmonických funkcí:
+            \begin{equation}
+                h_{j}=\sum_{n=1}^{3}a_{n}\sin\left(2\pi F_{n} t_{j}\right),
+                \label{eq:FTTest}
+            \end{equation}
+            kde
+            \begin{align}
+                a_{1}&=0.1, & a_{2}&=0.2 & a_{3}&=0.3,\nonumber\\
+                F_{1}&=440\,\text{Hz} & F_{2}&=\frac{5}{4} F_{1}=550\,\text{Hz} &F_{3}&=\frac{3}{2}F_{1}=660\,\text{Hz}\nonumber
+            \end{align}
+            a časy $t_{j}$ jsou dány vztahem~\eqref{eq:FTtime}.
+            Přehrajte si ji pomocí funkcí knihovny \file{sounddevice}.\footnote{
+                Uvedené frekvence odpovídají po řadě tónům $\text{a}^{1}$, $\text{c\#}^{2}$, $\text{e}^{2}$ v přirozeném ladění.
+                Zaznít by tedy měl durový kvintakord.
+            }
+            Spočítejte Fourierovu transformaci a vykreslete do grafu amplitudy $A_{k}$ na frekvencích $f_{k}$.
+            Přesvědčte se, že graf bude mít tři vrcholy s výškami odpovídajícími zadaným amplitudám $a_{n}$ a středy v místech zadaných frekvencí $F_{n}$.
+
+            Zopakujte výpočet pro $N=1000$ a $f_{s}=1000\,\text{Hz}$. V tomto případě jsou již frekvence $F_{2},F_{3}$ větší než Nyquistova frekvence $f_{\text{max}}$.
+            Zvuk bude zkreslený a vrcholy ve frekvenčním diagramu po provedení Fourierovy transformace se posunou.  
+        \end{task}
+
+        \begin{task}\label{task:Vowels}
+            Ve složce \href{https://github.com/PavelStransky/PCInPhysics2021/tree/main/sounds}{sounds} v repozitáři jsou soubory \ghfile{sounds/}{a.wav}, \ghfile{sounds/}{e.wav}, \ghfile{sounds/}{i.wav}, \ghfile{sounds/}{o.wav}, \ghfile{sounds/}{u.wav}, 
+            ve kterých jsou nahrané krátké vzorky samohlásek.\footnote{
+                Nahrávky jsou staženy z \url{https://homepages.wmich.edu/~hillenbr/voweldata.html}.
+            }
+            Vzorkovací frekvence nahrávek je $f_{s}=16000\,\text{Hz}$, nahrávky mají délku okolo $N\approx8000$.
+            Soubory načtěte pomocí knihovny \file{soundfile}, přehrajte si je, vyřízněte z nich kvůli rychlosti okno délky $N=2000$ (vezměte například prostřední část příkazem \code{sound[3000:5000]}), vypočítejte na něm Fourierovu transformaci a zakreslete získané amplitudy $A_{k}$ do jednoho grafu pro všech pět samohlásek.
+            Uvidíte, že každá samohláska má zcela jinak vysoké dominantní frekvence.
+            Této skutečnosti se využívá pro strojovou analýzu hlasu.\footnote{
+                Pomocí funkce \code{rec} si můžete nahrát a zanalyzovat vlastní hlas.
+            }
+        \end{task}
+
+        \begin{task}
+            Ve složce \href{https://github.com/PavelStransky/PCInPhysics2021/tree/main/sounds}{sounds} v repozitáři je soubor \ghfile{sounds/}{BlackHolesCollision.wav}, ve kterém je nasimulovaný průběh gravitačních vln těsně před srážkou dvou černých děr.\footnote{
+                Soubor pochází z \url{http://web.mit.edu/sahughes/www/sounds.html}.
+            }
+            Načtěte tento soubor, přehrajte si ho (uslyšíte charakteristický tzv. \emph{chirp sound}).
+            Pozor, soubor má dva kanály, pro následující analýzu vyberte pouze jeden z nich příkazem \code{sound[:,0]}.
+            Rozdělte časovou řadu na časová okna délky $N_{W}=2000$ bodů a pro každé okno spočítejte Fourierovu transformaci a amplitudy $A_{k}$.
+            Následně vykreslete konturový graf (spektrogram), kde na ose $x$ bude čas (začátku nebo středu použitého časového okna), na ose $y$ frekvence a na ose $z$ (barevný kód) amplituda.
+            Frekvence omezte pomocí příkazu \code{plt.ylim(0, 500)} na hodnoty $\langle 0\,\text{Hz},500\,\text{Hz}\rangle$. 
+        \end{task}
+
+    \subsection{Rychlá Fourierova transformace}
+        Fourierova transformace naprogramovaná pomocí definičních vztahů~\eqref{eq:FT} má časovou složitost $\mathcal{O}(N^{2})$, pro delší časové řady tedy doba výpočtu prudce roste (již pro $N=10000$ si počkáte několik minut).
+        Existuje mnohem efektivnější algoritmus s časovou složitostí $\mathcal{O}(N\log{N})$.
+        V Pythonu naleznete funkci počítající rychlou Fourierovu transformaci ze zadané časové řady v balíku \file{numpy}. Jmenuje se \href{https://numpy.org/doc/stable/reference/generated/numpy.fft.fft.html}{fft.fft}.
+    
+        \begin{task}
+            Spočítejte Fourierovu transformaci pomocí funkce naprogramované v úkolu~\ref{task:FT} a pomocí knihovní funkce \code{numpy.fft.fft} pro jednu z hlásek z úkolu~\ref{task:Vowels}. 
+            V grafu porovnejte získané amplitudy.
+            Měly by být stejné.
+        \end{task}
 
 \begin{thebibliography}{99}
     \bibitem{Muller1959} M.E. Muller, {\it A note on a method for generating points uniformly on n-dimensional spheres},
