@@ -3050,6 +3050,10 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         \end{equation}
     \end{task}
 
+    \begin{solution}
+        Řešení všech tří úloh je v souboru \ghfile{mathematica/}{solution.nb}.
+    \end{solution}
+
     Pokud se chcete s možnostmi programu Mathematica seznámit hlouběji a dozvědět se více o pokročilých možnostech programování, které nabízí, můžete navštěvovat dedikovanou přednášku Dr. Tomáše Ledvinky \href{https://is.cuni.cz/studium/predmety/index.php?tid=&do=predmet&kod=NTMF048}{Použití systémů počítačové algebry ve fyzice}.
 
     \section{Fourierova transformace}
@@ -3094,11 +3098,36 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             Dokažte, že provedením Fourierovy transformace a zpětné Fourierovy transformace dostanete původní časovou řadu.
         \end{voluntary}
 
+        \begin{solution}
+            Důkaz se provede přímočarým dosazením $H_{k}$ do zpětné Fourierovy transformace:
+            \begin{align}
+                \sum_{k=0}^{N-1}H_{k}\e^{\frac{2\pi\im j k}{N}}
+                    &=\sum_{k=0}^{N-1}\left[\frac{1}{N}\sum_{l=0}^{N-1}h_{l}\e^{-\frac{2\pi\im l k}{N}}\right]H_{k}\e^{\frac{2\pi\im j k}{N}}\nonumber\\
+                    &=\frac{1}{N}\sum_{kl}h_{l}\e^{\frac{2\pi\im k}{N}(j-l)}
+                     =\frac{1}{N}\sum_{kl}h_{l}\left[\e^{\frac{2\pi\im}{N}(j-l)}\right]^{k}
+                    &&\text{součet geometrické řady}\nonumber\\
+                    &=\frac{1}{N}\sum_{l}h_{l}\frac{1-\left[\e^{\frac{2\pi\im}{N}(j-l)}\right]^{N}}{1-\e^{\frac{2\pi\im}{N}(j-l)}}
+                    =\frac{1}{N}\sum_{l}h_{l}\frac{1-\e^{2\pi\im(j-l)}}{1-\e^{\frac{2\pi\im}{N}(j-l)}}\nonumber\\
+                    &=\frac{1}{N}\sum_{l}h_{l}N\delta_{jl}=h_{j}
+            \end{align}
+            ($\delta_{jl}$ je Kroneckerovo delta), přičemž při úpravě na posledním řádku se využilo. toho, že
+            \begin{align}
+                &\e^{2\pi\im(j-l)}=1
+                \quad\text{a zároveň}
+                \quad\e^{\frac{2\pi\im}{N}(j-l)}\neq1
+                &\text{pro}
+                \quad j\neq l\nonumber\\
+                &\lim_{x\rightarrow0}\frac{1-\e^{2\pi\im x}}{1-\e^{\frac{2\pi\im}{N}x}}=N
+                &\text{pro}
+                \quad j=l.
+            \end{align}
+        \end{solution}
+
         Z předpisu~\eqref{eq:FT} vyplývá, že výsledek Fourierovy transformace je obecně sekvence \emph{komplexních} čísel.
         Rozepsáním komplexní exponenciály dostaneme
         \begin{align}
             H_{k}^{R}&=\frac{1}{N}\sum_{j=0}^{N-1}\left(h_{j}^{R}\cos\frac{2\pi jk}{N}+h_{j}^{I}\sin\frac{2\pi jk}{N}\right),\nonumber\\
-            H_{k}^{I}&=\frac{\im}{N}\sum_{j=0}^{N-1}\left(-h_{j}\sin\frac{2\pi jk}{N}+h_{j}^{I}\cos\frac{2\pi jk}{N}\right),
+            H_{k}^{I}&=\frac{\im}{N}\sum_{j=0}^{N-1}\left(-h_{j}^{R}\sin\frac{2\pi jk}{N}+h_{j}^{I}\cos\frac{2\pi jk}{N}\right),
         \end{align}
         kde
         \begin{align}
@@ -3152,6 +3181,12 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             Imaginární jednotka v Pythonu je \code{1j}, komplexní číslo $3+4\im$ se tedy zapíše ve tvaru \code{3 + 4j}. 
         \end{task}
 
+        \begin{solution}
+            Vzorové řešení je v souboru \ghfile{python/fourier/}{transform.py} a umí spočítat Fourierovu transformaci pro reálnou i komplexní časovou řadu.
+            Jelikož samotné provádění cyklů v Pythonu zabere obrovské množství výpočetního času, je výhodné se cyklům vyhnout.
+            Jakékoliv zrychlení oceníme zejména v případě, kdy budeme chtít počítat transformaci z delší časové řady (již pro $N=1000$ může výpočet trvat několik sekund).
+        \end{solution}
+
         \begin{task}\label{task:3f}
             Vytvořte časovou řadu délky $N=2000$ se vzorkovací frekvencí $f_{s}=2000\,\text{Hz}$ (signál tedy bude trvat přesně $1\,\text{s}$) danou součtem tří harmonických funkcí:
             \begin{equation}
@@ -3175,6 +3210,40 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             Zvuk bude zkreslený a vrcholy ve frekvenčním diagramu po provedení Fourierovy transformace se posunou.  
         \end{task}
 
+        \begin{solution}
+            \begin{figure}[!htbp]
+                \begin{subfigure}{0.49\linewidth}
+                    \centering\epsfig{file=FT_test_2000.eps,width=\linewidth}
+                \end{subfigure}
+                \hfill
+                \begin{subfigure}{0.49\linewidth}
+                    \centering\epsfig{file=FT_test_1000.eps,width=\linewidth}
+                \end{subfigure}
+                \caption{
+                    \protect\small
+                    Fourierovo spektrum pro testovací signál daný součtem tří harmonických funkcí~\eqref{eq:FTTest} a pro dvě různé vzorkovací frekvence $f_{s}$.
+                    Pro $f_{s}$ jsou již některé komponenty nad Nyquistovou frekvencí a projeví se jako \uv{falešné} frekvence $F'=f_{\max}-F$.
+                }	
+                \label{fig:FTTest}
+            \end{figure}    
+
+            Vzorové řešení je v souboru \ghfile{python/fourier/}{analysis.py} ve funkci \code{test_signal}.
+            Funkce vytvoří zadanou časovou řadu, přehraje ji a vykreslí graf s Fourierovými komponentami, který je pro $f_{s}=2000$~Hz a $f_{s}=1000$~Hz zakreslen v obrázku~\ref{fig:FTTest}.
+            Pro $f_{s}=1000$~Hz jsou již frekvence vstupního signálu vyšší než Nyquistova frekvence $f_\text{max}=f_{s}/2=500$~Hz.
+            Ve spektru vidíme vrcholy na frekvencích
+            \begin{equation} 
+                F'_{2,3}=f_\text{max}-F_{2,3}=450\,\text{Hz}, 340\,\text{Hz}.
+            \end{equation}
+            Zvuk je při nevhodně malé vzorkovací frekvenci zkreslený.
+            Abychom analýzu signálu neměli ovlivněnou těmito \uv{falešnými} frekvencemi, je nutné před digitalizací signálu použít filtr, který frekvence ležící nad Nyquistovou frekvencí odstraní.
+
+            V případě zvukového signálu se často používá vzorkovací frekvence $f_{s}=44100$~Hz.
+            Přestože odpovídající Nyquistova frekvence $f_{\max}=22050$~Hz leží v ultrazvuku za oblastí slyšitelnosti, neodfiltrované zvuky s frekvencí vyšší než $f_{\text{max}}$ se klidně mohou projevit jako \uv{falešné} frekvence ve slyšitelné oblasti.
+
+            Vrcholy obrázku~\ref{fig:FTTest} mají konečnou šířku proto, že periody harmonických komponent nejsou soudělné s délkou časové řady, a tudíž analyzovaný signál není přesně periodický.
+            Pokud by signál byl přesně periodický a jeho délka byla navíc soudělná se vzorkovací frekvencí (v našem případě bychom museli volit délku časové řady $T=nT_{0}$, kde $T_{0}=1/110\,\text{s}$ je nejmenší společný násobek period $1/f_{1}$, $1/f_{2}$, $1/f_{3}$), byly by všechny Fourierovy komponenty nulové až na tři odpovídající zadaným frekvencím. 
+        \end{solution}
+
         \begin{task}\label{task:Vowels}
             Ve složce \href{https://github.com/PavelStransky/PCInPhysics2021/tree/main/sounds}{sounds} v repozitáři jsou soubory \ghfile{sounds/}{a.wav}, \ghfile{sounds/}{e.wav}, \ghfile{sounds/}{i.wav}, \ghfile{sounds/}{o.wav}, \ghfile{sounds/}{u.wav}, 
             ve kterých jsou nahrané krátké vzorky samohlásek.\footnote{
@@ -3188,16 +3257,63 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             }
         \end{task}
 
+        \begin{solution}
+            \begin{figure}[!htbp]
+                \begin{subfigure}{\linewidth}
+                    \centering\epsfig{file=FT_vowels.eps,width=0.8\linewidth}
+                \end{subfigure}
+                \caption{
+                    \protect\small
+                    Fourierovo spektrum pro samohlásky z testovacích souborů. 
+                }	
+                \label{fig:FTVowels}
+            \end{figure}           
+    
+            Fourierovo spektrum pro zadané samohlásky je vypočítáno pomocí funkce \code{vowels} ze souboru \ghfile{python/fourier/}{analysis.py} a je zobrazeno na obrázku~\ref{fig:FTVowels}. 
+            Je vidět, že pro všechny samohlásky se skládá ze základní frekvence (okolo $f_{0}=240$~Hz) a jejích násobků (harmonické frekvence), přičemž často je dominantní první harmonická frekvence (pro samohlásku \uv{o} je to až třetí a pro samohlásku \uv{a} dokonce až čtvrtá harmonická frekvence).
+            Právě poměry mezi amplitudami harmonických frekvencí jsou klíčové pro strojové rozpoznání, o kterou hlásku se jedná.
+        \end{solution}
+
         \begin{task}
             Ve složce \href{https://github.com/PavelStransky/PCInPhysics2021/tree/main/sounds}{sounds} v repozitáři je soubor \ghfile{sounds/}{BlackHolesCollision.wav}, ve kterém je nasimulovaný průběh gravitačních vln těsně před srážkou dvou černých děr.\footnote{
                 Soubor pochází z \url{http://web.mit.edu/sahughes/www/sounds.html}.
             }
             Načtěte tento soubor, přehrajte si ho (uslyšíte charakteristický tzv. \emph{chirp sound}).
-            Pozor, soubor má dva kanály, pro následující analýzu vyberte pouze jeden z nich příkazem \code{sound[:,0]}.
+            Pozor, soubor má dva kanály, pro následující analýzu vyberte pouze jeden z nich příkazem \code{signal[:,0]}.
             Rozdělte časovou řadu na časová okna délky $N_{W}=2000$ bodů a pro každé okno spočítejte Fourierovu transformaci a amplitudy $A_{k}$.
             Následně vykreslete konturový graf (spektrogram), kde na ose $x$ bude čas (začátku nebo středu použitého časového okna), na ose $y$ frekvence a na ose $z$ (barevný kód) amplituda.
             Frekvence omezte pomocí příkazu \code{plt.ylim(0, 500)} na hodnoty $\langle 0\,\text{Hz},500\,\text{Hz}\rangle$. 
-        \end{task}
+        \end{task} 
+
+        \begin{solution}
+            \begin{figure}[!htbp]
+                \begin{subfigure}{\linewidth}
+                    \centering\epsfig{file=FT_black_hole.eps,width=0.8\linewidth}
+                \end{subfigure}
+                \caption{
+                    \protect\small
+                    Spektrogram gravitačních vln generovaný okolo sebe obíhajícími dvěma černými děrami těsně před srážkou.
+                    Ke srážce dojce v čase $t\approx15$~s.
+                }	
+                \label{fig:FTBlackHole}
+            \end{figure}  
+
+            Spektrogram je vypočítán pomocí funkce \code{black_holes} (soubor \ghfile{python/fourier/}{analysis.py}) ze zadaného signálu pro plovoucí okno šířky 2000 bodů, které posouváme pro hladší graf po 100 bodech, a je vykreslen na obrázku~\ref{fig:FTBlackHole}.
+            Je vidět dominantní frekvence stoupající od přibližně 130 Hz.
+            V okamžiku srážky černých děr frekvence diverguje.
+            Dominantní frekvence je první harmonická: základní frekvence začíná na 65 Hz.
+            Podle tvaru křivky na spektrogramu se určují parametry srážejících se objektů: jejich hmotnosti a typ (černé díry, neutronové hvězdy). 
+
+            Zvukový soubor byl podle zdrojové webové stránky \uv{zrychlen}, aby se posunul do slyšitelných frekvencí.
+            Frekvence ve spektrogramu~\ref{fig:FTBlackHole} tedy neodpovídají počtu oběhů za sekundu černých děr těsně před srážkou.
+            Objekty se ve skutečnosti pohybují pomaleji.
+
+            \uv{Rázy}, které se objevují ve spektrogramu, jsou numerický artefakt způsobený konečností velikosti okna, ve kterém probíhá výpočet.
+
+            Srážka černých děr pomocí přímého měření gravitačních vln byla poprvé pozorována detektory LIGO a Virgo 14. září 2015.
+            Analýza byla publikována o necelý půl rok později~\cite{GW16} (pozorovaný spektrogram je v tomto článku zobrazen v obrázku 1) a odstartovala nové odvětví fyziky: gravitační astronomii. 
+            K dnešnímu dni (květen 2020) bylo prostřednictvím gravitačních vln pozorováno několik desítek srážek velmi hmotných objektů (černých děr nebo neutronových hvězd).
+        \end{solution}
 
     \subsection{Rychlá Fourierova transformace}
         Fourierova transformace naprogramovaná pomocí definičních vztahů~\eqref{eq:FT} má časovou složitost $\mathcal{O}(N^{2})$, pro delší časové řady tedy doba výpočtu prudce roste (již pro $N=10000$ si počkáte několik minut).
@@ -3210,6 +3326,23 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             Měly by být stejné.
         \end{task}
 
+        \begin{solution}
+            \begin{figure}[!htbp]
+                \begin{subfigure}{\linewidth}
+                    \centering\epsfig{file=FT_comparison.eps,width=0.8\linewidth}
+                \end{subfigure}
+                \caption{
+                    \protect\small
+                    Srovnání různých metod výpočtu Fourierovy transformace pro soubor \code{a.wav}.
+                    Výsledek získaný knihovní funkcí \code{numpy.fft.fft} byl vydělen délkou časové řady.
+                }	
+                \label{fig:FTComparison}
+            \end{figure}   
+
+            Srovnání Fourierovského spektra pro hlásku \uv{a} je naprogramované ve funkci \code{FT_me\-thod_Comparison} v souboru \ghfile{python/fourier/}{analysis.py} a graf je zobrazen na obrázku~\ref{fig:FTComparison}.
+            Fourierova transformace z knihovny \code{numpy} má jinak definovanou normalizaci, proto je pro porovnání nutné vydělit Fourierovy komponenty délkou časové řady $N$.
+            Pak jsou komponenty spočítané oběma metodami stejné.
+        \end{solution}
 \begin{thebibliography}{99}
     \bibitem{Muller1959} M.E. Muller, {\it A note on a method for generating points uniformly on n-dimensional spheres},
     Communications of the Asociation for Computing Machinery {\bf 2}, 19 (1959).
