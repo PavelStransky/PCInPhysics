@@ -18,6 +18,7 @@
 \usepackage{comment}
 \usepackage{titlesec}
 \usepackage{underscore}
+\usepackage{makecell}       % Šířky čar v tabulkách
 %\usepackage{showlabels}
 
 \hypersetup{
@@ -3343,6 +3344,207 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             Fourierova transformace z knihovny \code{numpy} má jinak definovanou normalizaci, proto je pro porovnání nutné vydělit Fourierovy komponenty délkou časové řady $N$.
             Pak jsou komponenty spočítané oběma metodami stejné.
         \end{solution}
+
+\section{Kafe}
+    Toto cvičení se bude týkat zpracování naměřených dat od načtení dat přes vytvoření modelu, nafitování jeho parametrů, vykreslení dat a uložení výsledků.
+    Vše bude demonstrováno na časové řadě teplot během chladnutí kávy.
+    Data naměřil již před více než 15 lety zakladatel tohoto cvičení \href{http://www-ucjf.troja.mff.cuni.cz/~dolejsi/dolejsi.html}{doc. Jiří Dolejší}
+    a jsou dostupná v repozitáři v souboru \ghfile{python/}{kafe.txt}.
+    Vzorový kód v Pythonu je pak v souboru \ghfile{python/}{kafe.py}.
+
+\subsection{Načtení dat}
+    Umět načíst externí data do vašeho programu je velmi důležité, jelikož zdroj dat může být úplně jiný systém než ten, ve kterém data zpracováváte (data můžete získat měřením, můžete je stáhnout z internetu, může vám je poslat kolega z druhého konce světa nebo je získáte výpočtem nějakém specializovaném programu).
+    My se budeme zabývat načtením textového souboru.
+
+    V Pythonu existuje nespočet možností, jak textová data načíst: od jednoduchého otevření souboru, načítání znaku po znaku nebo řádky po řádce a zpracovávání přes různá  automatizovaná řešení, například funkcí \code{\href{https://numpy.org/doc/stable/reference/generated/numpy.genfromtxt.html}{genfromtxt}} z knihovny \file{numpy} až po sofistikovaný balík \file{\href{https://pandas.pydata.org/}{pandas}}.
+    V přiloženém vzorovém souboru je použita jednoduchá možnost pomocí knihovny \file{\href{https://docs.python.org/3/library/csv.html}{csv}},\footnote{{\bf CSV} = {\bf C}omma-{\bf S}eparated {\bf V}alues, hodnoty oddělené čárkami. 
+    Ve skutečnosti může být jako oddělovač libovolný znak, běžně třeba mezera nebo tabulátor.
+    Oddělovač se specifikuje pomocí parametru \code{delimiter}.}
+    která je součástí instalace jazyka Python.
+    Pokud neznáme formát dat předem, je dobré si datový soubor nejprve otevřít v nějakém textovém editoru (například ve Visual Studiu Code) a zjistit, jak dlouhá je hlavička a v jakém sloupci nebo řádce je jaký údaj.
+    V souboru \file{kafe.txt} vidíme, že hlavička je dlouhá 10 řádků a je následována daty ve čtyřech sloupcích, přičemž v prvním sloupci je to nejdůležitější --- měřená teplota ---, ve druhém jednotka (stupně Celsia), ve třetím označení TE (jako teploměr) a ve čtvrtém čas.
+    Měření probíhala striktně po 10 sekundách, nemusíme tudíž složitě převádět formát času na číslo, ale stačí začít s časem $t_{0}=0\ \mathrm{s}$ a postupně přičítat $10\ \mathrm{s}$.
+    Data z hlavičky potřebovat nebudeme, proto celou hlavičku přeskočíme.
+    Z celého souboru stačí tedy načíst první sloupec.
+
+    Měřená data jsou dvojice čas--teplota
+    \begin{equation}
+        (t^{\mathrm{exp}}_{j},T^{\mathrm{exp}}_{j}),\qquad j=0,\dotsc,N-1,
+    \end{equation}
+    kde $N$ je počet měření.
+    Data jsou vykreslena na obrázku~\ref{fig:kafe}.
+    Teplota byla měřena s přesností $\Delta T^{\mathrm{exp}}=1\ ^{\circ}{\mathrm{C}}$.
+
+    \begin{figure}[!htbp]
+        \centering\epsfig{file=kafe.eps,width=0.75\linewidth}
+        \caption{
+            \protect\small
+            Naměřená data chladnutí kávy.
+        }	
+        \label{fig:kafe}
+    \end{figure}  
+
+\subsection{Model}
+    Chladnutí kapaliny vedením tepla popisuje \href{https://en.wikipedia.org/wiki/Newton's_law_of_cooling}{Newtonův zákon chladnutí}.
+    Odevzdané teplo $\Delta Q$ za krátký okamžik $\Delta t$ je tím větší, čím je větší rozdíl teploty tělesa $T$ a teploty okolí $T_{\mathrm{okolí}}$,
+    \begin{equation}
+        \label{eq:vedeni}
+        \Delta Q=-hS(T-T_{\mathrm{okolí}})\Delta t,
+    \end{equation}
+    kde $h$ je koeficient vedení tepla a $S$ aktivní povrch, skrz který teplo z tělesa uniká.
+    Na druhou stranu tím, že těleso teplo odevzdá, dojde k jeho ochlazení o teplotu $\Delta T$,
+    \begin{equation}
+        \Delta Q=c m\Delta T,
+    \end{equation}
+    kde $c$ je měrná tepelná kapacita a $m$ hmotnost tělesa.
+    Z těchto rovnic získáváme pro infinitezimální změny $\d Q$, $\d T$, $\d t$ diferenciální rovnici
+    \begin{equation}
+        \derivative{T}{t}=-\underbrace{\alpha}_{\frac{hS}{cm}}\left(T-T_{\mathrm{okolí}}\right),
+    \end{equation}
+    jejímž řešením je zmiňovaný Newtonův zákon chladnutí\footnote{Diferenciální rovnici vyřešíme například jednoduše separací proměnných.}
+    \begin{equation}
+        \label{eq:Newton}
+        T(t;\alpha)=\left(T_{0}-T_{\mathrm{okolí}}\right)\e^{-\alpha(t-t_{0})}+T_{\mathrm{okolí}}
+    \end{equation}
+    s počáteční podmínkou $T(t_0)=T_{0}$.
+    Explicitně je navíc uveden parametr modelu $\alpha$.
+
+\subsection{Fitování dat}
+    Máme model~\eqref{eq:Newton} s jedním parametrem $\alpha$.
+    Dalším krokem je nalézt optimální hodnotu tohoto parametru.
+    K tomu se používá \emph{metoda nejmenších čtverců} odchylek, která obecně spočívá v minimalizaci funkce
+    \begin{equation}
+        R^{2}(\alpha,\beta,\dotsc)=\sum_{j=0}^{N-1}\left[T^{\mathrm{exp}}_{j}-T\left(t^{\mathrm{exp}}_{j};\alpha,\beta,\dotsc\right)\right],
+    \end{equation}
+    kde minimum hledáme přes hodnoty parametrů $\alpha,\beta,\dotsc$.
+    K fitování slouží v Pythonu dvě funkce z knihovny \file{\href{https://docs.scipy.org/doc/scipy/reference/optimize.html}{scipy.optimize}}, a to \code{\href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html}{least_squares}} a \code{\href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html}{curve_fit}}, které fungují podobně.\footnote{Obě funkce volají jednu a tutéž minimalizační proceduru.}
+    My použijeme druhou z nich, neboť nám poskytne i odhady chyb fitovaných parametrů, což se ve fyzice hodí.
+
+    Funkce \code{\href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html}{curve_fit}} očekává na vstupu funkci modelu a dvojice naměřených dat.
+    Dále je vhodné udat počáteční odhad fitovaných parametrů (argument \code{p0}). Zejména pokud jsou optimální hodnoty parametrů o několik řádů jinde než 1, optimalizační procedura může selhat, jak se lze přesvědčit na vzorovém příkladu.
+    Další parametr je \code{sigma}, ve kterém můžeme specifikovat absolutní chyby jednotlivých měření.
+    To se hodí zejména v případě, kdy každý naměřený údaj má jinou chybu.
+
+    Fitovací funkce vrací dvě pole: v prvním jsou nafitované hodnoty všech parametrů modelu, v druhém je tzv. \emph{korelační matice}, jejíž diagonální prvky udávají odhady chyb parametrů modelu.
+    Funkce nevrací součet kvadrátů reziduí $R^{2}_{\mathrm{min}}$, který může sloužit k porovnání výkonností jednotlivých modelů.
+    Tuto veličinu však není obtížné vypočítat.
+
+    \begin{figure}[!htbp]
+        \centering\epsfig{file=kafe_Newton.eps,width=0.75\linewidth}
+        \caption{
+            \protect\small
+            Fitování Newtonova zákona chladnutí.
+            Optimální hodnota parametru modelu jsou
+            $\alpha=(746\pm5)\cdot10^{-6}\ \text{s}^{-1}$.
+            Součet reziduí je $R_{\mathrm{min}}=8.64\ ^{\circ}\mathrm{C}$.
+        }	
+        \label{fig:kafe_exp}
+    \end{figure}  
+
+    Použití fitovací funkce je ukázáno ve vzorovém kódu \ghfile{python/}{kafe.py}. 
+    Za teplotu okolí byla použita hodnota $T_{\mathrm{okolí}}=20\ ^{\circ}{\mathrm{C}}$.
+    Experimentální data a optimální teoretická křivka jsou na obrázku~\ref{fig:kafe_exp}.
+    Je vidět, že Newtonův zákon nepopisuje dobře skutečnost.
+    Otevírá se tedy prostor pro nás fyziky, abychom se pokusili model vylepšit.
+
+\subsection{Vylepšení modelu}
+    Jednoduchý model založený na ztrátě tepla vedením neobstojí.
+    Ukažme si několik možností, jak model rozšířit.
+    Rozšíření modelu mimo jiné znamená, že přidáme další parametry, jejichž hodnotu budeme fitovat.
+    Platí samozřejmě, že bez ohledu na kvalitu modelu čím více parametrů, tím lepší fit.
+    Je vždy dobré se vyvarovat extrémů, kdy model má více parametrů, než kolik máme experimentálních hodnot $N$.
+    Dobrý model je takový, který popisuje pomocí málo parametrů velké množství experimentálních dat.
+
+\subsubsection{Neurčitá teplota okolí}
+    Teplotu okolí $T_{\mathrm{okolí}}$ neznáme.
+    Předpokládali jsme jen, že experiment byl prováděn za běžné pokojové teploty, a proto jsme volili $T_{\mathrm{okolí}}=20\ ^{\circ}{\mathrm{C}}$.
+    Co však, pokud byla teplota jiná?
+    Můžeme zvolit teplotu okolí jako druhý fitovaný parametr modelu.
+
+    \begin{figure}[!htb]
+        \centering\epsfig{file=kafe_Newton_Tout.eps,width=0.75\linewidth}
+        \caption{
+            \protect\small
+            Fitování Newtonova zákona chladnutí s volnou teplotou okolí.
+            Optimální hodnoty parametrů jsou
+            $\alpha=(1360\pm30)\cdot10^{-6}\ \text{s}^{-1}$,
+            $T_{\mathrm{okolí}}=(39.8\pm0.6)\ ^{\circ}\mathrm{C}$.
+            Součet reziduí je $R_{\mathrm{min}}=3.76\ ^{\circ}\mathrm{C}$.
+        }	
+        \label{fig:kafe_exp_out}
+    \end{figure}  
+
+    Výsledek fitování dává mnohem lepší souhlas modelu s naměřenými daty (obrázek~\ref{fig:kafe_exp_out}), avšak nafitovaná teplota okolí je
+    $T_{\mathrm{okolí}}\approx40\ ^{\circ}\mathrm{C}$, což neodpovídá laboratorním podmínkám.\footnote{Doc. Jiří Dolejší se dušuje, že na takovou teplotu si netopí.}
+    Tento model, ač popisuje velmi dobře teoretická data, zavrhneme.\footnote{Při hlubším zamyšlení však lze i tento model přijmout. 
+    Jak je známo, vzduch je celkem špatný vodič tepla.
+    Okolo tělesa chladnoucího na vzduchu se tedy vytvoří teplejší vrstva, která může odpovídat \uv{efektivní} teplotě okolí vyšší, než je skutečná teplota okolí daleko od chladnoucího tělesa.}
+    
+\subsubsection{Model s vyzařováním}
+    Kapalina chladne čtyřmi základními procesy: vedením, prouděním, vyzařováním a vypařováním.
+    Newtonův zákon popisuje jen první z nich.
+    Druhý proces (proudění) závisí významně na tvaru tělesa a na okolním prostředí (foukáme do kávy? máme puštěný větrák? jsme na vrcholu větrné hory?) a je obtížné ho modelovat. 
+    Můžeme předpokládat, že experiment byl prováděn v laboratoři (kanceláři) a vliv proudění byl eliminován.
+    Zbývají tedy procesy vyzařování a vypařování. 
+    Zaměříme se na první z nich.
+
+    Těleso\footnote{Přesněji tzv. \emph{absolutně černé těleso}, což je ideální těleso pohlcující a vyzařující záření všech vlnových délek.} vyzařuje podle \href{https://en.wikipedia.org/wiki/Stefan%E2%80%93Boltzmann_law}{Stefanova-Boltzmannova zákona}, podle kterého je odevzdané teplo za časový okamžik $\Delta t$ za předpokladu, že teplota povrchu tělesa je $T$ a teplota okolí $T_{\mathrm{okolí}}$,
+    \begin{equation}
+        \Delta Q=-\sigma S\left(T^{4}-T_{\mathrm{okolí}}^{4}\right)\Delta t,
+    \end{equation}
+    kde $\sigma$ je Stefanova-Boltzmannova konstanta a $S$ je povrch tělesa.
+    To v kombinaci s~\eqref{eq:vedeni} vede na diferenciální rovnici
+    \begin{equation}
+        \derivative{T}{t}=-\alpha\left(T-T_{\mathrm{okolí}}\right)-\underbrace{\beta}_{\frac{\sigma S}{cm}}\left(T^{4}-T_{\mathrm{okolí}}^{4}\right).
+    \end{equation}
+    Tato rovnice není exaktně řešitelná, je tedy potřeba ji řešit numericky.
+    Jedná se o diferenciální rovnici 1. řádu, což je téma, se kterým jsme tento kurz začínali (sekce~\ref{sec:ODR1}).
+    Nové je zde to, že musíme zkombinovat řešení diferenciální rovnice s hledáním optimální hodnoty parametrů pro diferenciální rovnici.
+
+    \begin{figure}[!htb]
+        \centering\epsfig{file=kafe_rad.eps,width=0.75\linewidth}
+        \caption{
+            \protect\small
+            Fitování Newtonova modelu chladnutí rozšířeného o ztrátu tepla vyzařováním.
+            Optimální hodnoty parametrů jsou
+            $\alpha=(360\pm20)\cdot10^{-6}\ \text{s}^{-1}$,
+            $\beta=(96\pm5)\cdot10^{-11}\ \text{s}^{-1}\text{T}^{-3}$.
+            Součet reziduí je $R=3.71\ ^{\circ}\mathrm{C}$.
+        }	
+        \label{fig:kafe_rad}
+    \end{figure}      
+
+    Řešení je opět ve vzorovém kódu \ghfile{python/}{kafe.py} a výsledek je na obrázku~\ref{fig:kafe_rad}.
+    Optimální hodnota parametru $\beta$ je řádu $10^{-9}$, je tedy nutné při volání funkce \code{curve_fit} upřesnit počáteční hodnotu pro hledání tohoto parametru v \code{p0}, jinak optimalizační funkce selže.
+
+\subsection{Shrnutí}
+    Výsledky pro všechny modely jsou v tabulce~\ref{tab:kafe}.
+
+    \begin{table}[!htbp]
+        \centering
+        \begin{tabular}{|c c c c c c|} 
+        \hline
+        Název & Parametry & Označení v kódu & Hodnota & Jednotka & $R_{\mathrm{min}} [^{\circ}\mathrm{C}]$ \\
+        \Xhline{5\arrayrulewidth}
+        Newton & $\alpha$ & \code{alpha_fit} & $746\pm5$ & $10^{-6}\ \mathrm{s}^{-1}$ & $8.64$ \\
+        \hline
+        & $\alpha$ & \code{alpha_out_fit} & $1360\pm30$ & $10^{-6}\ \mathrm{s}^{-1}$ & \\
+        Newton s teplotou okolí & $T_{\mathrm{okolí}}$ & \code{T_out_fit} & $39.8\pm0.6$ & $^{\circ}\mathrm{C}$ & $3.76$ \\
+        \hline
+        & $\alpha$ & \code{alpha_rad_fit} & $360\pm20$ & $10^{-6}\ \mathrm{s}^{-1}$ & \\
+        Newton s vyzařováním & $\beta$ & \code{beta_rad_fit} & $96\pm5$ & $10^{-11}\ \mathrm{s}^{-1}\mathrm{T}^{-3}$ & $3.71$ \\
+        \hline
+       \end{tabular}
+       \caption{\protect\small Shrnutí modelů.}
+       \label{tab:kafe}
+    \end{table}
+
+\subsection{Uložení dat}
+    Po provedení všech výpočtů uložíme výsledky pro příští použití.
+    Existuje opět hromada možností, jak toho docílit, od jednoduchého zápisu do souboru po sofistikované knihovny pro serializaci a deserializaci dat, jakou je například \file{\href{https://docs.python.org/3/library/pickle.html}{pickle}}.
+    My využijeme opět jednoduché knihovny \file{\href{https://docs.python.org/3/library/csv.html}{csv}}.
+    Uložení všech namodelovaných teoretických křivek je ve vzorovém kódu \ghfile{python/}{kafe.py}.
+
 \begin{thebibliography}{99}
     \bibitem{Muller1959} M.E. Muller, {\it A note on a method for generating points uniformly on n-dimensional spheres},
     Communications of the Asociation for Computing Machinery {\bf 2}, 19 (1959).
