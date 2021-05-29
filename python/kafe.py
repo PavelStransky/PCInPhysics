@@ -1,9 +1,10 @@
 import csv
 import matplotlib.pyplot as plt
 
-import numpy as np
 from scipy.optimize import curve_fit
 from scipy.integrate import odeint
+
+import numpy as np
 
 # Inicializace proměnných
 temperatures = []
@@ -77,10 +78,12 @@ plt.ylabel("T [$\degree$C]")
 plt.legend()
 plt.show()
 
+T_abs = 273.15
+
 """ Newton + dodatečný člen simulující vyzařování """
 def model_rad_ode(temperature, time, alpha, beta):
     """ Diferenciální rovnice chladnutí (Newtonův zákon chladnutí + dodatečný člen se čtvrtou mocninou - záření) """
-    return -alpha * (temperature - T_out) - beta * (temperature**4 - T_out**4)
+    return -alpha * (temperature - T_out) - beta * ((temperature + T_abs)**4 - (T_out + T_abs)**4)
 
 def model_rad_solution(times, alpha, beta):
     """ Řešení diferenciální rovnice """
@@ -99,19 +102,48 @@ residua_rad = np.sqrt(sum((temperatures - temperatures_rad)**2))
 print(f"alpha = {alpha_rad_fit} +- {sigma_alpha_rad}, beta= {beta_rad_fit} +- {sigma_beta_rad}, R = {residua_rad}")
 
 plt.scatter(times, temperatures, label="Naměřená data")
-plt.plot(times, temperatures_rad, "red", label="Optimální řešení Newton + vyzařování")
+plt.plot(times, temperatures_rad, "red", label="Newton + vyzařování")
 plt.xlabel("t [s]")
 plt.ylabel("T [$\degree$C]")
 plt.legend()
 plt.show()
 
+""" Newton + umělý člen daný druhým členem Taylorova rozvoje (T - T_out) """
+def model_2_ode(temperature, time, alpha, beta):
+    """ Diferenciální rovnice chladnutí (Newtonův zákon chladnutí + dodatečný člen) """
+    return -alpha * (temperature - T_out) - beta * ((temperature - T_out)**2)
+
+def model_2_solution(times, alpha, beta):
+    """ Řešení diferenciální rovnice """
+    temperatures = odeint(model_2_ode, T0, times, args=(alpha, beta))
+    return temperatures[:,0]    # Jen teploty
+
+fit, cm = curve_fit(model_2_solution, times, temperatures, p0=(1e-3, 1e-6))
+alpha_2_fit, beta_2_fit = fit
+
+sigma_alpha_2 = np.sqrt(cm[0, 0])
+sigma_beta_2 = np.sqrt(cm[1, 1])
+
+temperatures_2 = model_2_solution(times, alpha_2_fit, beta_2_fit)
+residua_2 = np.sqrt(sum((temperatures - temperatures_2)**2))
+
+print(f"alpha = {alpha_2_fit} +- {sigma_alpha_2}, beta= {beta_2_fit} +- {sigma_beta_2}, R = {residua_2}")
+
+plt.scatter(times, temperatures, label="Naměřená data")
+plt.plot(times, temperatures_2, "red", label="Newton + druhý člen Taylorova rozvoje")
+plt.xlabel("t [s]")
+plt.ylabel("T [$\degree$C]")
+plt.legend()
+plt.show()
+
+
 """ Uložení výsledků """
 # newline="" je nutný parametr ve windows; jinak program vkládá mezi data prázdné řádky
 with open(r"kafe_model.txt", "w", newline="") as file:
     csvWriter = csv.writer(file, delimiter='\t')
-    csvWriter.writerow(["t [s]", "Texp [C]", "Texpout [C]", "Trad [C]"])
+    csvWriter.writerow(["t [s]", "Texp [C]", "Texpout [C]", "Trad [C]", "Ttaylor [C]"])
 
- #   for row in zip(times, temperatures, temperaturesModel):
+ #   for row in zip(times, temperatures, temperatures_exp, temperatures_out, temperatures_rad, temperatures_2):
  #       csvWriter.writerow(row)
         
-    csvWriter.writerows(zip(times, temperatures, temperatures_exp, temperatures_out, temperatures_rad))
+    csvWriter.writerows(zip(times, temperatures, temperatures_exp, temperatures_out, temperatures_rad, temperatures_2))
