@@ -987,7 +987,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         \item {\bf Řád metody:} 
         Metoda je $p$-tého řádu, pokud
         \begin{equation}\label{eq:RadMetodyODR}
-            L(\Delta t)=\mathcal{O}(\Delta t^{p+1}).
+            \mathcal{L}(\Delta t)=\mathcal{O}(\Delta t^{p+1}).
         \end{equation}
 
         \item {\bf Kontrola chyby řešení:}
@@ -1909,7 +1909,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     Histogram je jeden z klíčových objektů v mnoha oblastech fyziky, kde se pracuje s náhodnými veličinami.
     To je vpodstatě celá kvantová mechanika, a tudíž obory jako je atomová, jaderná, či subjaderná fyzika.
     S náhodnými veličinami se setkáte samozřejmě také v klasické statistické fyzice, ale také například v meteorologii či dalších oborech.
-    Stojí proto za to se s ním seznámit podrobně.
+    Stojí proto za to se s histogramem seznámit podrobně.
 
     \subsection{Základní definice a tvrzení z teorie pravděpodobnosti}
     \label{sec:Pravdepodobnost}
@@ -2050,7 +2050,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
                 \end{align} 
 
             \item {\bf Poissonovo rozdělení:}
-                Diskrétní rozdělení udávající počet nezávislých jevů $k$ v zadaném intervalu (například počet lidí, které potkáme na mostě cestou z Holešovic do Troji, nebo počet rozpadů radioaktivního prvku ve vzorku za jednotku času).  
+                Diskrétní rozdělení udávající počet nezávislých jevů $k$ v zadaném intervalu (například počet lidí, které potkáte na mostě cestou z Holešovic do Troji, počet kapek, které vám za nějakou časovou jednotku spadne na hlavu, počet rozpadů radioaktivního prvku ve vzorku za jednotku času atd.).  
                 Rozdělení pravděpodobnosti je
                 \begin{align}
                     \label{eq:Poisson}
@@ -2711,7 +2711,9 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     V moderních operačních systémech je počet současně běžících procesů neomezený.
     Pokud je procesů více, než dostupných procesorových jader, tak operační systém velmi rychle přepíná mezi prováděním procesu, čímž se zdá, že všechny procesy probíhají zároveň (tzv. \emph{preemptivní multitasking}).
     Přepínání samozřejmě stojí určitý výpočetní čas.
-    Optimální situace tedy je, pokud se počet procesů přesně rovná počtu procesorových jader.
+    Optimální situace tedy je, pokud se počet procesů přesně rovná počtu procesorových jader.\footnote{
+        We Windows se počet jader nejsnáze zjistí pomocí Správce úloh (Task manager), který lze vyvolat například stiskem kláves~\code{Ctrl+Shift+Esc}.
+    }
     Pak jsou všechna jádra vytížena, a přitom operační systém není zatěžován nutností přepínat mezi jednotlivými vlákny. 
     Toto je demonstrováno na obrázku~\ref{fig:Duration}.
     
@@ -2747,7 +2749,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     První vlákno tedy čeká na odemčení proměnné \code{b} aby mohlo odemknout proměnnou \code{a}, zatímco to druhé na odemčení proměnné \code{a}, bez čehož neuvolní proměnnou \code{b}. 
     Obě vlákna jsou do sebe zakleslá, čekají a k uvolnění nedojde nikdy.    
 
-    Pro pěkný podrobný úvod do paralelního programování doporučuji \url{https://computing.llnl.gov/tutorials/parallel_comp/}.
+    Pro pěkný podrobný úvod do paralelního programování doporučuji \url{https://hpc.llnl.gov/documentation/tutorials/introduction-parallel-computing-tutorial}.
 
     V Pythonu existují dvě základní knihovny pro zpracování programu ve více vláknech: \file{\href{https://docs.python.org/3/library/threading.html}{threading}} a \file{\href{https://docs.python.org/3/library/multiprocessing.html}{multiprocessing}}.
     První z nich obsahuje více funkcionalit, avšak spouští všechna vlákna jen na jednom procesoru (jádře), k paralelnímu provádění výpočtů se tedy nehodí.\footnote{
