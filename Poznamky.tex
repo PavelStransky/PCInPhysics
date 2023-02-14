@@ -228,19 +228,19 @@
 
     Pro Windows nejdůležitější zkratky jsou:
     \begin{itemize}
-        \item \code{Alt + Z}: Zalomí dlouhé řádky na konci okna.
-        \item \code{Alt + ←}: Vrátí kurzor na předchozí pozici (například po odskrolování někam do neznáma).
-        \item \code{Ctrl + /}: Přidá či odstraní komentář řádku.
-        \item \code{Ctrl + [, Tab}: Odsadí označenou část kódu o jednu úroveň.
-        \item \code{Ctrl + ], Shift + Tab}: Zmenší odsazení označené části kódu o jednu úroveň.
-        \item \code{Ctrl + Mezera}: Zobrazí okénko s nápovědou k danému symbolu.
+        \item \code{Alt+Z}: Zalomí dlouhé řádky na konci okna.
+        \item \code{Alt+←}: Vrátí kurzor na předchozí pozici (například po odskrolování někam do neznáma).
+        \item \code{Ctrl+/}: Přidá či odstraní komentář řádku.
+        \item \code{Ctrl+[, Tab}: Odsadí označenou část kódu o jednu úroveň.
+        \item \code{Ctrl+], Shift+Tab}: Zmenší odsazení označené části kódu o jednu úroveň.
+        \item \code{Ctrl+Mezera}: Zobrazí okénko s nápovědou k danému symbolu.
         \item \code{F12}: Posune kurzor na definici daného symbolu (proměnné, funkce, atd.).
-        \item \code{Shift + F12}: Zobrazí všechny reference na daný symbol.
-        \item \code{Ctrl + G}: Přechod na řádek s daným číslem.
-        \item \code{Ctrl + Shift + O}: Zobrazí všechny definované symboly v otevřeném okně.
+        \item \code{Shift+F12}: Zobrazí všechny reference na daný symbol.
+        \item \code{Ctrl+G}: Přechod na řádek s daným číslem.
+        \item \code{Ctrl+Shift+O}: Zobrazí všechny definované symboly v otevřeném okně.
         \item \code{F2}: Přejmenuje symbol (proměnnou, funkci, atd.) v rozahu jeho platnosti.
-        \item \code{Shift + Enter}: Spustí označenou část kódu v konzoli.
-        \item \code{Ctrl + F5}: Spustí otevřený soubor.
+        \item \code{Shift+Enter}: Spustí označenou část kódu v konzoli.
+        \item \code{Ctrl+F5}: Spustí otevřený soubor.
         \item \code{F5}: Spustí otevřený soubor v režimu ladění.
         \item \code{F9}: Přidá ladící bod.
     \end{itemize}
@@ -773,18 +773,18 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     Hotový kód lze spustit ve VS Code jedním z následujících tří způsobů.
     \begin{enumerate}
         \item 
-            \emph{Kliknutím na zelenou šipku na nástrojové liště}:
+            \emph{Kliknutím na šipku na nástrojové liště}:
             Tímto způsobem se spustí celý soubor kódu.
+            \begin{center}\includegraphics[width=\linewidth]{PythonRun.png}\end{center}
         \item
-            \emph{Stiskem \code{F5}} (a výběrem Python File): Kód se spustí v režimu ladění (debugger).
+            \emph{Stiskem \code{F5}}: Kód se spustí v režimu ladění (debugger).
             Zastaví se na každém kontrolním bodě (breakpoint, který se vloží na vybranou řádku kódu klávesou \code{F9}) nebo na každé chybě.
             Pro pokračování provádění kódu stačí stisknout buď znovu \code{F5}, nebo \code{F10} či \code{F11} pro jeden krok.
 
         \item
-            \emph{Označením části kódu a stiskem Ctrl+Enter}: V okně \code{TERMINAL} spustí \abbreviation{REPL} Pythonu a v něm označenou část kódu.
+            \emph{Označením části kódu a stiskem \code{Shift+Enter}}: V okně \code{TERMINAL} spustí \abbreviation{REPL} Pythonu a v něm označenou část kódu.
             \abbreviation{REPL} se po provedení kódu nezavře, takže v něm lze psát dodatečné příkazy.
-            Pro ukončení \abbreviation{REPL} do něj stačí napsat \code{exit()} nebo v něm stisknout \code{Ctrl+Z} a potvrdit.
-            \abbreviation{REPL} musí být ukončen, než se použije jakákoliv z dvou dříve popsaných metod spuštění kódu.
+            Pro ukončení \abbreviation{REPL} do něj stačí napsat \code{exit()} nebo v něm stisknout \code{Ctrl+Z} a potvrdit nebo ukončit okno terminálu kliknutím na ikonku popelnice.
     \end{enumerate}
 
 \subsubsection{Základy syntaxe Pythonu}
@@ -799,12 +799,12 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
         \item 
             \emph{Základní datové typy a operátory:}
             Python obsahuje jen dva základní číselné typy: \code{int} a \code{float}.
-            Zbytek je podobný jako v jiných programovacích jazycích.
+            Jejich použití je podobné jako v jiných programovacích jazycích.
 
         \item
             \emph{Formátování řetězců:}
             Python umožňuje několik různých způsobů, jak formátovat řetězce (vkládat do nich čísla či jiné proměnné).
-            Doporučuji se seznámit s velmi čitelným způsobem pomocí f-řetězce.            
+            Doporučuji se seznámit s velmi čitelným způsobem pomocí \code{f}-řetězce.            
             Pro více informací k formátování řetězců doporučuji tento výborný \href{https://pyformat.info}{návod}.
     
         \item
@@ -815,7 +815,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
             Python nabízí bohaté možnosti indexování prvků kolekcí.
 
             Python nemá typ \uv{řada} (jedno či vícerozměrný soubor hodnot stejných typů).
-            Ten je implementován až v rozšiřujících knihovnách, například v knihovně \file{numpy}, které se budeme věnovat později.
+            Ten je implementován až v rozšiřujících knihovnách, například v knihovně \file{numpy}, které je věnována sekce~\ref{sec:numpy}.
             
         \item
             \emph{Podmínky a cykly}:
@@ -826,7 +826,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
 
             Cykly jsou možné pouze přes iterovatelné objekty.
             Pro cyklus přes přirozená čísla (indexy) musíme vytvořit odpovídající iterovatelný objekt příkazem \code{range}.
-            V drtivé většině se lze při programování v Pythonu indexům zcela vyhnout.
+            V drtivé většině případů se lze při programování v Pythonu indexům zcela vyhnout.
 
         \item 
             \emph{Funkce}: Python umožnuje velkou variabilitu co se týče argumentů funkce a návratových hodnot díky své funkci automatického sbalení a rozbalení kolekcí.
@@ -863,7 +863,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
         \item \emph{asynchronní programování}, korutiny a úkoly (klíčová slova \code{await}, \code{async})
         \item či tvorbu a použití \emph{dekorátorů}.
     \end{itemize}
-    Pro plné ovládnutí jazyka vám doporučuji se v budoucnu s těmito koncepty seznámit, a to buď ze specializovaných přednášek, z tutoriálů a návodů na webu, nebo studiem cizích kódů.
+    Pro plné ovládnutí jazyka vám doporučuji se v budoucnu s těmito koncepty seznámit, a to buď na dedikovaných přednáškách, z tutoriálů a návodů na webu, nebo studiem cizích kódů.
 
     Na oficiálních stránkách Pythonu najdete \href{https://docs.python.org/3/tutorial/}{tutoriál k nejnovější verzi programovacího jazyka}.
 
@@ -898,8 +898,8 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     Častá otázka je, zda proměnné označovat \emph{česky či anglicky}.
     Jelikož nikdy nevíte, kdo v dnešním propojeném světě bude chtít váš kód použít a třeba i upravit pro své potřeby, doporučuji používat anglická pojmenování.
     
-    Snadná čitelnost kódu je podpořena i vhodným psaním \emph{komentářů}.
-    Na drouhou stranu je vhodné vycházet z předpokladu, že dobře napsaný kód je čitelný i bez komentářů.
+    Snadná čitelnost kódu je podpořena i správným psaním \emph{komentářů}.
+    Předně se dnes doporučuje vycházet z předpokladu, že dobře napsaný kód je čitelný i bez komentářů.
     Čitelnost totiž zaručují zejména vhodně a výstižně označené proměnné a správně navržená struktura kódu.
     Komentovat je dobré jen ty části kódu, kde se používá nějaký ne všeobecně známý trik nebo postup.
     Nadbytek komentářů je velmi těžké udržovat při úpravách a může vést i k tomu, že po několika změnách kódu nebudou komentáře v souladu s tím, co kód vykonává.
@@ -907,21 +907,21 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     Naopak doporučené je nešetřit popisem, co dělají jednotlivé funkce, jaké jsou jejich argumenty a co vracejí na výstupu.
     K tomu slouží komentář typu \emph{docstring}, který je vysvětlený v souboru \ghfile{python/basics/}{introduction.py} v sekci o funkcích.\footnote{
         Stejně jako v mluvených jazycích se zlepšujete čtením literatury, v programovacích jazycích pomáhá čtení cizích kódů.
-        Pro přiklad použití komentářů se koukněte třeba na zdrojový soubor funkce \code{\href{https://github.com/scipy/scipy/blob/master/scipy/optimize/optimize.py}{optimize}} z knihovny \file{scipy}.
+        Pro příklad použití komentářů se koukněte třeba na zdrojový soubor funkce \code{\href{https://github.com/scipy/scipy/blob/master/scipy/optimize/optimize.py}{optimize}} z knihovny \file{scipy}.
     }
     Použití \emph{docstringu} usnadní i tvorbu a správu doprovodné dokumentace k celému projektu.
-    Existují například nástroje, které vám z těchto komentářů vytvoří strukturované webové stránky.
+    Existují dokonce nástroje, které vám z těchto komentářů vytvoří strukturované webové stránky, například nástroj~\href{https://www.sphinx-doc.org}{Sphinx}.
 
-\subsubsection{Řady, vektory, matice (knihovna numpy)}
+\subsubsection{Řady, vektory, matice}
 \label{sec:numpy}
     Jak bylo zmíněno v předchozí sekci, definice jazyka Python neobsahuje typ \emph{řada}, tj. jedno či vícerozměrně pole hodnot stejného typu.
+    Tento typ a operace s ním jsou implementovány v knihovně \file{numpy}.
+    Ta není v holé instalaci Pythonu obsažena, je nutné ji doinstalovat podle návodu v sekci~\ref{sec:pip}.
+    Základy práce s řadami jsou vysvětleny v souboru \ghfile{python/basics/}{arrays.py} v repozitáři.
 
-    Základy práce s řadami jsou vysvětleny přímo v souboru \ghfile{python/basics/}{arrays.py} v repozitáři.
-
-\subsubsection{Grafy (knihovna matplotlib)}
-    K vykreslení grafů slouží knihovna \file{\href{https://matplotlib.org}{Matplotlib}}.
+\subsubsection{Grafy}
+    K vykreslení grafů se nejčastěji používá knihovna \file{\href{https://matplotlib.org}{Matplotlib}}.
     V základní instalaci Pythonu není obsažena, je nutné ji doinstalovat podle návodu v sekci~\ref{sec:pip}.
-
     Jednoduchý příklad vykreslení grafů je v souboru \ghfile{python/basics/}{plot.py} v repozitáři.
 
 \subsubsection{Pseudonáhodná čísla}\label{sec:PseudonahodnaCisla}
@@ -931,15 +931,15 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
             Pro základní použití je k dispozici knihovna \file{\href{https://docs.python.org/3/library/random.html}{random}}.
             Z ní nejdůležitější funkce jsou tyto:
             \begin{itemize}
-                \item \code{random()}: \emph{reálné} pseudonáhodné číslo $x$ rovnoměrně z intervalu $x\in\langle 0;1)$.
-                \item \code{uniform(a, b)}: \emph{reálné} pseudonáhodné číslo $x$ rovnoměrně z intervalu $x\in\langle a;b\rangle$.
+                \item \code{random()}: Pseudonáhodné číslo $x$ rovnoměrně vybrané z intervalu $x\in\langle 0;1)$.
+                \item \code{uniform(a, b)}: pseudonáhodné číslo $x$ rovnoměrně vybrané z intervalu $x\in\langle a;b\rangle$.
                 \item \code{gauss(mu, sigma)}: pseudonáhodné číslo z Gaussovského rozdělení se střední hodnotou \code{mu} a směrodatnou odchylkou \code{sigma}. 
-                \item \code{randint(a, b)}: \emph{celé} pseudonáhodné číslo $d$ z intervalu $a\leq d<b$.
+                \item \code{randint(a, b)}: pseudonáhodné \emph{celé} číslo $d$ z intervalu $a\leq d<b$.
                 \item \code{seed(s)}: nastaví počáteční násadu generátoru podle parametru \code{s} (pro jednu konkrétní násadu bude generátor dávat stejnou sekvenci čísel). 
                 Parametr může být jakéhokoliv typu, tedy číslo, řetězec atd. 
-                Pokud se parametr neuvede, použije se jako násada systémový čas.
-                \item \code{choice(l)}: vybere pseudonáhodně element ze seznamu \code{l}.
-                \item \code{shuffle(l)}: promíchá elementy v seznamu \code{l}.
+                Pokud se parametr neuvede, použije se jako násada aktuální systémový čas, a tudíž bude sekvence pseudonáhodných čísel při každém spuštění programu jiná.
+                \item \code{choice(m)}: vybere pseudonáhodně element ze seznamu \code{m}.
+                \item \code{shuffle(m)}: promíchá elementy v seznamu \code{m}.
             \end{itemize}
 
         \item
@@ -950,10 +950,10 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
             Ta umožňuje zvolit vlastní generátor pseudonáhodných čísel, generovat čísla z celé řady \href{https://numpy.org/doc/stable/reference/random/generator.html}{statistických rozdělení} a generovat naráz celé vektory či matice.
             \begin{itemize}
                 \item \code{generator = default_rng()}: Inicializuje standardní generátor pseudonáhodných čísel.
-                \item \code{generator = Generator(PCG64())}: Inicializuje specifický generátor pseudonáhodných čísel (v~tomto případě PCG-64, což je O'Neillův permutační kongruenční generátor).
-                \item \code{generator.random(size=10)}: vektor délky 10 s elementy z rovnoměrného rozdělení z~intervalu $\langle 0;1)$.
+                \item \code{generator = Generator(PCG64())}: Inicializuje specifický generátor pseudonáhodných čísel (v~tomto případě PCG-64, což je O'Neillův \href{https://en.wikipedia.org/wiki/Permuted_congruential_generator}{permutační kongruenční generátor}).
+                \item \code{generator.random(size=10)}: vektor délky 10 s elementy z rovnoměrného rozdělení na~intervalu $\langle 0;1)$.
                 \item \code{generator.normal(size=10)}: vektor délky 10 s elementy z normálního Gaussova rozdělení se střední hodnotou $0$ a směrodatnou odchylkou $1$.
-                \item \code{generator.normal(loc=1, scale=2, size=(10,10))}: matice rozměru $10\times10$ s elementy z normálního Gaussova rozdělení se střední hodnotou $1$ a směrodatnou odchylkou $2$.
+                \item \code{generator.normal(loc=1, scale=2, size=(10,10))}: matice rozměru $10\times10$ s elementy z normálního Gaussova rozdělení se střední hodnotou $1$ a směrodatnou odchylkou~$2$.
             \end{itemize}            
     \end{itemize}
 

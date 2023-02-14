@@ -348,6 +348,8 @@ from math import *      # Silně nedoporučované;
 # Funkcí dir() lze zjistit, co všechno modul obsahuje
 dir(math)
 
+""" 4. Zen Pythonu """
+import this
 
 ####################################################
 ## 5. Třídy
