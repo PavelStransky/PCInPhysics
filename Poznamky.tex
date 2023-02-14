@@ -102,7 +102,7 @@
 
 \def\code#1{\textnormal{\texttt{#1}}}
 \def\file#1{\textnormal{\textbf{\texttt{#1}}}}
-\def\ghfile#1#2{\textnormal{\textbf{\texttt{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/#1#2}{#2}}}}}
+\def\ghfile#1#2{\textnormal{\textbf{\texttt{\href{https://github.com/PavelStransky/PCInPhysics/blob/main/#1#2}{#2}}}}}
 
 \def\abbreviation#1{\textnormal{\textsc{#1}}}
 
@@ -134,7 +134,7 @@
 \theoremstyle{blue}
 \newtheorem{solution}{Řešení}[section]
 
-\title{Zápisky k předmětu Využití počítačů ve fyzice}
+\title{Poznámky k předmětu Využití počítačů ve fyzice}
 \date{\today}
 \author{Pavel Stránský}
 
@@ -155,14 +155,15 @@
 
 \subsection{Instalace Pythonu}
 \label{sec:InstalacePython}
-    Instalační soubor pro svůj operační systém stáhnete ze stránky \href{https://python.org}{python.org}.
-    Při instalaci na počítač s Windows doporučuji zvolit \uv{Add Python to PATH}, což zjednoduší práci s Pythonem z příkazové řádky, a na poslední obrazovce zvolit \uv{Disable path length limit}:
+    Instalační soubor pro svůj operační systém stáhnete ze stránky \url{https://www.python.org/downloads/}.
+    Při instalaci na počítač s Windows doporučuji zvolit \uv{Add Python to PATH}, což zjednoduší práci s Pythonem z příkazové řádky, a na posledním dialogovém okně obrazovce zvolit \uv{Disable path length limit} (pokud je tato volba k dispozici):
     \begin{center}
         \includegraphics[width=0.495\linewidth]{PythonInstallPath.png}
         \includegraphics[width=0.495\linewidth]{PythonInstallPathLimit.png}
     \end{center}
     Pro ověření instalace napíšeme v příkazové řádce příkaz \code{python}.\footnote{Na počítačích s Linuxem je příkaz v terminálu \code{python3}.}
     Tím se spustí \abbreviation{REPL}\footnote{{\bf R}ead-{\bf E}valuate-{\bf P}rint-{\bf L}oop.} Pythonu, ve které můžeme již psát všechny příkazy programovacího jazyka, které se po zadání ihned provedou a vypíšou výsledek.
+    REPL ukončíme zadáním příkazu \code{exit()}.
 
 \subsubsection{Instalace doplňujících knihoven}
 \label{sec:pip}
@@ -182,7 +183,15 @@
         Pak lze použít buď výše uvedený příkaz, nebo stručnější \code{pip3 install numpy}.
     }
     
-    Existuje samozřejmě celá řada dalších užitečných a používaných knihoven, jako je například \file{\href{https://pandas.pydata.org/}{Pandas}} pro analýzu dat nebo \file{\href{https://www.sympy.org/}{SymPy}} pro symbolické výpočty, na které v tomto kurzu nedojde.
+    Existuje samozřejmě celá řada dalších užitečných a používaných knihoven, jako je například 
+    \begin{itemize}
+        \item \file{\href{https://pandas.pydata.org/}{Pandas}} pro zpracování a analýzu dat,
+        \item \file{\href{https://www.sympy.org/}{SymPy}} pro symbolické výpočty,
+        \item \file{\href{https://www.tensorflow.org/}{TensorFlow}} (a další) pro strojové učení,
+        \item \file{\href{https://qutip.org/}{QuTiP}} pro simulace kvantových systémů,
+    \end{itemize} 
+    a nepřeberné množství vysoce specializovaných knihoven pro konkrétní fyzikální, matematické či statistické úkoly.
+    Na ně v tomto kurzu nedojde.
 
 \subsection{Instalace Visual Studio Code}
     Instalace jazyka Python obsahuje jednoduché vývojové prostředí nazvané \abbreviation{\href{https://docs.python.org/3/library/idle.html}{IDLE}}.\footnote{
@@ -191,7 +200,7 @@
     To však poskytuje jen omezené možnosti co se týče ladění, psaní rozsáhlejších projektů s více zdrojovými soubory nebo integrace s verzovacími programy.
 
     Pro serióznější práci budeme používat \href{https://code.visualstudio.com}{Visual Studio Code} s doplňkem pro programovací jazyk Python.
-    Instalační soubor stáhnete ze stránky \href{https://code.visualstudio.com}{code.visualstudio.com}.
+    Instalační soubor stáhnete ze stránky \url{https://code.visualstudio.com}.
     Během instalace na počítač s Windows doporučuji zvolit obě možnosti \uv{Add Open with Code action to...},
     \begin{center}\includegraphics[width=0.5\linewidth]{VSCodeInstall.png}\end{center}
     což zjednoduší otevírání složek s projekty nebo samostatných souborů pomocí pravého tlačítka myši.
@@ -207,7 +216,7 @@
     Vyhledáte doplněk \href{https://marketplace.visualstudio.com/items?itemName=ms-python.python}{Python} {\color{red} 2} od Microsoftu, vyberete ho {\color{red} 3} a nainstalujete {\color{red} 4}.
 
 \subsection{Instalace Git}
-    Instalační soubor verzovacího systému \href{https://git-scm.com}{Git} stáhnete z webové stránky \href{https://git-scm.com}{git-scm.com}.
+    Instalační soubor verzovacího systému \href{https://git-scm.com}{Git} stáhnete z webové stránky \url{https://git-scm.com}.
     K instalaci Gitu potřebujete administrátorská práva.
     
     V následujícím postupu zobrazuji jen ty snímky obrazovky, na kterých je vhodné vybrat jinou volbu, než jaká je instalátorem standardně nabízena.
@@ -220,15 +229,23 @@
     Nejběžnější je \code{main}, na které již přešel i populární správce vzdálených repozitářů \href{https://github.com}{GitHub}.
     Doporučuji tedy zvolit pojmenování \code{main}.
 
-    Všechna nastavení lze samozřejmě kdykoliv po instalaci změnit.
+    Všechna ostatní nastavení, na která se táže instalační program, nechte na doporučené hodnotě. 
+    Nastavení lze samozřejmě kdykoliv po instalaci změnit.
+
+\subsection{Instalace Anacondy}
+    \href{https://www.anaconda.com/}{Anaconda} je rozsáhlý balík zahrnující instalaci Pythonu a velké množství knihoven včetně všech knihoven zmiňovaných v sekci~\ref{sec:pip}.
+    Balík navíc obsahuje samostatnou instalaci Visual Studia Code a několik dalších vývojových prostředí, z nichž nejznámější jsou \href{https://www.spyder-ide.org/}{Spyder} a \href{https://jupyter.org/}{Jupyter}.\footnote{
+        Všechny tyto komponenty a vývojová prostředí lze samostatně doinstalovat k holé verzi Pythonu.}
+    Výhoda balíku typu Anaconda spočívá v tom, že všechny knihovny jsou vybrány tak, aby byly mezi sebou kompatibilní a byly zároveň kompatibilní s použitou verzí Pythonu.
+    To je však přináší i největší nevýhodu: verze Pythonu a přiložených knihoven nikdy není ta nejaktuálnější dostupná na trhu, a tedy nelze používat nejnovější funkce a rysy jazyka.
 
 \section{Úvod do používaných nástrojů}
     V této sekci naleznete základy použití verzovacího systému Git a úvod do syntaxe a idiomatiky jazyka Python.
-    Na rozdíl od zbytku poznámek bude tato sekce v průběhu cvičení postupně doplňována podle toho, s jakými technikami se seznámíme v hlavní části cvičení.
+    Tato sekce tvoří jakousi stručnou technickou \uv{referenční příručku}, ke které se budou následující části poznámek odkazovat.
 
 \subsection{Verzovací systém Git}
     Každý si patrně už někdy v životě zasteskl, že nemá uložené dřívější verze svých souborů.
-    Změny, které se ukazují být nevhodné či provedené omylem (kočka nepozorovaně přejde po klávesnici a my pak soubor uložíme), kamarád, který z nějakých důvodů chce tu verzi vašeho programu, kterou jste mu poskytli před rokem, a vy jste mezitím kód zásadně přepsali, to vše jsou důvody k předsevzetí nějakým způsobem důležité milníky v práci na projektu archivovat.
+    Změny, které se ukazují být nevhodné či provedené omylem (kočka nepozorovaně přejde po klávesnici a my pak soubor uložíme), kamarád, který z nějakých důvodů chce zrovna tu verzi vašeho programu, kterou jste mu poskytli před rokem, a vy jste mezitím kód zásadně přepsali, to vše jsou důvody k předsevzetí nějakým způsobem důležité milníky v práci na projektu archivovat.
 
     Triviální verzování může spočívat například v ručním ukládání kopií projektu s daty či jinými označeními jednotlivých verzí.
     Takovýto postup je ale velmi těžkopádný, jelikož v každé kopii musí být uloženy všechny soubory projektu, i pokud se v nich od předchozí verze nic nezměnilo.
@@ -246,10 +263,10 @@
     V něm se uchovávají nejen verze souborů, ale také údaje o tom, kdo a kdy změny provedl.
     To předurčuje verzovací systémy pro efektivní správu týmových projektů, kdy každý člen týmu pracuje na určité části projektu a své změny následně do projektu včleňuje.
 
-    My budeme používat verzovací systém \href{https://git-scm.com}{Git}.
-    Ten patří mezi \emph{distribuované} verzovací systémy\footnote{
+    My se zaměříme na verzovací systém \href{https://git-scm.com}{Git}.
+    Ten patří mezi \emph{distribuované} verzovací systémy,\footnote{
         Další distribuované verzovací systémy jsou například \href{https://www.mercurial-scm.org/}{Mercurial}, \href{https://bazaar.canonical.com}{Bazaar} či \href{http://darcs.net/}{Darcs}.
-    }, což znamená, že každý uživatel má na svém počítači celý obsah repozitáře a pouze ve chvílích, kdy uzná za vhodné nebo kdy je k tomu příležitost, může své změny synchronizovat se \emph{vzdáleným repozitářem}, ve kterém se shromažďují změny od všech členů týmu, začleňují do hlavní vývojové větve projektu a hlídají případné kolize.
+    } což znamená, že každý uživatel má na svém počítači celý obsah repozitáře a pouze ve chvílích, kdy uzná za vhodné nebo kdy je k tomu příležitost, může své změny synchronizovat se \emph{vzdáleným repozitářem}, ve kterém se shromažďují změny od všech členů týmu, začleňují se do hlavní vývojové větve projektu a hlídají se případné kolize.
     Výhody tohoto přístupu oproti centralizovaným verzovacím systémům\footnote{
         Nejznámější reprezentant centralizovaného verzovacího systému je \href{https://subversion.apache.org/}{Subversion}.
     } jsou následující:
@@ -269,7 +286,7 @@
     Tímto způsobem lze používat všechny dostupné funkce Gitu.
     My se s nejdůležitějšími funkcemi seznámíme právě pomocí textových příkazů, protože na nich se nejlépe naučí, jak tento Git funguje a jaké jsou jeho možnosti.
     Jakmile si člověk ujasní principy verzování pomocí Gitu, může využít některý z množství nástrojů a doplňků pro různé programy, které práci s repozitáři usnadní a zrychlí.
-    Obsluha Git repozitářů je integrována i do vývojového prostředí Visual Studio Code.
+    Obsluha Git repozitářů je integrována i do vývojového prostředí Visual Studio Code, ve kterém navíc existuje výborný doplněk \href{https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens}{GitLens}.
 
     Na stránkách projektu Git najdete \href{https://git-scm.com/book/en/v2}{podrobný interaktivní návod} ke všem funkcím verzovacího systému (a to částečně i v \href{https://git-scm.com/book/cs/v2}{češtině}).
 
@@ -280,7 +297,7 @@
         git config --global user.name "..."
         git config --global user.email "..."\end{lstlisting}
     přičemž za ... doplníte své jméno (přezdívku) a email.
-    Těmito údaji se podepisují všechny zapsané změny v repozitáři.
+    Těmito údaji se podepisují všechny vámi zapsané změny v repozitáři.
     Pokud tedy spolupracujete na projektu s jinými lidmi, je dobré zvolit takové údaje, pomocí kterých vás kolegové snadno identifikují a úspěšně kontaktují.
 
     Výpis všech nastavení získáte příkazem
@@ -297,8 +314,8 @@
         \item \emph{Nesledovaný (untracked):} 
             Systém Git historii tohoto souboru neuchovává.
             Každý nové vytvořený soubor je v tomto stavu.
-            Speciální podskupinu tvoří \emph{ignorované (ignored)} soubory, což bývají v drtivé většině pomocné soubory nebo soubory s citlivými údaji.
-            Seznam ignorovaných souborů se uvede do speciálního souboru \file{.gitignore}, o kterém pojednává sekce~\ref{sec:gitignore}.
+            Speciální podskupinu tvoří \emph{ignorované (ignored)} soubory, což bývají v drtivé většině pomocné soubory nebo soubory s citlivými údaji, například přístupovými tokeny nebo přímo hesly.
+            Seznam ignorovaných souborů se zapisuje do speciálního souboru \file{.gitignore}, o kterém pojednává sekce~\ref{sec:gitignore}.
 
         \item \emph{Připravený k zapsání (staged):} 
             Soubor je systémem Git sledován (verzován).
@@ -333,12 +350,12 @@
             \begin{lstlisting}
         git commit [m "popis revize"]\end{lstlisting}
             kde \code{"popis revize"} je povinné označení ukládaného historického snímku.
-            Pokud se neuvede část v hranatých závorkách, systém Git spustí textový editor zvolený při jeho instalaci a v něm otevře soubor, do kterého název revize a případně nějaké podrobnější komentáře uvedete.
+            Pokud se neuvede část v hranatých závorkách, systém Git spustí textový editor zvolený při instalaci a v něm otevře soubor, do kterého název revize a případně nějaké podrobnější komentáře uvedete.
             Po uložení souboru a uzavření textového editoru se provede zapsání.
     \end{itemize}
 
 \subsubsection{Životní cyklus souborů v repozitáři}
-Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci diferenciálních rovnic ze sekce~\ref{sec:ODR1}.
+Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci diferenciálních rovnic ze sekce~\ref{sec:ODR1}.
 
 \subsubsubsection{Vytvoření nového repozitáře}
     Ve složce, jejíž historii chceme ukládat, se repozitář vytvoří jednoduchým příkazem
@@ -349,7 +366,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     V této složce je uložena veškerá zapsaná historie vašeho projektu od jeho vytvoření.
     Pokud tuto složku smažete, přijdete tím o \uv{paměť} systému Git pro daný projekt, avšak aktuální soubory projektu zůstanou tak, jak jsou.
     Pokud naopak přesunete nebo překopírujete složku s projektem včetně podsložky \code{.git} kamkoliv jinam, klidně na jiný počítač, kopírujete zároveň celou historii projektu.
-    Nedoporučuji jakkoliv měnit soubory v této složce, protože tím můžete nevratně narušit integritu repozitáře a systém Git přestane být schopen repozítář používat.
+    Nedoporučuji jakkoliv měnit soubory v této skryté složce, protože tím můžete nevratně narušit integritu repozitáře a systém Git přestane být schopen repozitář používat.
 
 \subsubsubsection{Stav repozitáře}
     Aktuální stav repozitáře kdykoliv zjistíte pomocí
@@ -421,7 +438,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     {\color{blue} Dobrá programátorská praxe je zapisovat vždy jen takový kód, který lze spustit, tj. který neobsahuje žádné syntaktické chyby.}
 
 \subsubsubsection{Přidání dalšího souboru do projektu}
-    V programu na řešení diferenciálních rovnic je dobré oddělit univerzální výpočetní funkce od funkcí specifických pro daný model.
+    V programu na řešení diferenciálních rovnic se bude hodit oddělit univerzální výpočetní funkce od funkcí specifických pro daný model.
     Vytvoříme tedy nový soubor \file{relaxation.py}, do kterého přesuneme kód
     \begin{lstlisting}[style=TinyPython]
         import ode
@@ -495,7 +512,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 
     \item \code{!important.log}
 
-        ale neignoruje soubor \code{important.log}.
+        avšak neignoruje soubor \code{important.log}.
 
     \item \code{*.[oa]}
 
@@ -503,40 +520,40 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
 
     \item \code{temp/}
 
-        Ignoruje všechny soubory v podadresáři \code{temp}.
+        Ignoruje všechny soubory v podsložce \code{temp}.
 
     \item \code{doc/**/*.pdf}
     
-        Ignoruje všechny soubory s příponou \code{pdf} v podadresáři \code{doc} a ve všech jeho podadresářích.
-        Neignoruje však soubory s příponou \code{pdf} v hlavním adresáři projektu.
+        Ignoruje všechny soubory s příponou \code{pdf} v podsložce \code{doc} a ve všech jejích podsložkách.
+        Neignoruje však soubory s příponou \code{pdf} v kořenové složce projektu.
     \end{itemize}
-    Další příklady jsou například~\href{https://www.atlassian.com/git/tutorials/saving-changes/gitignore}{zde}.
+    Další příklady použití souboru \code{.gitignore} jsou například~\href{https://www.atlassian.com/git/tutorials/saving-changes/gitignore}{na této stránce}.
 
     Pokud na GitHubu zakládáte nový projekt, můžete upřesnit, jaký programovací jazyk budete používat a GitHub automaticky vytvoří optimální soubor \code{.gitignore}.
 
     \begin{voluntary}
         Podívejte se do souboru \ghfile{}{.gitignore} v repozitáři k těmto zápiskům.
         Zatímco Python si téměř žádné pomocné soubory nevytváří, {\LaTeX} jich generuje požehnaně.
-        Proto je tento soubor celkem dlouhý. 
+        Proto je seznam ignorovaných souborů celkem dlouhý. 
     \end{voluntary}
 
 \subsubsection{Větve}
 \label{sec:branches}
     Verzovací systém Git umožňuje pracovat paralelně na několika různých verzích kódu a mezi nimi dokáže efektivně přepínat.
     Větvení se hodí v případě, že chceme vyzkoušet více různých přístupů k řešení úlohy.
-    Pro každé vytvoříme vlastní větev úprav, což dovolí řešení porovnávat a nakonec vybrat to, které vyhovuje nejvíce.
+    Pro každý nápad vytvoříme vlastní větev úprav, což dovolí řešení porovnávat a nakonec vybrat to, které vyhovuje nejvíce.
     Každou větev můžeme dále větvit.
-    Perspektivní větve lze následně slučovat dohromady, neperspektivní lze nechat být.
+    Změny v perspektivních větvích lze následně začleňovat do hlavní větve, neperspektivní větve lze nechat být nebo odstranit.
     
     Častá programátorská praxe je taková, že v hlavní větvi\footnote{Hlavní větev se donedávna pojmenovávala \code{master}, dnes se spíše prosazuje pojmenování \code{main}.} se nachází vždy jen odladěná a otestovaná verze programu.
     Pro každou změnu v projektu se vytvoří nová větev.
     Na té se může pracovat hodinu, ale třeba několik měsíců.
-    V této \uv{vývojové} větvi se změny provedou, odladí, pošlou testerům, a teprve poté se začlení do hlavní větve.
+    V této \uv{vývojové} větvi se změny provedou, odladí, pošlou testerům, a teprve po důkladném otestování se začlení do hlavní větve.
     Mezitím je stále k dispozici funkční program hlavní větve, který lze bez obav používat k ostrému provozu.
 
 \subsubsubsection{Vytvoření nové větve}
     Budeme pokračovat ve vývoji programu pro řešení obyčejných diferenciálních rovnic.
-    Předpokládejme, že řešení pro jednu rovnici máme hotové a chceme ho rozšířit tak, bych fungovalo i na soustavu více diferenciálních rovnic 1. řádu, kterým se věnuje sekce~\ref{sec:ODRn}.
+    Předpokládejme, že řešení pro jednu rovnici máme hotové a chceme ho rozšířit tak, aby fungovalo i na soustavu libovolného počtu diferenciálních rovnic 1. řádu, kterým se věnuje sekce~\ref{sec:ODRn}.
     K tomu vytvoříme novou větev \code{odesystem}
     \begin{lstlisting}
         git branch odesystem\end{lstlisting}
@@ -578,10 +595,10 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     Větev odstraníme prostým
     \begin{lstlisting}
         git branch -d odesystem\end{lstlisting}
-    Odstraňovat větve má smysl jen v případě, kdy jsme přesvědčeni, že změny v ní provedené byla slepá cesta.
+    Odstraňovat větve má smysl jen v případě, kdy jsme přesvědčeni, že změny v ní provedené byla slepá cesta, nebo pokud provedené změny byly začleněny do jiné větve.
 
 \subsubsection{Návrat k dřívějším verzím}
-    Pozor, při neopatrném použití těchto příkazů hrozí ztráta dat!
+    {\color{red} Pozor, při neopatrném použití těchto příkazů hrozí ztráta dat!}
     Pokud si budete následující příkazy zkoušet, doporučuji vám zazálohovat si celou složku s projektem včetně repozitáře (složky \file{.git}).
 
     \begin{itemize}
@@ -595,7 +612,7 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
         \item \code{git reset 946cb25} se vrátí na zapsání, jehož hash začíná uvedeným číslem.
         \item \code{git reset ORIG_HEAD} se vrátí na tu zapsanou verzi, na které jsme byli bezprostředně před použitím posledního příkazu \code{git reset}.
         \item \code{git checkout -b oldrev 946cb25} vytvoří novou větev nazvanou \uv{oldrev}, ve které budou soubory ve stavu, kdy bylo provedeno zapsání s uvedeným hashem (hash zjistíme například pomocí \code{git log -{}-oneline} popsaného v sekci~\ref{sec:gitlog}).
-        \item \code{git checkout 946cb25} vrátí se do tohoto zapsání, ale ponechá historii tak, jak je.\footnote{Tzv. Detached HEAD state.}.
+        \item \code{git checkout 946cb25} vrátí se do tohoto zapsání, ale ponechá historii tak, jak je.\footnote{Tzv. detached HEAD state.}.
             K návratu zpět stačí použít příkaz pro přepnutí do hlavní větve \code{git switch main}.
     \end{itemize}
 
@@ -606,21 +623,20 @@ Práci s repozitářem budu demonstrovat na příkladu projektu pro integraci di
     \begin{itemize}
     \item \href{https://github.com}{GitHub}: 
         Na něm si každý může zdarma zřídit vlastní repozitáře a používat je například k~synchronizaci svého projektu mezi různými počítači, pro sdílení vlastních výtvorů s komunitou nebo právě pro spolupráci ve vlastním týmu. 
-        Vlastníkem firmy vyvíjející tento systém je Microsoft.
-        Z toho důvodu je základní práce s ním integrována i co vývojového prostředí Visual Studio Code.
+        Vlastníkem firmy vyvíjející tento systém je Microsoft, díky čemuž je základní práce s ním integrována do vývojového prostředí Visual Studio Code.
     \item \href{https://gitlab.mff.cuni.cz}{GitLab}: 
         Open source řešení, základní verze rovněž zdarma, k pokročilé verzi má MFF UK licenci.
     \end{itemize}
     Oba systémy disponují webovým rozhraním, ze kterého lze projekty jednoduše spravovat, a~rovněž desktopovými aplikacemi, které umožňují pracovat s lokálními repozitáři pomocí jednoduchého rozhraní.
     Pro GitHub existuje například \href{https://desktop.github.com}{GitHub Desktop}.
-    Projekty mohou být soukromé (přístup k nim máte pouze vy či ti, kterým pošlete pozvánku) nebo veřejné (přístup má kdokoliv).
+    Projekty mohou být buď soukromé (přístup k nim máte pouze vy či ti, kterým pošlete pozvánku), nebo veřejné (přístup má zcela kdokoliv).
 
-    Tyto zápisky a vzorové ukázky kódů jsou veřejně na GitHubu a můžete k nim dostat na adrese \url{https://github.com/PavelStransky/PCInPhysics2021}.
+    Tyto zápisky a vzorové ukázky kódů jsou veřejně na GitHubu a můžete k nim dostat na adrese \url{https://github.com/PavelStransky/PCInPhysics}.
     K dispozici je samozřejmě celý repozitář s historií se všemi commity a se všemi vývojovými větvemi.
     Repozitář můžete stáhnout buď z uvedené webové stránky (zelené tlačítko \code{Clone or download}), nebo pomocí programu git.
 
     \begin{itemize}
-    \item \code{git clone https://github.com/PavelStransky/PCInPhysics2021}
+    \item \code{git clone https://github.com/PavelStransky/PCInPhysics}
     
         V aktuální složce vytvoří podsložku \code{PCInPhysics} a do ní stáhne celý repozitář.
         V případě těchto zápisků se jedná o tento soubor v {\LaTeX}u,

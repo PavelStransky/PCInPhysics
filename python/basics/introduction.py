@@ -5,7 +5,7 @@
 """
 
 ####################################################
-##### 1. Základní datové typy a operátory
+##### 1. Základní datové typy a operátory ##########
 ####################################################
 
 """ Celá čísla (int) """
@@ -19,13 +19,13 @@
 1 + 1               # = 2           # sčítání
 8 - 1               # = 7           # odčítání
 10 * 2              # = 20          # násobení
-35 / 5              # = 7.0         # Dělení vždy vrací číslo s desetinnou čárkou
-5 // 3              # = 2           # Pokud se nejedná o speciální celočíselné dělení, kdy je desetinná část oříznuta 
+35 / 5              # = 7.0         # Dělení / VŽDY vrací číslo s desetinnou čárkou
+5 // 3              # = 2           # ...pokud se nejedná o speciální celočíselné dělení //, kdy je desetinná část oříznuta 
 -5 // 3             # = -2          # (platí i záporná čísla)
 7 % 3               # = 1           # Modulo (zbytek po celočíselném dělení 
 2**4                # = 16          # Mocnění (x na y-tou)
 
-3 * 2.0             # = 6.0         # Pokud je jeden operand desetinným číslem, výsledek je jím také
+3 * 2.0             # = 6.0         # Pokud je jeden operand desetinným číslem, výsledek také desetinné číslo
 
 (1 + 3) * 2         # = 8           # Závorky pro změnu priority operátorů
 
@@ -58,7 +58,8 @@ not True            # = False       # Negace
 
 # Víceřádkové řetězce se uvozují """ nebo '''
 ''' Toto je jedna možnost,
-jak zapsat víceřádkový řetězec '''
+jak zapsat víceřádkový řetězec. 
+V řetězci budou i symboly pro nový řádek. '''
 
 # Slučování řetězců
 "Rychlost " + "světla"  # = "Rychlost světla"
@@ -71,12 +72,12 @@ hbar = 1.054572E-34
 
 # Použití metody format ("New Style" formátování)
 # https://docs.python.org/3/library/string.html#formatstrings
-"{} konstanta má hodnotu {} {}".format("Redukovaná Plackova", hbar, "Js") 
+"{} má hodnotu {} {}".format("Redukovaná Plackova konstanta", hbar, "Js") 
                         # = "Redukovaná Planckova konstanta má hodnotu 1.054572e-34 Js"
 "{nazev} konstanta má hodnotu {hodnota} {jednotka}".format(nazev="Boltzmannova", hodnota=1.380649E-23, jednotka="J/K")                     
                         # Hodnoty lze pojmenovat
 "Komu se ne{rym}, tomu se ze{rym}".format(rym="lení")   
-                        # Označení se může ve formátovaném řetězci libovolně opakovat
+                        # Označení se může ve formátovaném řetězci libovolněkrát opakovat
 
 # Interpolace (f - řetězec)
 f"Redukovaná Planckova konstanta má hodnotu {hbar} Js"  
@@ -98,7 +99,8 @@ None
 int(2.82)               # = 2       # float to int
 float("9.34")           # = 9.34    # string to float
 str(3.14)               # = "3.14"  # float to string
-bool(0)                 # = False   # int to bool (všechny hodnoty jsou True jen 0 je False)
+bool(0)                 # = False   # int to bool (všechny hodnoty jsou True, jen 0 je False)
+
 
 ####################################################
 ##### 2. Proměnné a kolekce
@@ -109,8 +111,9 @@ bool(0)                 # = False   # int to bool (všechny hodnoty jsou True je
 # Lze pojmenovávat jakkoliv, klíčová je hlavně konzistence.
 # Kód je čitelnější, pokud podle pojmenování proměnné ihned víme, co obsahuje.
 pocet_kraju = 14
-# Názvy proměnných mohou obsahovat i unicode znaky, například písmena s diakritikou, ale nedoporučuji to.
-# Naopak doporučuji používat anglické pojmenování proměnných, protože nikdy nevíte, kdo bude váš kód používat.
+# Názvy proměnných mohou obsahovat i unicode znaky, například písmena s diakritikou, ale nedoporučuje se to.
+# Naopak se doporučuje používat anglické pojmenování proměnných, protože nikdy nevíte, kdo bude váš kód používat.
+# Navíc tak odpadá problém se skloňováním.
 počet_krajů = 14
 
 del počet_krajů                     # Odstraní proměnnou
@@ -119,34 +122,32 @@ pocet_kraju += 2                    # Zvýšení počtu krajů o 2
 
 # V Pythonu neexistuje operátor ++
 
-""" Seznamy (lists) """
-otevrena_divadla = []               # Prázdný seznam
+""" Seznamy [lists] """
+# Uspořádané množiny indexované celými čísly
+stanice_metra_v_brne = []           # Prázdný seznam
 fibonacci = [1, 1, 2, 3, 5]         # Začátek Fibonacciho řady
-
 
 fibonacci.append(8)                 # Na konec seznamu se přidává pomocí append
 fibonacci.pop()                     # pop naopak z konce řady prvek odstraní
 
 fibonacci[0]        # = 1           # Python indexuje od 0, takže toto je první prvek
-fibonacci[-1]       # = 5           # Lze indexovat i odzadu
+fibonacci[-1]       # = 5           # Lze indexovat i odzadu: -1 je poslední prvek, -2 předposlední atd.
 
 fibonacci.append(fibonacci[-1] + fibonacci[-2]) # Takto můžeme postupně přidávat další prvky Fibonacciho řady
 
 5 in fibonacci      # = True        # Kontrola, jestli prvek 5 v seznamu existuje
 len(fibonacci)      # = 6           # Délka seznamu
 
-# Řezy (slices)
+# Řezy (slices) zacatek:konec:krok == slice(zacatek, konec, krok)
 fibonacci[0:2]      # = [1, 1]      # Vybere prvky s indexy 0 a 1 (dolní mez včetně, horní mez nikdy; počet vybraných prvků je tedy horní-spodní mez)
 fibonacci[3:]       # = [3, 5, 8]   # Prvky od indexu 3 do konce seznamu
 fibonacci[:3]       # = [1, 1, 2]   # 3 prvky od začátku řady
 fibonacci[::2]      # = [1, 2, 5]   # Každý druhý prvek
 fibonacci[::-1]     # = [8, 5, 3, 2, 1, 1]  # Seznam v opačném pořadí
 
-# [zacatek:konec:krok] == slice(zacatek, konec, krok)
-
 # Kopie seznamu
 f = fibonacci               # POZOR! Provede tzv. mělkou kopii, tj. f a fibonacci ukazují na stejné místo v paměti
-f[0] = -1
+f[0] = -1                   # ... a při změně v jedné proměnné dojde ke změně i v druhé
 print(f)                    # = [-1, 1, 2, 5, 8]
 print(fibonacci)            # = [-1, 1, 2, 5, 8]
 f = fibonacci.copy()        # Pro opravdovou kopii seznamu nutné pooužít buď metodu copy()...
@@ -156,23 +157,24 @@ f = fibonacci[:]            # ...nebo řez
 fibonacci + [13, 21]        # = [1, 1, 2, 3, 5, 8, 13, 21]
 fibonacci.extend([13, 21])  # totéž
 
-pelmel = [0, "Ryba", fibonacci, hbar]   # Prvky seznamu nemusejí mít stejné typy; prvky seznamu mohou být i seznamy
+pelmel = [0, "Ryba", [1, 1, 2, 3, 5, 8], hbar]   # Prvky seznamu nemusejí mít stejné typy; prvky seznamu mohou být i seznamy či jiné složené typy
 
 # Rozbalení seznamů a n-tic
-otevrena_divadla, zivocich, fibonacci, hbar = pelmel
+metro_v_brne, zivocich, fibonacci, hbar = pelmel
 print(zivocich)             # = "Ryba"
 
 a, b = 10, 20               # Pomocí rozbalení lze přiřazovat více proměnných zároveň
 a, b = b, a                 # A takto jednoduše prohodíme hodnoty dvou proměnných
 
 """ N-tice (tuples)"""
-# Jako seznam, ale nelze měnit prvky seznamu
+# Jako seznam, ale nelze měnit prvky seznamu.
 ntice = (2, 4, 6)
 ntice = (1,)                # Pokud chceme n-tici s jedním prvkem, musíme použít tento zápis
+ntice[0] = 1                # CHYBA!
 
-""" Slovníky """
+""" Slovníky {dictionaries} """
 # Neuspořádané množiny, kdy každý element má vlastní klíč a hodnotu
-cena = {"mleko": 19.9, "chleba": 32.5, "kvetak": 48.2}
+cena = {"mleko": 19.9, "chleba": 32.5, "kvetak": 48.2}      # Ceny v roce 2021
 
 cena["chleba"]          # = 32.5                            # Indexuje se pomocí klíče
 list(cena.keys())       # = ["chleba", "mleko", "kvetak"]   # Seznam klíčů; není zaručeno pořadí
@@ -195,10 +197,14 @@ prvocisla & dvouciferna_prvocisla   # = {11, 13, 23}                        # Pr
 prvocisla | dvouciferna_prvocisla   # = {2, 3, 5, 7, 11, 13, 17, 19, 23}    # Sjednocení
 prvocisla - dvouciferna_prvocisla   # = {2, 3, 5, 7}                        # Rozdíl
 
+
 ####################################################
 ## 3. Řízení toku programu, cykly
 ####################################################
-# Bloky kódu musí být odsazeny a musí mít stejné odsazení
+# Bloky kódu musí být odsazeny (odsazení má syntaktický význam) a musejí mít odsazení
+# stejným počtem stejných prázdných znaků (pozor na tabulátory vs mezery!)
+
+otevrena_divadla = 2
 
 """ Podmínka """
 if otevrena_divadla > 1:
@@ -209,11 +215,11 @@ else:                               # Část else je také nepovinná
     print("Vše zavřené. Korona.")
 
 """ Cyklus """
-# Provádí se přes jakýkoliv iterovatelný objekt
+# Provádí se přes jakýkoliv iterovatelný objekt. Preferovaný způsob používání cyklů v Pythonu.
 for fyzik in ["Einstein", "Dirac", "Feynman"]:
     print(f"{fyzik} byl génius.")
 
-for zbozi in cena.keys():   # cena.keys() je iterovatelný objekt, lze ho takto vypsat
+for zbozi in cena.keys():   # cena.keys() je iterovatelný objekt, a proto ho lze takto vypsat
     print(zbozi)
 
 # Chceme-li iterovat přes celá čísla, použijeme range
@@ -224,27 +230,34 @@ for j in range(10, 20, 3):  # Vypíše čísla od 10 (včetně) do 20 s krokem 3
     print(j)        
 
 """ Smyčka """
-while len(fibonacci) < 10:  # Provádí smyčku do té doby, dokud je splněna podmínka (dokud nemá seznam fibonacci deset prvků)
+fibonacci = [1, 1]
+while len(fibonacci) < 10:  # Provádí smyčku do té doby, dokud je splněna podmínka 
+                            # (dokud nemá seznam fibonacci deset prvků)
     fibonacci.append(fibonacci[-1] + fibonacci[-2])    
+print(fibonacci)
 
-# Ve smyčce a cyklu lze použít klíčová slova continue (pro okamžité provádění další iterace) a break (pro okamžité ukončení)
+# Ve smyčce a cyklu lze použít klíčová slova 
+# continue (pro okamžité provádění další iterace),
+# break (pro okamžité ukončení).
 while True:                             # Nekonečná smyčka
     zadani = input('Zadejte řetězec: ') # Zadání z klávesnice
     if len(zadani) > 5:                 # Je-li délka slova větší než 5...
         print("V pořádku. Končím.")
         break                           # ...smyčku ukončíme
     print(f"Řetězec {zadani} je příliš krátký. Zadejte znovu.")
+print(zadani)                           # Proměnná inicializovaná v bloku je viditelná i mimo blok.
+
 
 ####################################################
 ## 4. Funkce
 ####################################################
 # Stejně jako v případě cyklů, i zde je tělo funkce v odsazeném bloku
 
-def odecti(x, y=1):      # Funkce (metoda) se definuje klíčovým slovem def; můžeme zadat i implicitní hototy argumentů
+def odecti(x, y=1):      # Funkce (metoda) se definuje klíčovým slovem def; můžeme zadat i implicitní hodnoty argumentů
     """
-        Vložíme-li takovýto komentář bezprostředně pod deklaraci funkce,
-        slouží jako dokumentační komentář (docstring) a lze k němu přistoupit přes atribut __doc__.
-        Zobrazí se také v našeptávači Visual Studio Code, pokud nad název funkce najedeme myší.
+    Vložíme-li takovýto komentář bezprostředně pod deklaraci funkce,
+    slouží jako dokumentační komentář (docstring) a lze k němu přistoupit přes atribut __doc__.
+    Zobrazí se také v našeptávači Visual Studio Code, pokud nad název funkce najedeme myší.
     """
     return x - y        # Hodnoty se vrací pomocí return
 
@@ -257,10 +270,10 @@ odecti({1, 3, 4}, {3, 5})           # Dynamické typování zabezpečí, že fun
 
 print(odecti.__doc__)               # Vypíše komentář k funkci
 
-# Python neumožňuje přetěžování funkcí (jako většina objektových programovacích jazyků).
+# Python neumožňuje přetěžování funkcí (narozdíl od většiny objektových programovacích jazyků).
 # Pokud chceme funkci s proměnným množstvím argumentů, použijeme v deklaraci 
-# operátor * (pojmenování args je jen konvence) pro všechny nepojmenované argumenty; typ args je n-tice
-# operátor ** (kwargs je opět jen konvence) pro všechny pojmenované argumenty; typ kwargs je slovník
+# operátor * (pojmenování args je jen konvence) pro všechny NEPOJMENOVANÉ argumenty; typ args bude n-tice
+# operátor ** (kwargs je opět jen konvence) pro všechny POJMENOVANÉ argumenty; typ kwargs bude slovník
 def promenne_mnozstvi_argumentu(x, y, *args, **kwargs):
     print(f"x = {x}, y = {y}")
     print(f"Nepojmenované dodatečné argumenty: {args})")
@@ -271,31 +284,32 @@ promenne_mnozstvi_argumentu(5, 3, 2, 1, 0, z=5, nazev="Cisla")
 
 """ Pokročilejší použití funkcí """
 def vyrobit_scitacku(pricitane_cislo):
-    def scitacka(x):
+    def scitacka(x):                # Funkce lze vnořovat
         return x + pricitane_cislo
     return scitacka
 
 pricist_10 = vyrobit_scitacku(10)
 pricist_10(3)       # = 13
 
-# Anonymní funkce
+# Anonymní funkce (lambda funkce)
 def vyrobit_nasobicku(nasobene_cislo):
     return lambda x: x * nasobene_cislo     # Pomocí klíčového slova lambda
 
 nasobit_2 = vyrobit_nasobicku(2)
-nasobit_2(10)
+nasobit_2(10)      # = 20
 
-print(pricist_10.__name__)          # Jméno funkce
+print(pricist_10.__name__)          # Jméno funkce pomocí atributu __name__
 print(nasobit_2.__name__)           # Funkce je opravdu anonymní
 
 """ Základní prvky funkcionálního programování """
 # Lze použít funkce map() a filter() z funkcionálního programování
+fibonacci = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
 f_10 = map(pricist_10, fibonacci)   # Vytvoři iterovatelný objekt s elementy Fibonacciho řady zvětšenými o 10
-for x in f_10:                      # Ověření, že to funguje (pozor, lze iterovat pouze jednou)
+for x in f_10:                      # Ověření, že to funguje (pozor, lze iterovat pouze jednou!)
     print(x)                        
 
 flt = filter(lambda x: 10 <= x <= 30, fibonacci)    # Hodnoty Fibonacciho řady v daných mezích
-for x in flt:                       # Ověření, že to funguje
+for x in flt:                       # Ověření, že to funguje (opět možný pouze jeden průchod)
     print(x)                        
 
 """ Generátorová notace """
@@ -304,7 +318,8 @@ f_10 = [pricist_10(x) for x in fibonacci]       # [11, 11, 12, 13, 15, 18, 23, 3
 flt = [x for x in fibonacci if 10 <= x <= 30]   # [13, 21]
 
 druhe_mocniny = {x: x**2 for x in range(1, 5)}  # => {1: 1, 2: 4, 3: 9, 4: 16}  # Slovník druhých mocnin
-hlasky = {pismeno for pismeno in "abeceda"}     # => {"d", "a", "c", "e", "b"}  # Množina
+hlasky = {pismeno for pismeno in "abeceda"}     # => {"d", "a", "c", "e", "b"}  # Množina písmen ve slově "abeceda"
+
 
 ####################################################
 ## 5. Moduly
@@ -317,7 +332,7 @@ hlasky = {pismeno for pismeno in "abeceda"}     # => {"d", "a", "c", "e", "b"}  
 import math             # Modul s matematickými funkcemi
 print(math.sqrt(16.0))  # = 4 (odmocnina)
 
-# Modul lze přejmenovat při importu
+# Modul lze přejmenovat při importu pro snazší použití
 import math as m
 print(m.sin(m.pi / 6))  # = 0.5
 
@@ -327,14 +342,17 @@ print(ceil(3.7))        # = 4.0     # Horní celá část
 print(floor(3.7))       # = 3.0     # Dolní celá část
 
 """ 3. Načtení všech funkcí z modulu """
-from math import *      # Silně nedoporučované - může docházet ke kolizím jmen, pokud se funkce s daným jménem vyskytuje ve více modulech
+from math import *      # Silně nedoporučované; 
+                        # může docházet ke kolizím jmen, pokud se funkce s daným jménem vyskytuje ve více modulech
 
 # Funkcí dir() lze zjistit, co všechno modul obsahuje
 dir(math)
 
+
 ####################################################
 ## 5. Třídy
 ####################################################
+# Možnosti a vlastnosti tříd se v Pythonu v mnohém liší od jiných objektově orientovaných jazyků (C++, Java)
 class Bod:                              # Deklarace třídy
     dimenze = "rovina"                  # Atribut třídy - je sdílený všemi instancemi
     
@@ -342,7 +360,8 @@ class Bod:                              # Deklarace třídy
         self.x = x                      # Přiřazení parametru do atributu instance
         self.y = y
 
-    def otoc(self, uhel):               # Metoda instance. Všechny metody instance musejí mít "self" jako první parametr (označení self je konvence, lze použít třeba this známé z jiných objekových jazyků)
+    def otoc(self, uhel):               # Metoda instance. POZOR, všechny metody instance musejí mít "self" jako první parametr 
+                                        # (označení self je konvence, lze použít třeba this známé z jiných objekových jazyků)
         self.x = self.x * math.cos(uhel) + self.y * math.sin(uhel)
         self.y = -self.x * math.sin(uhel) + self.y * math.cos(uhel)
 
@@ -365,7 +384,7 @@ print(p)
 p.otoc(math.pi)
 print(p)
 
-p.y = 0                                 # V Pythonu jsou všechny atributy veřejné a lze je měnit
+p.y = 0                                 # V Pythonu jsou všechny atributy veřejné, a lze je tedy kdykoliv měnit
 print(p)
 
 # Volání třídní metody
