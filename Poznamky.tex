@@ -150,7 +150,7 @@
     Tento volně dostupný program lze nainstalovat na všechny neužívanější operační systémy (Linux, Windows, macOS).    
     Má nepřeberné možnosti při editaci zdrojových souborů, překladu a ladění snad ve všech známých programovacích jazycích.
     Bohaté možnosti nastavení umožnují přizpůsobit si práci svým potřebám (například zvýrazňování syntaxe, klávesové zkratky či vzhled prostředí).
-    Pomocí doplňků ho můžete integrovat s dalšími službami, například s verzovacím programem Git, či vzdálenými repozitáři, čehož také využijeme.
+    Pomocí doplňků ho můžete integrovat s dalšími službami, například s verzovacím programem Git nebo vzdálenými repozitáři, čehož také využijeme.
     Komunita, která toto vývojové prostředí používá a spravuje, je obrovská, což zaručuje dobrou podporu a rychlé přidávání nových funkcí.
 
 \subsection{Instalace Pythonu}
@@ -187,14 +187,15 @@
     \begin{itemize}
         \item \file{\href{https://pandas.pydata.org/}{Pandas}} pro zpracování a analýzu dat,
         \item \file{\href{https://www.sympy.org/}{SymPy}} pro symbolické výpočty,
-        \item \file{\href{https://www.tensorflow.org/}{TensorFlow}} (a další) pro strojové učení,
+        \item \file{\href{https://www.tensorflow.org/}{TensorFlow}}, 
+            \file{\href{https://scikit-learn.org}{scikit-learn}} (a další) pro strojové učení,
         \item \file{\href{https://qutip.org/}{QuTiP}} pro simulace kvantových systémů,
     \end{itemize} 
     a nepřeberné množství vysoce specializovaných knihoven pro konkrétní fyzikální, matematické či statistické úkoly.
-    Na ně v tomto kurzu nedojde.
+    S nimi se seznámíte ve specializovaných kurzech a přednáškách.
 
 \subsection{Instalace Visual Studio Code}
-    Instalace jazyka Python obsahuje jednoduché vývojové prostředí nazvané \abbreviation{\href{https://docs.python.org/3/library/idle.html}{IDLE}}.\footnote{
+    Instalace jazyka Python s sebou nese jednoduché vývojové prostředí nazvané \abbreviation{\href{https://docs.python.org/3/library/idle.html}{IDLE}}.\footnote{
         {\bf I}ntegrated {\bf D}evelopment and {\bf L}earning {\bf E}nvironment.
     }
     To však poskytuje jen omezené možnosti co se týče ladění, psaní rozsáhlejších projektů s více zdrojovými soubory nebo integrace s verzovacími programy.
@@ -209,6 +210,41 @@
     \begin{lstlisting}
         sudo snap install --classic code\end{lstlisting}
     nebo použít tento \href{https://code.visualstudio.com/docs/setup/linux}{návod}.
+    
+    \subsubsection{Klávesové zkratky}
+    Ačkoliv veškeré funkce vývojového prostředí Visual Studio Code lze používat pomocí myši, pro seriózní práci je dobré se naučit klávesové zkratky, jelikož významně zrychují a zefektivňují práci.
+    Základní klávesové zkratky (nový soubor, uložení souboru, hledání v souboru, navigace v souboru, kopírování a vkládání atd.) fungují stejně jako v jiných programech.
+    Kromě toho je ve Visual Studiu Code množství klávesových zkratek, které usnadňují editaci, spouštění, ladění a správu kódu.
+    Všechny klávesové zkratky lze zobrazit a upravit podle vlastních preferencí stiskem kláves \code{Ctrl+K Ctrl+S}.
+
+    Klávesové zkratky se liší podle použitého operačního systému.
+    Doporučuji vám projít si oficiální \uv{taháky} s nejdůležitějšími zkratkami pro
+    \href{https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf}{Windows}, 
+    \href{https://code.visualstudio.com/shortcuts/keyboard-shortcuts-linux.pdf}{Linux} i 
+    \href{https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf}{MacOS} 
+    přímo od tvůrců tohoto vývojového prostředí.
+    Uvedené klávesove zkratky platí pro rozložení klávesnice Angličtina (Spojené státy).
+    Pro jiné rozložení klávesnice nemusejí některé z nich fungovat.
+
+    Pro Windows nejdůležitější zkratky jsou:
+    \begin{itemize}
+        \item \code{Alt + Z}: Zalomí dlouhé řádky na konci okna.
+        \item \code{Alt + ←}: Vrátí kurzor na předchozí pozici (například po odskrolování někam do neznáma).
+        \item \code{Ctrl + /}: Přidá či odstraní komentář řádku.
+        \item \code{Ctrl + [, Tab}: Odsadí označenou část kódu o jednu úroveň.
+        \item \code{Ctrl + ], Shift + Tab}: Zmenší odsazení označené části kódu o jednu úroveň.
+        \item \code{Ctrl + Mezera}: Zobrazí okénko s nápovědou k danému symbolu.
+        \item \code{F12}: Posune kurzor na definici daného symbolu (proměnné, funkce, atd.).
+        \item \code{Shift + F12}: Zobrazí všechny reference na daný symbol.
+        \item \code{Ctrl + G}: Přechod na řádek s daným číslem.
+        \item \code{Ctrl + Shift + O}: Zobrazí všechny definované symboly v otevřeném okně.
+        \item \code{F2}: Přejmenuje symbol (proměnnou, funkci, atd.) v rozahu jeho platnosti.
+        \item \code{Shift + Enter}: Spustí označenou část kódu v konzoli.
+        \item \code{Ctrl + F5}: Spustí otevřený soubor.
+        \item \code{F5}: Spustí otevřený soubor v režimu ladění.
+        \item \code{F9}: Přidá ladící bod.
+    \end{itemize}
+
 
 \subsubsection{Instalace doplňku pro Python}
     \begin{center}\includegraphics[width=\linewidth]{VSCodeInstallPython.png}\end{center}
@@ -217,7 +253,7 @@
 
 \subsection{Instalace Git}
     Instalační soubor verzovacího systému \href{https://git-scm.com}{Git} stáhnete z webové stránky \url{https://git-scm.com}.
-    K instalaci Gitu potřebujete administrátorská práva.
+    K instalaci Gitu potřebujete administrátorská práva na svém počítači.
     
     V následujícím postupu zobrazuji jen ty snímky obrazovky, na kterých je vhodné vybrat jinou volbu, než jaká je instalátorem standardně nabízena.
     \begin{center}\includegraphics[width=0.5\linewidth]{GitInstallEditor.png}\end{center}
@@ -232,12 +268,15 @@
     Všechna ostatní nastavení, na která se táže instalační program, nechte na doporučené hodnotě. 
     Nastavení lze samozřejmě kdykoliv po instalaci změnit.
 
-\subsection{Instalace Anacondy}
-    \href{https://www.anaconda.com/}{Anaconda} je rozsáhlý balík zahrnující instalaci Pythonu a velké množství knihoven včetně všech knihoven zmiňovaných v sekci~\ref{sec:pip}.
-    Balík navíc obsahuje samostatnou instalaci Visual Studia Code a několik dalších vývojových prostředí, z nichž nejznámější jsou \href{https://www.spyder-ide.org/}{Spyder} a \href{https://jupyter.org/}{Jupyter}.\footnote{
-        Všechny tyto komponenty a vývojová prostředí lze samostatně doinstalovat k holé verzi Pythonu.}
-    Výhoda balíku typu Anaconda spočívá v tom, že všechny knihovny jsou vybrány tak, aby byly mezi sebou kompatibilní a byly zároveň kompatibilní s použitou verzí Pythonu.
-    To je však přináší i největší nevýhodu: verze Pythonu a přiložených knihoven nikdy není ta nejaktuálnější dostupná na trhu, a tedy nelze používat nejnovější funkce a rysy jazyka.
+\subsection{Anaconda}
+    Ačkoliv platforma \href{https://www.anaconda.com/}{Anaconda} nebude v tomto kurzu využívána, vzhledem k jejímu rozšíření stojí za to se o ní zmínit.
+    Jedná se o rozsáhlý balík programů zahrnující instalaci Pythonu a velké množství knihoven včetně všech knihoven zmiňovaných v sekci~\ref{sec:pip}.
+    Balík navíc obsahuje samostatnou instalaci vývojového prostředí Visual Studio Code a několik dalších vývojových prostředí, z nichž nejznámější jsou \href{https://www.spyder-ide.org/}{Spyder} a \href{https://jupyter.org/}{Jupyter}.\footnote{
+        Všechny tyto komponenty a vývojová prostředí lze samozřejmě samostatně doinstalovat k holé verzi Pythonu.}
+    Výhoda platformy typu Anaconda spočívá v tom, že všechny knihovny jsou vybrány tak, aby byly mezi sebou kompatibilní a byly zároveň kompatibilní s použitou verzí Pythonu.
+    To však přináší i hlavní nevýhodu: verze Pythonu a přiložených knihoven nikdy není ta nejaktuálnější dostupná na trhu, a tedy nelze používat nejnovější funkce a rysy jazyka.
+    Navíc Anaconda bude vždy obsahovat množství knihoven a programů, které nevyužijete, jen budou zabírat místo na disku a mohou zpomalovat chod používaných funkcí.
+
 
 \section{Úvod do používaných nástrojů}
     V této sekci naleznete základy použití verzovacího systému Git a úvod do syntaxe a idiomatiky jazyka Python.
@@ -687,7 +726,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
         Následně si do vzdáleného repozitáře nahrajte lokální repozitář pomocí příkazu \code{git push}. 
     \end{voluntary}
 
-\subsubsection{Cheat Sheet}
+\subsubsection{Tahák}
     Pro snadnou orientaci v použití Gitu bez nutnosti pamatovat si všechny příkazy je dostupný \href{https://training.github.com/downloads/github-git-cheat-sheet.pdf}{Git Cheat Sheet} nebo \href{https://ndpsoftware.com/git-cheatsheet.html}{tento interaktivní web}.
 
 \subsection{Programovací jazyk Python}
@@ -708,7 +747,8 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
             U interpretovaných jazyků se neztrácí čas překladem do strojového kódu a je pro ně přirozené dynamické typování proměnných.
             Tím, že interpet čte text kódu příkaz po příkazu, je provádění programů pomalejší, ale vzhledem k tomu, že velká část časově náročných funkcí a knihoven bývá napsána v rychlejších programovacích jazycích, není to zásadní nevýhoda.
             
-            Opakem intepretovaných jazyků jsou jazyky kompilované, přičemž kompilace se provádí buď přímo do strojového kódu daného procesoru\footnote{Například C/C++, Pascal nebo Fortran.} nebo do mezikódu. Ten  ke spuštění vyžaduje dodatečnou kompilaci, která však může být vysoce optimalizovaná přímo pro danou hardwarovou konfiguraci použitého počítače.\footnote{Zde se jedná napřílad o jazyky Java, C\# a celý .NET framework nebo Julia.}
+            Opakem intepretovaných jazyků jsou jazyky kompilované, přičemž kompilace se provádí buď přímo do strojového kódu daného procesoru\footnote{Například C/C++, Pascal nebo Fortran.} nebo do mezikódu. 
+            Mezikód ke spuštění vyžaduje dodatečnou kompilaci, která však může být vysoce optimalizovaná přímo pro danou hardwarovou konfiguraci použitého počítače.\footnote{Zde se jedná napřílad o jazyky Java, C\# a celý .NET framework nebo Julia.}
 
         \item 
             \emph{Dynamicky typovaný}, což znamená, že proměnná nemusí mít předem daný typ a typ proměnné se může za běhu programu dokonce měnit.
