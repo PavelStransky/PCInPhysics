@@ -349,7 +349,7 @@
         git help config\end{lstlisting}
 
 \subsubsection{Čtyři možné stavy souborů v repozitáři}
-    \begin{itemize}
+    \begin{enumerate}
         \item \emph{Nesledovaný (untracked):} 
             Systém Git historii tohoto souboru neuchovává.
             Každý nové vytvořený soubor je v tomto stavu.
@@ -391,7 +391,9 @@
             kde \code{"popis revize"} je povinné označení ukládaného historického snímku.
             Pokud se neuvede část v hranatých závorkách, systém Git spustí textový editor zvolený při instalaci a v něm otevře soubor, do kterého název revize a případně nějaké podrobnější komentáře uvedete.
             Po uložení souboru a uzavření textového editoru se provede zapsání.
-    \end{itemize}
+
+            Každé zapsání ukládá úplný obraz celého repozitáře a lze se k němu kdykoliv vrátit.
+    \end{enumerate}
 
 \subsubsection{Životní cyklus souborů v repozitáři}
 Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci diferenciálních rovnic ze sekce~\ref{sec:ODR1}.

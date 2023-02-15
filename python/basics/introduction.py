@@ -247,6 +247,24 @@ while True:                             # Nekonečná smyčka
     print(f"Řetězec {zadani} je příliš krátký. Zadejte znovu.")
 print(zadani)                           # Proměnná inicializovaná v bloku je viditelná i mimo blok.
 
+""" Comprehension """
+# Vytvoření nového seznamu (slovníku, n-tice) z existujícího iterovatelného objektu
+ovoce = ["jablko", "hruška", "švestka", "třešeň", "mango"]
+
+# Následující kód vytvoří nový seznam všech ovocí, v jejichž názvu je písmeno ň
+ovoce_nove = []
+for o in ovoce:     
+    if "ň" in o:                        
+        ovoce_nove.append(o)
+
+# Lze napsat mnohem kratším způsobem pomocí comprehension
+ovoce_nove = [o for o in ovoce if "ň" in o] 
+
+# Další příklady
+ovoce_cr = [o if o != "mango" else "malina" for o in ovoce]
+ovoce_velka = [o.upper() for o in ovoce]# Převede názvy ovocí na velká písmena
+
+fibonacci_suda = [f for f in fibonacci if f % 2 == 0]
 
 ####################################################
 ## 4. Funkce
