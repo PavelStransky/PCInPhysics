@@ -143,10 +143,53 @@
 
 \newcommand{\sectionbreak}{\clearpage}
 
+\section{Úvod}
+\label{sec:Uvod}
+    Cílem tohoto cvičení je pohrát si s jednoduchými fyzikálními problémy, vyzkoušet si různé způsoby jejich řešení a získat {\bf zkušenost a odvahu} pro řešení složitějších problémů v budoucnosti.
+    Postupy a kódy, které si budeme ukazovat, nemusejí být (a nebudou) ty nejsofistikovanější, nejoptimálnější ani nejelegantnější, i když v těchto poznámkách se o eleganci a formální (a samozřejmě i faktickou) správnost budu maximálně snažit.
+    Půjde nám hlavně o srozumitelnost a o pochopení principu, jak nejběžnější numerické algoritmy fungují, jaký algoritmus zvolit pro konkrétní úlohu, jaké mají konkrétní algoritmy vlastnosti a na co si při jejich použití dát pozor.
+
+    Ve cvičení nebude probíhat systematická výuka žádného programovacího jazyka ani numerických algoritmů, k tomu slouží jiné dedikované přednášky.
+    Od účastníka cvičení se očekává, že již prošel kurzem základů programování a je schopen napsat funkční kód v nějakém aktuálním programovacím jazyce.
+
+    \subsection{Výběr programovacího jazyka}
+        Většina příkladů cvičení bude demonstrována v nejnovější verzi programovacího jazyka \href{https://python.org}{Python}.
+        Jeho výhodou je jednoduchost, v dnešní době velká rozšířenost a existence nepřeberného množství pokročilých knihoven, které lze snadno použít.
+        Neznamená to, že se musíte upínat k Pythonu, pokud vám není sympatický nebo pokud ovládáte jiný programovací jazyk a chcete raději pilovat své schopnosti v něm.
+        Každé cvičení bude mít vždy \uv{teoretickou část}, ve které budou algoritmy vysvětleny bez vazby na konkrétní programovací jazyk.
+        Výsledné programy pak nebudou nijak obsáhlé a nebudou vyžadovat při programování žádné speciální finesy,\footnote{Například objektově orientované programování, abstraktní typy, asynchronní programování atd.}
+        lze je tudíž napsat snad v jakémkoliv dnes používaném jazyce.
+        Pokud se rozhodnete (dnes nebo kdykoliv v budoucnu) pro jiný jazyk než Python, doporučuji dát si pozor na následujících několik bodů, ve kterých se programovací jazyky lišívají:
+        \begin{itemize}
+            \item \emph{Indexování:} Některé programovací jazyky indexují pole od 0, jiné od 1. Ve dvou a vícerozměrných polích může první index udávat někdy řádek, jindy sloupec.
+            \item \emph{Parametry funkcí} mohou být předávané hodnotou nebo odkazem. 
+            Pokud jsou předávané odkazem, pak při změně hodnoty proměnné uvnitř funkce dojde ke změně i vně funkce.
+            Podobně může fungovat přiřazení jedné proměnné do druhé.
+            \item \emph{Obor platnosti proměnných:} Některé programovací jazyky mají bloky, ve kterých pokud deklarujeme proměnnou, při opuštění bloku přestane být dostupná.
+            V jiných jazycích může být obor platnosti proměnné například celá funkce.
+            V některých jazycích neexistují globální proměnné.\footnote{I pokud existují, doporučuje se jejich použití omezit na minimum a používat je jen v opravdu odůvodněných případech.}
+            \item \emph{Správa paměti:} Drtivá většina dnešních programovacích jazyků má automatickou správu paměti, kdy nemusíte řešit, kdy a kolik paměti alokujete a že ji musíte uvolnit, když ji přestanete používat.
+            Nízkoúrovňové jazyky (například C/C++) však vyžadují, aby se o správu paměti staral programátor sám.
+        \end{itemize}
+
+        Pro fyzika je navíc důležité, aby programovací jazyk, který si zvolí, byl silný v následujících bodech:
+        \begin{itemize}
+            \item \emph{Existence základních numerických knihoven:} Nejčastěji je potřeba numerické řešení diferenciálních rovnic, práce s pseudonáhodnými čísly, diagonalizace matic a fitování parametrů funkcí ze zadaných dat.
+            Užitečná je také rychlá Fourierova transformace a v dnešní době i možnost zvýšení přesnosti čísel s desetinnou čárkou nad standardních 64-bitů.
+            \item \emph{Možnost tvorby grafů:} Grafická reprezentace výsledků bývá vždy nejčitelnější a nejefektivnější. 
+            V základu se hodí grafy funkcí s jedním parametrem a konturové grafy.
+            V dnešní době se také hodí, pokud program umí vytvořit animace.
+            \item \emph{Možnost spustit program na různých platformách:} Výpočetní clustery a dedikované počítače pracují často pod jinými operačními systémy než běžné osobní počítače.
+            Programovací jazyk by měl existovat a být snadno nainstalovatelný zejména na stroje s operačním systémem Linux.
+            \item \emph{Podpora distribuovaných výpočtů a výpočtů ve více vláknech:} Výpočetní síla dnešních počítačů používaných ve vědě spočívá v paralelizaci. 
+            Podpora od programovacího jazyka je velkou výhodou.
+        \end{itemize}
+
+
 \section{Instalace používaných nástrojů}
 \label{sec:Instalace}
     Příklady k cvičení budou demonstrovány v nejnovější verzi programovacího jazyka \href{https://python.org}{Python}.
-    Jako vývojové prostředí doporučuji \href{https://code.visualstudio.com}{Visual Studio Code}.
+    Jako vývojové prostředí bude používáno \href{https://code.visualstudio.com}{Visual Studio Code}.
     Tento volně dostupný program lze nainstalovat na všechny neužívanější operační systémy (Linux, Windows, macOS).    
     Má nepřeberné možnosti při editaci zdrojových souborů, překladu a ladění snad ve všech známých programovacích jazycích.
     Bohaté možnosti nastavení umožnují přizpůsobit si práci svým potřebám (například zvýrazňování syntaxe, klávesové zkratky či vzhled prostředí).
@@ -748,6 +791,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
             Pokud kód obsahuje syntaktickou chybu, je odhalena až ve chvíli, kdy se na ni interpret při provádění kódu narazí.
             U interpretovaných jazyků se neztrácí čas překladem do strojového kódu a je pro ně přirozené dynamické typování proměnných.
             Tím, že interpet čte text kódu příkaz po příkazu, je provádění programů pomalejší, ale vzhledem k tomu, že velká část časově náročných funkcí a knihoven bývá napsána v rychlejších programovacích jazycích, není to zásadní nevýhoda.
+            Kvůli skutečnosti, že Python se obvykle používá jako mezičlánek spojující efektivně napsané funkce různých knihoven, setkáte se také s označením jazyk \emph{skriptovací}.
             
             Opakem intepretovaných jazyků jsou jazyky kompilované, přičemž kompilace se provádí buď přímo do strojového kódu daného procesoru\footnote{Například C/C++, Pascal nebo Fortran.} nebo do mezikódu. 
             Mezikód ke spuštění vyžaduje dodatečnou kompilaci, která však může být vysoce optimalizovaná přímo pro danou hardwarovou konfiguraci použitého počítače.\footnote{Zde se jedná napřílad o jazyky Java, C\# a celý .NET framework nebo Julia.}
@@ -807,7 +851,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
             \emph{Formátování řetězců:}
             Python umožňuje několik různých způsobů, jak formátovat řetězce (vkládat do nich čísla či jiné proměnné).
             Doporučuji se seznámit s velmi čitelným způsobem pomocí \code{f}-řetězce.            
-            Pro více informací k formátování řetězců doporučuji tento výborný \href{https://pyformat.info}{návod}.
+            Více informací k formátování řetězců naleznete v tomto výborném \href{https://pyformat.info}{návodu}.
     
         \item
             \emph{Proměnné a kolekce:} 
