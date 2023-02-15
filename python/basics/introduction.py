@@ -300,6 +300,16 @@ def promenne_mnozstvi_argumentu(x, y, *args, **kwargs):
 # Při volání funkce musíme nejprve zadat povinné argumenty, potom nepojmenované volitené a až nakonec všechny pojmenované
 promenne_mnozstvi_argumentu(5, 3, 2, 1, 0, z=5, nazev="Cisla") 
 
+# Lze využít i obrácený postup s operátory *, ** (rozbalení seznamu a slovníku)
+def objem_kvadru(a, b, c):
+    return a * b * c
+
+rozmery = [2, 3, 5]                 # Rozbalení seznamu
+print(objem_kvadru(*rozmery))
+
+rozmery = {"b": 3, "c":4, "a":1}    # Rozbalení slovníku
+print(objem_kvadru(**rozmery))
+
 """ Pokročilejší použití funkcí """
 def vyrobit_scitacku(pricitane_cislo):
     def scitacka(x):                # Funkce lze vnořovat
@@ -338,6 +348,7 @@ flt = [x for x in fibonacci if 10 <= x <= 30]   # [13, 21]
 druhe_mocniny = {x: x**2 for x in range(1, 5)}  # => {1: 1, 2: 4, 3: 9, 4: 16}  # Slovník druhých mocnin
 hlasky = {pismeno for pismeno in "abeceda"}     # => {"d", "a", "c", "e", "b"}  # Množina písmen ve slově "abeceda"
 
+soucet_kvadratu = sum(x*x for x in fibonacci)   # Argument funkce vytváří tzv. iterátor
 
 ####################################################
 ## 5. Moduly
