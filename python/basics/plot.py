@@ -18,9 +18,9 @@ plt.plot(xs, ys2)
 plt.show()                              # Ukáže graf. POZOR, Pro pokračování provádění kódu je potřeba graf zavřít (pokud nepoužíváte interaktivní mód plt.ion())
 
 """ Popisky os a grafu"""
-plt.plot(xs, ys1, color="red", linestyle=":", label="$\\sin(x)$")
-plt.plot(xs, ys2, "b-.", label="$\\tan(x)$")
-plt.xlabel("$x$")                       # Popisky os (lze použít příkazy LaTeXu uvozené znaky $$)
+plt.plot(xs, ys1, color="red", linestyle=":", label="$\\sin(\\xi)$")
+plt.plot(xs, ys2, "b-.", label=r"$\tan(\xi)$")
+plt.xlabel(r"$\xi$")                       # Popisky os (lze použít základní příkazy LaTeXu uvozené znaky $$)
 plt.ylabel("$y$")
 plt.title("Goniometrie")                # Popisek grafu
 plt.ylim(-3, 3)                         # Meze osy y
