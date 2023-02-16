@@ -159,13 +159,16 @@
         Jeho výhodou je jednoduchost, v dnešní době velká rozšířenost a existence nepřeberného množství pokročilých knihoven, které lze snadno použít.
         Neznamená to, že se musíte upínat k Pythonu, pokud vám není sympatický nebo pokud ovládáte jiný programovací jazyk a chcete raději pilovat své schopnosti v něm.
         Každé cvičení bude mít vždy \uv{teoretickou část}, ve které budou algoritmy a techniky vysvětleny bez vazby na konkrétní programovací jazyk.
-        Výsledné programy pak nebudou nijak obsáhlé a až na výjimky (úvod do paralelizace) nebudou vyžadovat při programování žádné speciální finesy,\footnote{Například objektově orientované programování, abstraktní typy, asynchronní programování atd.}
+        Výsledné programy pak nebudou nijak obsáhlé a až na výjimky (úvod do paralelizace) nebudou vyžadovat při programování žádné speciální finesy,\footnote{Například objektově orientované programování, abstraktní typy, asynchronní programování, regulární výrazy atd.}
         lze je tudíž napsat snad v jakémkoliv dnes používaném jazyce.
         Pokud se rozhodnete (nyní nebo kdykoliv v budoucnu) pro jiný jazyk než Python, doporučuji dát si pozor na následujících několik bodů, ve kterých se programovací jazyky lišívají:
         \begin{itemize}
             \item \emph{Indexování:} Některé programovací jazyky indexují pole od 0, jiné od 1. Ve dvou a vícerozměrných polích může první index udávat někdy řádek, jindy sloupec.
             \item \emph{Číselné typy a implicitní přetypování:} Rozdíly jsou zejména u operace dělení / dvou celých čísel, kde v některých jazycích je výsledkem celé číslo, tedy celá část po výsledku dělení, v jiných číslo s destinnou čárkou.
             Různě také funguje implicitní přetypování, a to zejména mezi číslem a řetězcem (výrazy typu \code{"12.3"{} + 4}).
+            \item \emph{Práce s textovými řetězci a speciálními znaky; formátování:} Různé jazyky používají různé způsoby pro formátování textových řetězců a pro převod číselných hodnot na text.
+            V některých jazycích je textový řetězec jen pole znaků, a je tedy možné k jednotlivým znakům přistupovat pomocí indexů a stejným způsobem je měnit.
+            To přináší komplikace při použití bohatších znakových sad\footnote{Například dnes nejčastěji používaná znaková sada UTF-8 může mít jednotlivý znak reprezentovaný jedním až čtyřmi bajty."}, proto nejnovější jazyky od možnosti přímé editace textových řetězců upouštějí.
             \item \emph{Parametry funkcí} mohou být předávané hodnotou nebo odkazem. 
             Pokud jsou předávané odkazem, pak při změně hodnoty proměnné uvnitř funkce dojde ke změně i vně funkce.
             Podobně může fungovat přiřazení jedné proměnné do druhé.
