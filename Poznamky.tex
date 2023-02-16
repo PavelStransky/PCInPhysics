@@ -19,6 +19,7 @@
 \usepackage{titlesec}
 \usepackage{underscore}
 \usepackage{makecell}       % Šířky čar v tabulkách
+\usepackage{fnpct}          % %% Lepší formátování poznámek pod čarou 
 %\usepackage{showlabels}
 
 \hypersetup{
@@ -146,22 +147,25 @@
 \section{Úvod}
 \label{sec:Uvod}
     Cílem tohoto cvičení je pohrát si s jednoduchými fyzikálními problémy, vyzkoušet si různé způsoby jejich řešení a získat {\bf zkušenost a odvahu} pro řešení složitějších problémů v budoucnosti.
-    Postupy a kódy, které si budeme ukazovat, nemusejí být (a nebudou) ty nejsofistikovanější, nejoptimálnější ani nejelegantnější, i když v těchto poznámkách se o eleganci a formální (a samozřejmě i faktickou) správnost budu maximálně snažit.
-    Půjde nám hlavně o srozumitelnost a o pochopení principu, jak nejběžnější numerické algoritmy fungují, jaký algoritmus zvolit pro konkrétní úlohu, jaké mají konkrétní algoritmy vlastnosti a na co si při jejich použití dát pozor.
-
+    Postupy a kódy, které si budeme ukazovat, nemusejí být ty nejsofistikovanější či nejoptimálnější.
+    Půjde nám hlavně o srozumitelnost a o pochopení principu, jak nejběžnější numerické algoritmy fungují, jaký algoritmus zvolit pro konkrétní úlohu, jaké mají probírané algoritmy vlastnosti a na co si při jejich použití dát pozor.
+    Vzhledem k tomu, že prezentované algoritmy budou relativně jednoduché, budeme se snažit o maximální eleganci výsledného programu, přičemž pod elegancí budeme chápat hlavně dobrou {\bf čitelnost a udržitelnost} kódu.
+    
     Ve cvičení nebude probíhat systematická výuka žádného programovacího jazyka ani numerických algoritmů, k tomu slouží jiné dedikované přednášky.
     Od účastníka cvičení se očekává, že již prošel kurzem základů programování a je schopen napsat funkční kód v nějakém aktuálním programovacím jazyce.
 
     \subsection{Výběr programovacího jazyka}
-        Většina příkladů cvičení bude demonstrována v nejnovější verzi programovacího jazyka \href{https://python.org}{Python}.
+        Většina příkladů cvičení bude demonstrována v programovacím jazyce \href{https://python.org}{Python}.
         Jeho výhodou je jednoduchost, v dnešní době velká rozšířenost a existence nepřeberného množství pokročilých knihoven, které lze snadno použít.
         Neznamená to, že se musíte upínat k Pythonu, pokud vám není sympatický nebo pokud ovládáte jiný programovací jazyk a chcete raději pilovat své schopnosti v něm.
-        Každé cvičení bude mít vždy \uv{teoretickou část}, ve které budou algoritmy vysvětleny bez vazby na konkrétní programovací jazyk.
-        Výsledné programy pak nebudou nijak obsáhlé a nebudou vyžadovat při programování žádné speciální finesy,\footnote{Například objektově orientované programování, abstraktní typy, asynchronní programování atd.}
+        Každé cvičení bude mít vždy \uv{teoretickou část}, ve které budou algoritmy a techniky vysvětleny bez vazby na konkrétní programovací jazyk.
+        Výsledné programy pak nebudou nijak obsáhlé a až na výjimky (úvod do paralelizace) nebudou vyžadovat při programování žádné speciální finesy,\footnote{Například objektově orientované programování, abstraktní typy, asynchronní programování atd.}
         lze je tudíž napsat snad v jakémkoliv dnes používaném jazyce.
-        Pokud se rozhodnete (dnes nebo kdykoliv v budoucnu) pro jiný jazyk než Python, doporučuji dát si pozor na následujících několik bodů, ve kterých se programovací jazyky lišívají:
+        Pokud se rozhodnete (nyní nebo kdykoliv v budoucnu) pro jiný jazyk než Python, doporučuji dát si pozor na následujících několik bodů, ve kterých se programovací jazyky lišívají:
         \begin{itemize}
             \item \emph{Indexování:} Některé programovací jazyky indexují pole od 0, jiné od 1. Ve dvou a vícerozměrných polích může první index udávat někdy řádek, jindy sloupec.
+            \item \emph{Číselné typy a implicitní přetypování:} Rozdíly jsou zejména u operace dělení / dvou celých čísel, kde v některých jazycích je výsledkem celé číslo, tedy celá část po výsledku dělení, v jiných číslo s destinnou čárkou.
+            Různě také funguje implicitní přetypování, a to zejména mezi číslem a řetězcem (výrazy typu \code{"12.3"{} + 4}).
             \item \emph{Parametry funkcí} mohou být předávané hodnotou nebo odkazem. 
             Pokud jsou předávané odkazem, pak při změně hodnoty proměnné uvnitř funkce dojde ke změně i vně funkce.
             Podobně může fungovat přiřazení jedné proměnné do druhé.
@@ -176,25 +180,63 @@
         \begin{itemize}
             \item \emph{Existence základních numerických knihoven:} Nejčastěji je potřeba numerické řešení diferenciálních rovnic, práce s pseudonáhodnými čísly, diagonalizace matic a fitování parametrů funkcí ze zadaných dat.
             Užitečná je také rychlá Fourierova transformace a v dnešní době i možnost zvýšení přesnosti čísel s desetinnou čárkou nad standardních 64-bitů.
-            \item \emph{Možnost tvorby grafů:} Grafická reprezentace výsledků bývá vždy nejčitelnější a nejefektivnější. 
+            Experimentátoři využijí pokročilé možnosti analýzy a filtrování dat.
+            \item \emph{Možnost tvorby grafů:} Grafická reprezentace výsledků bývá obvykle nejčitelnější a nejsrozumitelnější. 
             V základu se hodí grafy funkcí s jedním parametrem a konturové grafy.
-            V dnešní době se také hodí, pokud program umí vytvořit animace.
-            \item \emph{Možnost spustit program na různých platformách:} Výpočetní clustery a dedikované počítače pracují často pod jinými operačními systémy než běžné osobní počítače.
+            V dnešní době je navíc výhodou, pokud program umí vytvořit animace.
+            \item \emph{Možnost spustit program na různých platformách:} Výpočetní clustery a dedikované výpočetní počítače pracují často pod jinými operačními systémy než běžné osobní počítače.
             Programovací jazyk by měl existovat a být snadno nainstalovatelný zejména na stroje s operačním systémem Linux.
             \item \emph{Podpora distribuovaných výpočtů a výpočtů ve více vláknech:} Výpočetní síla dnešních počítačů používaných ve vědě spočívá v paralelizaci. 
-            Podpora od programovacího jazyka je velkou výhodou.
         \end{itemize}
 
+    \subsection{Výběr vývojového prostředí}
+    \label{sec:IDE}
+        Zatímco na volbě programovacího jazyka záleží, co všechno budeme schopni naprogramovat a jak budou výsledné programy rychlé a efektivní, tak to, jak se nám bude dobře a rychle kód psát, záleží na volbě vývojového prostředí.
+        Na funkčnost výsledného programu nemá vliv, zda jsme ho napsali v jednoduchém textovém editoru nebo v sofistikovaném programu s pokročilými možnostmi spouštění, ladění a verzování kódu.
+        Je ale jasné, že to druhé nám významně usnadní práci a sníží pravděpodobnost chyb, které náš program bude nakonec obsahovat.
+
+        Jako vývojové prostředí v tomto cvičení bude používáno \href{https://code.visualstudio.com/}{Visual Studio Code}.
+        Tento volně dostupný program lze nainstalovat na všechny neužívanější operační systémy (Linux, Windows, MacOS).    
+        Má nepřeberné možnosti při editaci zdrojových souborů, překladu a ladění snad ve všech známých programovacích jazycích.
+        Bohaté možnosti nastavení umožnují přizpůsobit si práci svým potřebám (například zvýrazňování syntaxe, klávesové zkratky či vzhled prostředí).
+        Pomocí doplňků ho můžete integrovat s dalšími službami, například s verzovacím programem Git nebo vzdálenými repozitáři, čehož také využijeme.
+        Komunita, která toto vývojové prostředí používá a spravuje, je obrovská, což zaručuje dobrou podporu a rychlé přidávání nových funkcí.
+        Je to právě univerzálnost a rozšířenost tohoto vývojového prostředí, díky které padla volba na něj.
+        
+        Pro Python existuje samozřejmě obrovské množství dalších velmi kvalitních vývojových prostředí. 
+        Nejčastěji používané jsou
+        \begin{itemize}
+            \item \abbreviation{\href{https://docs.python.org/3/library/idle.html}{IDLE}}:\footnote{
+                {\bf I}ntegrated {\bf D}evelopment and {\bf L}earning {\bf E}nvironment.
+            } 
+                Toto jednoduché vývojové prostředí je součástí instalace jazyka Python.
+                Obsahuje základní zvýrazňování syntaxe, má však omezené možnosti co se týče ladění, psaní rozsáhlejších projektů s více zdrojovými soubory nebo integrace s verzovacími programy.
+            \item \href{https://www.spyder-ide.org/}{Spyder} a \href{https://www.jetbrains.com/pycharm/}{PyCharm}:
+                Vývojová prostředí s pokročilými funkcemi přímo určená pro jazyk Python.
+                Vynikající alternativy pro Visual Studio Code, které v mnoha ohledech dokonce překonávají.
+            
+            \item \href{https://jupyter.org/}{Jupyter}: 
+                Jiná koncepce práce s programovacím jazykem.
+                Kód je součástí tzv. \emph{zápisníku (notebook)}, ve kterém může být zároveň strukturovaný a formátovaný text.\footnote{Stejný přístup má například program \href{https://www.wolfram.com/mathematica/}{Mathematica}, které se budeme věnovat v sekci~\ref{sec:Mathematica}.}
+                Jedná se tedy o kombinaci programu a poznámek, kde součástí poznámek jsou přímo výsledky výpočtů (tabulky, grafy atd.).
+                Zápisník lze snadno konvertovat například do formátu LaTeX nebo PDF.
+                Koncepce zápisníku však není příliš vhodná při použití verzovacích programů a při práci na rozsáhlejších projektech v týmu.
+        \end{itemize}
+
+        Pokud teprve vybíráte, které vývojové prostředí se naučíte, doporučuji zvážit, zda potřebujete následující funkce a vlastnosti a nakolik je dané vývojové prostředí podporuje.
+
+        \begin{itemize}
+            \item \emph{Zvýrazňování syntaxe:} Pomáhá čitelnosti a snazží orientaci v kódu.
+            \item \emph{Spouštění a ladění kódu (debugger):} To zahrnuje vkládání \emph{ladících bodů (breakpoints)}, na kterých se chceme, aby se program zastavil, možnost krokování a výpisu (a často i editace) aktuálních hodnot proměnných či podrobné informace o chybách, pokud k nim při provádění programu dojde, včetně rychlého skoku na příslušná místa kódu.
+            \item \emph{Našeptávání a automatické doplňování:} Zatímco dříve byly názvy proměnných často omezené na malý počet znaků, dnešní programovací jazyky umožňují používat v podstatě libovolnou délku. Není také nutné omezovat se jen na znaky ASCII, nýbrž proměnné a funkce lze pojmenovávat včetně symbolů s diakritikou a písmen z jiných abeced (včetně například řeckých písmen). Klidně delší, ale výstižné pojmenování proměnných se doporučuje i kvůli lepší čitelnosti kódu bez nutnosti obsáhlých a na údržbu náročných komentářů. Automatické dokončování výrazně zrychluje psaní a snižuje množství chyb a překlepů.
+            \item \emph{Integrace s verzovacími systémy:} Pokud budete pracovat na větším týmovém projektu, použití verzovacích systémů se nevyhnete. Práci usnadňuje, když samotné vývojové prostředí umí zapisovat nové verze a porovnávat různé verze téhož souboru s vyznačením provedených změn.
+        \end{itemize}
 
 \section{Instalace používaných nástrojů}
 \label{sec:Instalace}
-    Příklady k cvičení budou demonstrovány v nejnovější verzi programovacího jazyka \href{https://python.org}{Python}.
+    Vzorové příklady k cvičení budou vypracovány v nejnovější verzi programovacího jazyka \href{https://python.org}{Python}.
     Jako vývojové prostředí bude používáno \href{https://code.visualstudio.com}{Visual Studio Code}.
-    Tento volně dostupný program lze nainstalovat na všechny neužívanější operační systémy (Linux, Windows, macOS).    
-    Má nepřeberné možnosti při editaci zdrojových souborů, překladu a ladění snad ve všech známých programovacích jazycích.
-    Bohaté možnosti nastavení umožnují přizpůsobit si práci svým potřebám (například zvýrazňování syntaxe, klávesové zkratky či vzhled prostředí).
-    Pomocí doplňků ho můžete integrovat s dalšími službami, například s verzovacím programem Git nebo vzdálenými repozitáři, čehož také využijeme.
-    Komunita, která toto vývojové prostředí používá a spravuje, je obrovská, což zaručuje dobrou podporu a rychlé přidávání nových funkcí.
+    V této sekci si stručně ukážeme, jak programy nainstalovat a jak provést jejich základní nastavení.
 
 \subsection{Instalace Pythonu}
 \label{sec:InstalacePython}
@@ -238,12 +280,7 @@
     S nimi se seznámíte ve specializovaných kurzech a přednáškách.
 
 \subsection{Instalace Visual Studio Code}
-    Instalace jazyka Python s sebou nese jednoduché vývojové prostředí nazvané \abbreviation{\href{https://docs.python.org/3/library/idle.html}{IDLE}}.\footnote{
-        {\bf I}ntegrated {\bf D}evelopment and {\bf L}earning {\bf E}nvironment.
-    }
-    To však poskytuje jen omezené možnosti co se týče ladění, psaní rozsáhlejších projektů s více zdrojovými soubory nebo integrace s verzovacími programy.
-
-    Pro serióznější práci budeme používat \href{https://code.visualstudio.com}{Visual Studio Code} s doplňkem pro programovací jazyk Python.
+    Zde projdeme instalaci vývojového prostředí \href{https://code.visualstudio.com}{Visual Studio Code} s doplňkem pro programovací jazyk Python.
     Instalační soubor stáhnete ze stránky \url{https://code.visualstudio.com}.
     Během instalace na počítač s Windows doporučuji zvolit obě možnosti \uv{Add Open with Code action to...},
     \begin{center}\includegraphics[width=0.5\linewidth]{VSCodeInstall.png}\end{center}
@@ -258,7 +295,7 @@
     Ačkoliv veškeré funkce vývojového prostředí Visual Studio Code lze používat pomocí myši, pro seriózní práci je dobré se naučit klávesové zkratky, jelikož významně zrychují a zefektivňují práci.
     Základní klávesové zkratky (nový soubor, uložení souboru, hledání v souboru, navigace v souboru, kopírování a vkládání atd.) fungují stejně jako v jiných programech.
     Kromě toho je ve Visual Studiu Code množství klávesových zkratek, které usnadňují editaci, spouštění, ladění a správu kódu.
-    Všechny klávesové zkratky lze zobrazit a upravit podle vlastních preferencí stiskem kláves \code{Ctrl+K Ctrl+S}.
+    Všechny klávesové zkratky lze zobrazit a upravit podle vlastních preferencí postupným stiskem kláves \code{Ctrl+K Ctrl+S}.
 
     Klávesové zkratky se liší podle použitého operačního systému.
     Doporučuji vám projít si oficiální \uv{taháky} s nejdůležitějšími zkratkami pro
@@ -269,7 +306,7 @@
     Uvedené klávesove zkratky platí pro rozložení klávesnice Angličtina (Spojené státy).
     Pro jiné rozložení klávesnice nemusejí některé z nich fungovat.
 
-    Pro Windows nejdůležitější zkratky jsou:
+    Pro operační systém Windows nejdůležitější zkratky jsou:
     \begin{itemize}
         \item \code{Alt+Z}: Zalomí dlouhé řádky na konci okna.
         \item \code{Alt+←}: Vrátí kurzor na předchozí pozici (například po odskrolování někam do neznáma).
@@ -314,12 +351,10 @@
 \subsection{Anaconda}
     Ačkoliv platforma \href{https://www.anaconda.com/}{Anaconda} nebude v tomto kurzu využívána, vzhledem k jejímu rozšíření stojí za to se o ní zmínit.
     Jedná se o rozsáhlý balík programů zahrnující instalaci Pythonu a velké množství knihoven včetně všech knihoven zmiňovaných v sekci~\ref{sec:pip}.
-    Balík navíc obsahuje samostatnou instalaci vývojového prostředí Visual Studio Code a několik dalších vývojových prostředí, z nichž nejznámější jsou \href{https://www.spyder-ide.org/}{Spyder} a \href{https://jupyter.org/}{Jupyter}.\footnote{
-        Všechny tyto komponenty a vývojová prostředí lze samozřejmě samostatně doinstalovat k holé verzi Pythonu.}
-    Výhoda platformy typu Anaconda spočívá v tom, že všechny knihovny jsou vybrány tak, aby byly mezi sebou kompatibilní a byly zároveň kompatibilní s použitou verzí Pythonu.
-    To však přináší i hlavní nevýhodu: verze Pythonu a přiložených knihoven nikdy není ta nejaktuálnější dostupná na trhu, a tedy nelze používat nejnovější funkce a rysy jazyka.
+    Balík navíc obsahuje samostatnou instalaci vývojového prostředí Visual Studio Code a několik dalších vývojových prostředí včetně nejznámějších Spyder a Jupyter, které byly zmíněny v sekci~\ref{sec:IDE}.
+    Výhoda platformy Anaconda a platforem podobného typu spočívá v tom, že všechny knihovny jsou vybrány s ohledem na to, aby byly mezi sebou kompatibilní a aby byly zároveň kompatibilní s použitou verzí Pythonu.
+    To je však zároveň i hlavní nevýhodou: verze Pythonu a přiložených knihoven nikdy není ta nejaktuálnější dostupná na trhu, a tedy nelze používat nejnovější funkce a rysy jazyka.
     Navíc Anaconda bude vždy obsahovat množství knihoven a programů, které nevyužijete, jen budou zabírat místo na disku a mohou zpomalovat chod používaných funkcí.
-
 
 \section{Úvod do používaných nástrojů}
     V této sekci naleznete základy použití verzovacího systému Git a úvod do syntaxe a idiomatiky jazyka Python.
@@ -794,7 +829,11 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
             Kvůli skutečnosti, že Python se obvykle používá jako mezičlánek spojující efektivně napsané funkce různých knihoven, setkáte se také s označením jazyk \emph{skriptovací}.
             
             Opakem intepretovaných jazyků jsou jazyky kompilované, přičemž kompilace se provádí buď přímo do strojového kódu daného procesoru\footnote{Například C/C++, Pascal nebo Fortran.} nebo do mezikódu. 
-            Mezikód ke spuštění vyžaduje dodatečnou kompilaci, která však může být vysoce optimalizovaná přímo pro danou hardwarovou konfiguraci použitého počítače.\footnote{Zde se jedná napřílad o jazyky Java, C\# a celý .NET framework nebo Julia.}
+            Mezikód ke spuštění vyžaduje dodatečnou kompilaci, která však může být vysoce optimalizovaná přímo pro danou hardwarovou konfiguraci použitého počítače.\footnote{
+                Zde se jedná napřílad o jazyky Java, C\# a celý .NET framework nebo Julia.
+                }\footnote{
+                    Pro Python existuje knihovna \file{\href{https://numba.pydata.org/}{Numba}}, která také umožňuje překlad vybraných částí programu do strojového kódu pomocí \href{https://llvm.org/}{LLVM} překladače, a tím provádění programu výrazně zrychlit.
+                }
 
         \item 
             \emph{Dynamicky typovaný}, což znamená, že proměnná nemusí mít předem daný typ a typ proměnné se může za běhu programu dokonce měnit.
@@ -3106,6 +3145,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     }
 
     \subsection{Mathematica}
+    \label{sec:Mathematica}
     Program Wolfram Mathematica má za sebou již více než 30 let vývoje. 
     Lze ho použít jako rozšířenou kalkulačku pro jednoduché výpočty a vykreslování grafů,
     ale jeho skutečná síla je v efektivním skloubení možnosti práce se symbolickými výrazy spolu s numerickými výpočty v libovolné přesnosti.
