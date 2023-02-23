@@ -265,4 +265,7 @@ TSWLatexianTemp*
 # Python
 __pycache__/*
 **/__pycache__/*
-python/tmp/*
+
+# files beginning with _
+**/_*/*
+**/_*.*
