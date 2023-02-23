@@ -1,0 +1,89 @@
+\documentclass[a4paper,11pt,twoside]{article}
+\usepackage[utf8]{inputenc}	% Text coding
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage{epsfig}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[unicode]{hyperref}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{xifthen}
+\usepackage{amsthm,thmtools}
+\usepackage{bold-extra}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[subrefformat=simple,labelformat=simple]{subcaption} % Instead of subfigure
+\usepackage{listings}
+\usepackage{comment}
+\usepackage{titlesec}
+\usepackage{underscore}
+\usepackage{makecell}       % Šířky čar v tabulkách
+
+% Page size
+\addtolength{\topmargin}{-1.5cm} %\addtolength{\textheight}{-10cm}
+\addtolength{\textwidth}{4cm} \addtolength{\textheight}{4cm} % Width and height of the text
+\addtolength{\voffset}{-0.5cm} % Top margin
+\addtolength{\hoffset}{-2cm}
+\setlength{\headheight}{15pt}
+
+\DeclareMathOperator{\e}{e}
+
+\def\vector#1{\boldsymbol{#1}}								% Vector
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\derivative}[3][]{\ifthenelse{\isempty{#1}}	    % Normal derivative
+	{\frac{\d{#2}}{\d{#3}}}
+	{\frac{\d^{#1}{#2}}{\d{#3}^{#1}}}
+}
+\newcommand{\im}{\mathrm{i}}
+
+\def\makematrix#1{\begin{pmatrix}#1\end{pmatrix}}       % Matrix
+\def\abs#1{\left|#1\right|}
+\def\probability#1{\mathrm{Pr}\left[#1\right]}
+\def\expectation#1{\mathrm{E}\left[#1\right]}
+\def\dispersion#1{\sigma_{#1}^{2}}
+\def\c{,\!}
+
+\def\code#1{\textnormal{\texttt{#1}}}
+\def\file#1{\textnormal{\textbf{\texttt{#1}}}}
+\def\ghfile#1#2{\textnormal{\textbf{\texttt{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/#1#2}{#2}}}}}
+
+\def\abbreviation#1{\textnormal{\textsc{#1}}}
+
+\begin{document}
+
+\section*{Domácí úkol na 9.3.2022}
+\subsection*{Tlumené a buzené kyvadlo}
+Naprogramujte a odlaďte řešení pohybové rovnice pro pohyb tlumeného a buzeného kyvadla
+\begin{equation}
+    \label{eq:pendulum}
+    \derivative[2]{\theta}{t}+\eta\derivative{\theta}{t}+\omega^{2}\sin{\theta}=A\sin\omega_{0}t,
+\end{equation}
+kde $\theta$ udává výchylku kyvadla od svislé osy, druhý člen popisuje tlumení v závěsu s koeficientem tlumení $\eta>0$, třetí člen odpovídá gravitační síle (a způsobuje nelinearitu rovnice) a pravá strana modeluje harmonické buzení s úhlovou frekvencí $\omega_0$.
+
+Pro numerické řešení převeďte rovnici~\eqref{eq:pendulum} na soustavu obyčejných diferenciálních rovnic 1. řádu a k jejímu řešení použijte Eulerovu metodu 2. řádu a Runge-Kuttovu metodu 4. řádu:
+\begin{align*}
+    \vector{k}_{1}&=\vector{f}(\vector{y}_{i},t_{i}),\\
+    \vector{k}_{2}&=\vector{f}\left(\vector{y}_{i}+\vector{k}_{1}\frac{\Delta t}{2},t_{i}+\frac{\Delta t}{2}\right),\\
+    \vector{k}_{3}&=\vector{f}\left(\vector{y}_{i}+\vector{k}_{2}\frac{\Delta t}{2},t_{i}+\frac{\Delta t}{2}\right),\\
+    \vector{k}_{4}&=\vector{f}\left(\vector{y}_{i}+\vector{k}_{3}\Delta t,t_{i}+\Delta t\right),\\
+    \vector{\phi}_{i}&=\frac{1}{6}\left(\vector{k}_{1}+2\vector{k}_{2}+2\vector{k}_{3}+\vector{k}_{4}\right),\\
+\end{align*}
+kde $\vector{y}$ je vektor hledaných funkcí, $\vector{f}$ je vektor pravé strany soustavy řešených diferenciálních rovnic prvního řádu a $\Delta t$ je časový krok.
+Integrační krok se dělá stejně jako u ostatních procvičovaných jednokrokových algoritmů,
+\begin{equation*}
+    \vector{y}_{i+1}=\vector{y}_{i}+\vector{\phi}_{i}\Delta t.
+\end{equation*}
+
+Uvažujte následující hodnoty parametrů
+\begin{align}
+    \eta&=0.5,
+    &\omega&=1,
+    &A&=1.
+\end{align}
+Pro frekvenci buzení volte tři různé hodnoty $\omega_0=0\c2;0\c4;0\c8$ a řešte na časovém intervalu $t=\langle0;500\rangle$ s počátečními podmínkami $\theta_0=0,\dot{\theta}_{0}=1$.
+Otestujte stabilitu řešení volbou dvou různých časových kroků $\Delta t=0\c01$ a $\Delta t=0\c005$.
+
+Vypracovaný úkol odešlete na e-mailovou adresu \href{mailto:pcfyzika@pavelstransky.cz}{pcfyzika@pavelstransky.cz}.
+Před odesláním se přesvědčte, že program neobsahuje žádné syntaktické chyby a že je z kódu pochopitelné, jak ho spustit, aby vrátil hledaný výsledek.
+\end{document}
