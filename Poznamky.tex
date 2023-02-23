@@ -122,10 +122,10 @@
 {5pt}{5pt}{\itshape\color{blue}}{}{\bfseries\color{blue}}{:}{.5em}{}
 
 \theoremstyle{red}
-\declaretheorem[name=Úkol,numberwithin=section]{task}
+\declaretheorem[name=Úloha,numberwithin=section]{task}
 
 \theoremstyle{green}
-\declaretheorem[name=Úkol,numberwithin=section,sibling=task]{voluntary}
+\declaretheorem[name=Úloha,numberwithin=section,sibling=task]{solved}
 
 \begin{document}
 
@@ -653,11 +653,11 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
 
     Pokud na GitHubu zakládáte nový projekt, můžete upřesnit, jaký programovací jazyk budete používat a GitHub automaticky vytvoří optimální soubor \code{.gitignore}.
 
-    \begin{voluntary}
+    \begin{task}
         Podívejte se do souboru \ghfile{}{.gitignore} v repozitáři k těmto zápiskům.
         Zatímco Python si téměř žádné pomocné soubory nevytváří, {\LaTeX} jich generuje požehnaně.
         Proto je seznam ignorovaných souborů celkem dlouhý. 
-    \end{voluntary}
+    \end{task}
 
 \subsubsection{Větve}
 \label{sec:branches}
@@ -797,17 +797,17 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
 
     Další informace najdete například v \href{https://git-scm.com/book/cs/v2/Z%C3%A1klady-pr%C3%A1ce-se-syst%C3%A9mem-Git-Pr%C3%A1ce-se-vzd%C3%A1len%C3%BDmi-repozit%C3%A1%C5%99i}{dokumentaci}.
 
-    \begin{voluntary}
+    \begin{task}
         Stáhněte si do svých počítačů (naklonujte si) z GitHubu repozitář s poznámkami k tomuto cvičení.
         V budoucnu si pomocí příkazu \code{git pull} stahujte aktuální verze.
         Můžete si vytvořit pracovní větev poznámek a v ní si s kódy hrát.
         V hlavní větvi \code{master} se vám uchová originální verze ze~vzdáleného repozitáře.
-    \end{voluntary}
+    \end{task}
 
-    \begin{voluntary}
+    \begin{task}
         Vytvořte si účet na GitHubu, vytvořte prázdný projekt a navažte si ho s dříve na cvičení vytvořeným lokálním repozitářem pomocí příkazů \code{git remote add} (plný příkaz výše).
         Následně si do vzdáleného repozitáře nahrajte lokální repozitář pomocí příkazu \code{git push}. 
-    \end{voluntary}
+    \end{task}
 
 \subsubsection{Tahák}
     Pro snadnou orientaci v použití Gitu bez nutnosti pamatovat si všechny příkazy je dostupný \href{https://training.github.com/downloads/github-git-cheat-sheet.pdf}{Git Cheat Sheet} nebo \href{https://ndpsoftware.com/git-cheatsheet.html}{tento interaktivní web}.
@@ -1214,9 +1214,9 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
                 y''(t)\approx\frac{y'\left(t+\frac{\Delta t}{2}\right)-y'(t)}{\frac{\Delta t}{2}}.
             \end{equation}
 
-            \begin{voluntary}
+            \begin{task}
                 Dokončete odvození vztahů~\eqref{eq:Euler2b}.
-            \end{voluntary}            
+            \end{task}            
     \end{itemize}
 
     Analogicky se postupuje při odvození metod vyššího řádu.
@@ -1224,9 +1224,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     U Eulerovy metody 2. řádu se navíc ukázalo, že lze odvodit několik stejně dobrých vztahů.
     Tato volnost s řádem metody narůstá.
 
-\newpage
-\subsection{Domácí úkol na 23.3.2021}
-\begin{task}
+\begin{solved}
 \label{task:ODR1}
     Naprogramujte Eulerovu metodu 1. a 2. řádu a Runge-Kuttovu metodu.
     Vyřešte numericky diferenciální relaxační rovnici\footnote{
@@ -1238,7 +1236,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     s počátečními podmínkami $y_{0}=1$ (analytickým řešením je funkce $e^{-t}$).
     Integrační krok $\Delta t$ ponechte jako volný parametr.
     Nakreslete grafy řešení $y(t)$ pro rozdílné hodnoty integračních kroků, například $\Delta t=0.01$ a $\Delta t=0.1$ pro čas $t\in\langle0;10\rangle$.
-\end{task}
+\end{solved}
 
 \setcounter{solution}{1}
 \begin{solution}
@@ -1246,28 +1244,6 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     Jedno možné řešení v souborech \ghfile{python/ode/}{ode.py} (integrační metoda), \ghfile{python/ode/}{graphs.py} (vykreslování grafů) a \ghfile{python/ode/}{relaxation.py} (hlavní soubor, který obsahuje definici modelu a volá všechny výpočetní a vykreslovací funkce).
     Na řešení této úlohy je také ukázán základ práce s větvemi v sekci~\ref{sec:branches}.
     
-    \begin{figure}[!htbp]
-        \begin{subfigure}{0.49\linewidth}
-            \centering\epsfig{file=relaxation_methods.eps,width=\linewidth}
-        \end{subfigure}
-        \hfill
-        \begin{subfigure}{0.49\linewidth}
-            \centering\epsfig{file=relaxation_euler_1.eps,width=\linewidth}
-        \end{subfigure}
-        \begin{subfigure}{0.49\linewidth}
-            \centering\epsfig{file=relaxation_euler_2.eps,width=\linewidth}
-        \end{subfigure}
-        \hfill
-        \begin{subfigure}{0.49\linewidth}
-            \centering\epsfig{file=relaxation_runge_kutta_4.eps,width=\linewidth}
-        \end{subfigure}
-        \caption{
-            \protect\small
-            Integrace relaxační diferenciální rovnice ~\eqref{eq:relaxace} různými metodami a s různými časovými kroky.
-        }	
-        \label{fig:relaxace}
-    \end{figure}
-
     \begin{itemize}
     \item \ghfile{python/ode/}{ode.py}: 
         Modul napsaný maximálně obecně, aby ho bylo možné použít na řešení libovolné diferenciální rovnice, a také soustav diferenciálních rovnic probíraných v sekci~\ref{sec:ODRn}.
@@ -1290,6 +1266,28 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
             Funkce \code{odeint} používá sofistikovaný řešitel diferenciálních rovnic s proměnným krokem.
             Pro podrobnosti můžete mrknout na \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html}{dokumentaci} k této funkci.
     \end{itemize}
+
+    \begin{figure}[!htbp]
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=relaxation_methods.eps,width=\linewidth}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=relaxation_euler_1.eps,width=\linewidth}
+        \end{subfigure}
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=relaxation_euler_2.eps,width=\linewidth}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.49\linewidth}
+            \centering\epsfig{file=relaxation_runge_kutta_4.eps,width=\linewidth}
+        \end{subfigure}
+        \caption{
+            \protect\small
+            Integrace relaxační diferenciální rovnice~\eqref{eq:relaxace} různými metodami a s různými časovými kroky.
+        }	
+        \label{fig:relaxace}
+    \end{figure}    
 
     \item \ghfile{python/ode/}{graphs.py}: 
         Vykresluje grafy srovnávající různé metody nebo různé kroky výpočtu.
@@ -1321,7 +1319,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     Je vidět, že chyba opravdu klesá s řádem metody a že čím je metoda vyššího řádu, tím rychleji chyba klesá se zmenšujícím se krokem.
 \end{solution}
 
-\begin{task}
+\begin{solved}
 \label{task:KumulovanaChyba}
     Rozšiřte kód tak, aby počítal průměrnou kumulovanou chybu
     \begin{equation}\label{eq:KumulovanaChyba}
@@ -1332,7 +1330,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     Jelikož očekáváme mocninnou závislost dle~\eqref{eq:RadMetodyODR}, kde exponent je tím větší, čím větší je řád metody, je výhodné graf $\mathcal{E}(\Delta t)$ kreslit v log-log měřítku.
     V Pythonu použijete místo \textnormal{\texttt{plot(...)}} funkci \textnormal{\texttt{loglog(...)}} z knihovny \textnormal{\texttt{matplotlib.pyplot}}.
     Ověřte, že získané křivky jsou v souladu s řády použitých metod.
-\end{task}
+\end{solved}
 
 \begin{solution}
     \begin{figure}[!htb]
@@ -1350,14 +1348,14 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
 \end{solution}
 
 
-\begin{task}
+\begin{solved}
     Pomocí naprogramovaných metod vyřešte nelineární diferenciální rovnici
     \begin{equation}
         \label{eq:sinyt}
         \derivative{y}{t}=\sin\left(t y\right)
     \end{equation}
     s počáteční podmínkou $y_{0}=1$, $t_{0}=0$ a vykreslete graf jejího řešení.
-\end{task}
+\end{solved}
 
 \begin{solution}
     \begin{figure}[!htb]
@@ -1410,12 +1408,12 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
 
     \end{example}
 
-    \begin{voluntary}
+    \begin{solved}
     Převeďte na soustavu obyčejných diferenciálních rovnic prvního řádu rovnici třetího řádu pro Hiemenzův tok
     \begin{equation}
         x'''+xx''-x'^{2}+1=0.
     \end{equation}
-    \end{voluntary}
+    \end{solved}
 
     \begin{solution}
     Hledaná soustava diferenciálních rovnic je
@@ -1449,9 +1447,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     Řád Verletova algoritmu je $p=2$. 
     Symplektické algoritmy s vyšším řádem existují, avšak v praxi se nepoužívají.
 
-\newpage
-{\color{red}\subsection{Domácí úkol na 30.3.2021}}
-\begin{task}
+\begin{solved}
     Rozšiřte kód naprogramovaný v úkolu~\ref{task:ODR1} tak, aby fungoval pro libovolně velkou soustavu obyčejných diferenciálních rovnic.
     Využijte k tomu funkce pro práci s řadami z knihovny \file{numpy} popsané v sekci~\ref{sec:numpy}.
     Vyřešte diferenciální rovnici harmonického oscilátoru 
@@ -1460,7 +1456,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     \end{equation}
     s počátečními podmínkami $x_{0}=0$, $x'_{0}\equiv v_{0}=1$, $t_{0}=0$ a porovnejte řešení různými metodami s analytickým řešením $x(t)=\sin t$.
     Jako časový krok volte například $\Delta t=0.1$ a $\Delta t=0.01$ a počítejte na časovém intervalu $t\in\langle 0;30\rangle$.
-\end{task}    
+\end{solved}    
 
 \begin{solution}
 \label{sol:ODRn}
@@ -1510,14 +1506,14 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
 \end{solution}
 
 
-\begin{task}
+\begin{solved}
     Naprogramujte Verletův algoritmus~\eqref{eq:Verlet}.
     Ukažte, že zatímco při použití Eulerovy metody nebo Runge-Kuttovy metody energie systému v průběhu výpočtu roste, Verletův algoritmus energii zachovává.
     Energie bezrozměrného harmonického oscilátoru~\eqref{eq:HO} je dána vzorcem
     \begin{equation}\label{eq:HOE}
         E=\frac{1}{2}\left(x^{2}+v^{2}\right).
     \end{equation}
-\end{task}
+\end{solved}
 
 \begin{solution}
     Symplektický Verletův algoritmus je naprogramován v souboru \ghfile{python/ode/}{symplectic.py}.
@@ -1531,7 +1527,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
 \end{solution}
 
 
-\begin{task}
+\begin{solved}
     Eulerovu metodu 1. řádu lze pro soustavy dvou diferenciálních rovnic 1. řádu vylepšit následující záměnou:
     \begin{align}
         &\begin{matrix}
@@ -1546,7 +1542,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     \end{align}
     (vypočítáme $x_{i+1}$ a tuto hodnotu použijeme namísto hodnoty $x_{i}$ pro výpočet rychlosti $v_{i+1}$).
     Naprogramujte tuto metodu a pomocí výsledků úlohy~\ref{task:KumulovanaChyba} ukažte, že pro harmonický oscilátor se jedná o metodu 2. řádu.
-\end{task}
+\end{solved}
 
 \begin{solution}
     \uv{Vylepšené} Eulerovy metody jsou naprogramovány v souboru \ghfile{python/ode/}{symplectic.py}.
@@ -1572,14 +1568,14 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
 \end{solution}
 
 
-\begin{task}
+\begin{solved}
     Pohrajte si s řešením rovnice pro klesající exponenciálu
     \begin{equation}\label{eq:Exp2}
         \derivative[2]{x}{t}=x
     \end{equation}
     s počátečními podmínkami $x_{0}=1$, $x'_{0}=-1$.
     Přesvědčte se, že Verletova metoda a vylepšená Eulerova metoda z předchozího úkolu jsou nestabilní --- pro tuto rovnici v relativně krátkém čase začnou řešení exponenciálně divergovat.
-\end{task}
+\end{solved}
 
 \begin{solution}
     Řešení rovnice~\eqref{eq:Exp2} je v souboru \ghfile{python/ode/}{exp.py}.
@@ -1606,7 +1602,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     Symplektické algoritmy však v určitou chvíli \uv{překmitnou} na exponenciálně rostoucí řešení, což způsobí pozorovanou divergovat.
 \end{solution}
 
-\begin{task}
+\begin{solved}
     Vyřešte nelineární soustavu tří diferenciálních rovnic pro jednoduchý Lorenzův model vedení tepla v atmosféře
     \begin{align}
         \derivative{x}{t}&=\sigma(y-x),\nonumber\\
@@ -1616,8 +1612,8 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     \end{align}
     s hodnotami parametrů $\sigma=10$, $\rho=28$ a $\beta=8/3$, počátečními podmínkami $(x_0, y_0, z_0)=(1,1,1)$ (na počátečních podmínkách zase tolik nezáleží), s krokem $\Delta t=0.01$ a na časovém intervalu $t\in\langle0,100\rangle$.
     Vykreslete graf $z(x)$.
-    Výsledná křivka je slavný Lorenzův podivný atraktor ve tvaru motýlích křídel, krerý zpopularizoval teorii klasického chaosu.
-\end{task}
+    Výsledná křivka je slavný \href{https://cs.wikipedia.org/wiki/Lorenz%C5%AFv_atraktor}{Lorenzův podivný atraktor} ve tvaru motýlích křídel, krerý zpopularizoval teorii klasického chaosu.
+\end{solved}
 
 \begin{solution}
     Řešení Lorenzova systému diferenciálních rovnic je jednoduchou aplikací kódu naprogramovaného v úloze~\ref{sol:ODRn} a lze ho nalézt v souboru \ghfile{python/ode/}{lorenz.py}.
@@ -1633,6 +1629,17 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
         \label{fig:Lorenz}
     \end{figure}
 \end{solution}
+
+\begin{task}
+    Vyřešte numericky pohybovou rovnici pro pohyb tlumeného a buzeného kyvadla
+    \begin{equation}
+        \derivative[2]{\theta}{t}+\eta\derivative{\theta}{t}+\omega^{2}\sin{\theta}=A\sin{\omega t}
+    \end{equation}
+    s počátečními podmínkami $\theta_{0}=0$, $\dot{\theta}_{0}=1$ a hodnotami parametrů
+    $\eta=0.5,\omega=1,A=1$ na časovém intervalu $t\in\langle0,500\rangle$.    
+    Pro frekvenci buzení volte tři různé hodnoty $\omega_0=0.2,0.4,0.8$.
+    Otestujte stabilitu řešení volbou dvou různých kroků, např. $\Delta t=0.01,\Delta t=0.005$.
+\end{task}
 
 \subsection{Shrnutí}
 \begin{itemize}
@@ -1668,14 +1675,13 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
 
     Základní funkce a postupy pro generování náhodných čísel v Pythonu jsou uvedeny v sekci~\ref{sec:PseudonahodnaCisla}.
 
-    {\color{red}\subsection{Domácí úkol na 6.4.2021}}
-    \begin{task}
+    \begin{solved}
         Naprogramujte náhodnou procházku ve 2D rovině.
         Délku kroku volte konstantní $s=1$, směr volte náhodně.
         Začněte z bodu $(x,y)=(0,0)$ a procházku ukončete poté, co opustíte oblast tvaru čtverce o hraně délky $2a$.
         Uchovávejte celou procházku v poli či seznamu.
         Nakonec trajektorii vykreslete do~grafu.
-    \end{task}
+    \end{solved}
 
     \begin{solution}
         Řešení je naprogramováno v souboru \ghfile{python/randomwalk/}{2d.py}.
@@ -1689,21 +1695,21 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         Vzorový kód je napsán takovým způsobem, aby mohl být přímočaře rozšířen pro vícerozměrnou náhodnou procházku.
     \end{solution}
     
-    \begin{task}
+    \begin{solved}
         Upravte náhodnou procházku tak, aby počítala s cyklickými okrajovými podmínkami.
         To znamená, že pokud opustíte oblast čtverce jednou jeho stranou, objevíte se na straně protilehlé (jako kdybyste okraje čtverce zavinuli a slepili).
         Výpočet ukončete poté, co uděláte $n$ kroků.
-    \end{task}
+    \end{solved}
 
     \begin{solution}
         Cyklické okrajové podmínky jsou naprogramovány ve funkci \code{random_walk_2d_inter\-active} v souboru \ghfile{python/randomwalk/}{2d.py}.
         Stejně je lze naprogramovat i do funkce \code{random_walk_2d}, výsledný graf však nebude vypadat příliš hezky.
     \end{solution}
 
-    \begin{task}\label{task:NahodnaProchazka}
+    \begin{solved}\label{task:NahodnaProchazka}
         Zamyslete se nad tím, jak byste realizovali náhodnou procházku s konstantní délkou kroku v $d>2$ rozměrech, a zkuste své řešení naprogramovat.
         Zásadní je dodržet požadavek, aby pohyb do jakéhokoliv směru nastával se stejnou pravděpodobností (esence úlohy tedy spočívá v generování náhodného směru v $d$-rozměrném prostoru).
-    \end{task}
+    \end{solved}
 
     \begin{solution}
         Zatímco pro směr ve 2D rovině stačí náhodě generovat jeden úhel (předchozí úloha), vícerozměrné úlohy jsou komplikovanější.
@@ -1822,9 +1828,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
 \subsection{Minimalizace pomocí knihovny SciPy}
     Python obsahuje funkci pro hledání minima \code{\href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html}{minimize}} v knihovně \file{scipy.optimize}.
     
-\newpage
-{\color{red}\subsection{Domácí úkol na 13.4.2021}}
-\begin{task}
+\begin{solved}
     Rozšiřte sv;j program z minulého cvičení pro náhodnou procházku tak, aby hledal minimum funkce dvou proměnných $f(x,y)$.
     Otestujte svůj program pro kvadratickou funkci
     \begin{equation}\label{eq:Minimumf}
@@ -1839,7 +1843,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     Její minimum se nachází v~bodě $\left(a,a^{2}\right)$ a hodnoty parametrů nejčastěji se volí $a=1,b=100$.   
     
     Implementujte vhodným způsobem ukončení náhodné procházky, tj. okamžik, kdy jste již dorazili do minima funkce.
-\end{task}
+\end{solved}
 
 \begin{solution}
     Vzorový kód naleznete v souboru \ghfile{python/randomwalk/}{minimize.py} a vychází z~náhodné vícerozměrné procházky z modulu \ghfile{python/randomwalk/}{nd.py} (z tohoto modulu kód využívá funkci \code{random_direction_gaussian}).
@@ -1865,11 +1869,11 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     Minimalizace konkrétních funkcí $f(x,y)$ a $g(x,y)$ ze zadání úlohy je provedena v souboru \file{min_functions.py}.
 \end{solution}
 
-\begin{task}
+\begin{solved}
     Náhodnou procházku zakreslete jako čáru do grafu společně s konturovým grafem potenciálu.
     Návod na nakreslení konturového grafu v Pythonu pomocí funkce \code{matplotlib.pyplot.contourf} naleznete
     v souboru \ghfile{python/basics/}{contourf.py}.
-\end{task}
+\end{solved}
 
 \begin{solution}
     \begin{figure}[!htb]
@@ -1925,7 +1929,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     Výsledky pro funkce $f$ a $g$ ze zadání jsou zobrazeny na obrázku~\ref{fig:Minimalizacefg}.
 \end{solution}
 
-\begin{task}
+\begin{solved}
     Použijte kód pro vícerozměrnou náhodnou procházku a najděte pomocí něho minimum funkce čtyř proměnných
     \begin{align}
         h(s,t,u,v)
@@ -1933,7 +1937,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             &\quad-\frac{1}{2}\left[\left(s^{2}+t^{2}\right)\left(2-s^{2}-t^{2}-u^{2}-v^{2}\right)+\left(su-tv\right)^{2}\right]\\
             &\quad+\frac{s}{2}\sqrt{2-s^{2}-t^{2}-u^{2}-v^{2}}\nonumber.
         \end{align}
-\end{task}
+\end{solved}
 
 \begin{solution}
     Volání funkce \code{minimize.minimize_adaptive(h, dimension=4)} vypočítá minimum v bodě
@@ -1947,13 +1951,13 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     Důležitá podmínka však je, že počáteční bod náhodné procházky musí ležet v definičním oboru funkce $h$.
 \end{solution}
 
-\begin{task}
+\begin{solved}
     Naprogramujte Metropolisův algoritmus a odlaďte ho na případu funkce
     \begin{equation}\label{eq:Minimumr}
         r(x,y)=x^{4}-2x^{2}+x+y^{2}.
     \end{equation}
     Tato funkce má dvě lokální minima (jedná se o vzorovou funkci ze souboru \ghfile{python/basics/}{contourf.py}).
-\end{task}
+\end{solved}
 
 \begin{solution}
     Pro ukázku, že standardní minimalizace pomocí náhodné procházky vede náhodně do~různých lokálních minim, slouží obrázek~\ref{fig:MetropolisMinimalizacea}.
@@ -2013,10 +2017,10 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     \end{itemize}
 \end{solution}
 
-\begin{task}
+\begin{solved}
     Prostudujte \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html}{dokumentaci} k funkci \code{minimize} a vytvořte kód, který tuto funkci využije k najití minima všech doposud studovaných funkcí dvou a více proměnných.
     Pokud programujete v jiném programovacím jazyku, nalezněte odpovídající minimalizační funkci či knihovnu a použijte ji.
-\end{task}
+\end{solved}
 
 \begin{solution}
     Knihovní funkci voláme příkazem \code{minimize(f, initialCondition)}, kde parametr \code{initialCondition} je $n$-tice udávající počáteční bod, ze kterého minimalizační procedura vystartuje.
@@ -2207,9 +2211,9 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
                 přičemž parametr $\lambda$ udává zároveň střední hodnotu a zároveň rozptyl rozdělení.
         \end{itemize}
 
-    \begin{voluntary}
+    \begin{solved}
         Dokažte vztahy~\eqref{eq:ExpectationR}--\eqref{eq:DispersionR} a \eqref{eq:ExpectationP}--\eqref{eq:DispersionR}.
-    \end{voluntary}
+    \end{solved}
 
     \begin{solution}
         K dokázání~\eqref{eq:ExpectationR}--\eqref{eq:DispersionR} vyjdeme z definičních vztahů pro střední hodnotu a rozptyl~\eqref{eq:Expectation}--\eqref{eq:Dispersion}:
@@ -2275,9 +2279,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
                 je náhodná veličina s rozdělením daným distribuční funkcí $F$.
         \end{itemize}
 
-\newpage
-{\color{red}\subsection{Domácí úkol na 20.4.2021}}
-    \begin{task}
+    \begin{solved}
         Naprogramujte funkci pro výpočet histogramu: na vstupu bude pole hodnot (výběr z nějakého rozdělení) a počet intervalů histogramu; na výstupu bude pole, jehož každý prvek bude odpovídat jednomu intervalu histogramu a ponese počet hodnot, které do tohoto intervalu padnou ze vstupního pole.
         Nejefektivnějšímu algoritmu stačí jeden průchod vstupním polem (jeden cyklus). 
         Pokuste se na něj přijít.
@@ -2285,7 +2287,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         Výstupní pole funkce vykreslete jako čárový graf.\footnote{
             Knihovna \code{matplotlib} obsahuje funkce na přímé vykreslení sloupcového histogramu, například \code{\href{https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html}{hist}}.
         }
-    \end{task}
+    \end{solved}
 
     \begin{solution}
         Vzorový výpočet histogramu je naprogramován v souboru \ghfile{python/histogram/}{histogram.py} ve funkci \code{histogram}.
@@ -2326,7 +2328,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         Příklady histogramů a jejich vykreslení do grafu jsou v řešení následujícího úkolu a na obrázku~\ref{fig:Distributions}.
     \end{solution}
 
-    \begin{task}\label{task:Distributions}
+    \begin{solved}\label{task:Distributions}
         Otestujte funkci z předchozího úkolu na následujících vstupních datech:
         \begin{enumerate}
             \item
@@ -2341,7 +2343,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
                 Jaká bude střední hodnota $\mu$ a rozptyl $\sigma$ tohoto rozdělení?
         \end{enumerate}
         Pro pěkné grafy volte alespoň $n=10000$ (počet prvků výběru) a $N=100$ (počet intervalů histogramu).
-    \end{task}
+    \end{solved}
     
     \begin{solution}
         Testování funkce \code{histogram} pro různá rozdělení je v souboru \ghfile{python/histogram/}{distributions.py}.
@@ -2409,10 +2411,10 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         \end{figure}    
     \end{solution}
 
-    \begin{task}\label{task:NormalDistribution}
+    \begin{solved}\label{task:NormalDistribution}
         Na základě centrální limitní věty~\eqref{eq:CLT1} vytvořte jednoduchý generátor čísel s normálním Gaussovským rozdělením $N(0,1)$.
         Jaké je optimální hodnota $m$, abychom získali dostatečně přesnou aproximaci normálního rozdělení, a přitom použili co nejméně algebraických operací?
-    \end{task}
+    \end{solved}
 
     \begin{solution}
         Ideální počet sečtených čísel z rovnoměrného rozdělení pro získání velmi dobré aproximace čísla z normálního Gaussova rozdělení je $m=12$, neboť pro tuto hodnotu:
@@ -2446,10 +2448,10 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         \end{figure}    
     \end{solution}
     
-    \begin{task}
+    \begin{solved}
         Nakreslete histogram pro rozdělení hodnot v jednotlivých intervalech histogramů z úlohy \ref{task:Distributions}.
         Jaké očekáváte statistické rozdělení v tomto případě?
-    \end{task}
+    \end{solved}
 
     \begin{solution}
         Počet hodnot v jednotlivých intervalech splňuje předpoklady pro Poissonovo rozdělení, očekáváme tedy Poissonovo rozdělení se parametrem
@@ -2479,10 +2481,10 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         \end{figure}
     \end{solution}
     
-    \begin{task}\label{task:GeneratorTime}
+    \begin{solved}\label{task:GeneratorTime}
         Na základě známé hustoty pravděpodobnosti~\eqref{eq:NormalDistribution} vytvořte generátor čísel s Gaussovským normálním rozdělením.
         Porovnejte jeho rychlost s generátorem založeným na centrální limitní větě, který jste naprogramovali v úloze~\ref{task:NormalDistribution} a s generátorem z některé z knihoven.\footnote{Porovnání můžete provést tak, že nagenergujete větší množství čísel různými metodami, například $n=10^{6}$, a změříte dobu výpočtu.} 
-    \end{task}
+    \end{solved}
 
     \begin{solution}
         Generátor je naprogramován v souboru \ghfile{python/histogram/}{gaussian.py}, funkce \code{generator_hm}, a porovnání histogramu takto nagenerovaných náhodných hodnot s teoretickou hustotou pravděpodobnosti je na obrázku~\ref{fig:GaussianGenerator}(b). 
@@ -2497,7 +2499,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         \end{itemize}
     \end{solution}
 
-    \begin{task}
+    \begin{solved}
         Vytvořte generátor čísel z rozdělení daném distribuční funkcí
         \begin{equation}
             \label{eq:F}
@@ -2505,7 +2507,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         \end{equation}
         Jak vypadá analyticky hustota pravděpodobnosti?
         Nakreslete histogram a porovnejte.
-    \end{task}
+    \end{solved}
 
     \begin{solution}
         Hustota pravděpodobnosti je dána derivací distribuční funkce podle vztahu~\eqref{eq:rhoF}, tj.
@@ -2553,7 +2555,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     Buffonova jehla je názorné experimentální použití metody Monte-Carlo, konkrétně varianty nazývané hit-and-miss.
     Té jsme se již dotkli v sekci~\ref{sec:SelectDistribution} a nyní si rozebereme podrobněji.
     
-    \begin{task}
+    \begin{solved}
         Metodou Monte-Carlo vyřešte tzv. narozeninový problém: Uvažujte skupinu $n$ lidí. 
         Jaká je pravděpodobnost, že dva lidi ve skupině budou mít narozeniny ve stejný den?
         Úloha se samozřejmě dá vyřešit \href{https://cs.wikipedia.org/wiki/Narozeninov%C3%BD_probl%C3%A9m}{exaktně}, ale zkuste si úlohu vyřešit metodou Monte-Carlo:
@@ -2567,7 +2569,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             \item jaká je pravděpodobnost pro skupinu $30$ lidí a
             \item jak velkou skupinu potřebujete, aby byla pravděpodobnost alespoň $30\%$.
         \end{enumerate}
-    \end{task}
+    \end{solved}
 
     \begin{solution}
         \begin{figure}[!htbp]
@@ -2764,7 +2766,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         \overline{f}^{2}&=\left[\frac{1}{N}\sum_{j=1}^{N}f(x_{j})\right]^{2}.\nonumber
     \end{align}
 
-    \begin{task}
+    \begin{solved}
         Metodou Monte-Carlo spočítejte integrály
         \begin{align}
             I_{1}&\equiv\int_{0}^{2\pi}\e^{-x}\sin{x}\,\d x,
@@ -2773,7 +2775,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         \end{align}
         První integrál má analytické vyjádření, které si můžete odvodit a porovnat s hodnotou získanou Monte-Carlo integrací; druhý integrál lze spočítat pouze numericky.
         Metodu můžete otestovat i na jiných známých integrálech.
-    \end{task}
+    \end{solved}
 
     \begin{solution}
         Řešení je naprogramováno v souboru \ghfile{python/montecarlo/}{integration.py} dvěma způsoby:
@@ -2800,7 +2802,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     Ve více rozměrech bývá navíc integrační oblast složitější, k čemuž lze využít metodu hit-and-miss.
     To se nejlépe ukáže na příkladu.
 
-    \begin{task}\label{task:I3}
+    \begin{solved}\label{task:I3}
         Spočítejte čtyřrozměrný integrál
         \begin{equation}
             I_{3}\equiv\int_{\Omega}\sin{\sqrt{\ln\left(x+y+z+w+2\right)}}\,\d x\,\d y\,\d z\,\d w,
@@ -2815,7 +2817,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         Pokud ano, spočítáte funkční hodnotu integrandu v tomto bodě.
         Jedná se tedy o kombinaci integrace~\eqref{eq:MCInt} a metody hit-and-miss.
         Budete-li si uchovávat počet hodů $N_{\text{celkem}}$ a počet zásahů $N_{\text{zásah}}$, získáte jako vedlejší produkt objem integrační hyperoblasti pomocí vzorce~\eqref{eq:MCS}.
-    \end{task}
+    \end{solved}
 
     \begin{solution}
         Řešení pro tento konkrétní integrál je naprogramováno v souboru \ghfile{python/montecarlo/}{integration.py} ve funkci \code{integral3}.
@@ -3242,9 +3244,9 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             Jiná často používaná konvence je tento faktor rozdělit symetricky mezi obě transformace: pak bude před oběma sumami ve vztazích~\eqref{eq:FT} stát $\frac{1}{\sqrt{N}}$ a Fourierova transformace bude unitární transformací mezi vektory $\vector{h}=(h_{j})$ a $\vector{H}=(H_{k})$ (unitární transformace zachovává délku komplexního vektoru).
         }
 
-        \begin{voluntary}
+        \begin{task}
             Dokažte, že provedením Fourierovy transformace a zpětné Fourierovy transformace dostanete původní časovou řadu.
-        \end{voluntary}
+        \end{task}
 
         \begin{solution}
             Důkaz se provede přímočarým dosazením $H_{k}$ do zpětné Fourierovy transformace:
@@ -3323,11 +3325,11 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         My si vyzkoušíme Fourierovu transformaci na zvukovém souboru.
         Práce se zvukovými soubory v Pythonu je popsána v sekci~\ref{sec:Zvuk}
 
-        \begin{task}\label{task:FT}
+        \begin{solved}\label{task:FT}
             Naprogramujte Fourierovu transformaci a zpětnou Fourierovu transformaci podle vzta\-hů~\eqref{eq:FT}.
             Můžete počítat buď nezávisle reálnou a imaginární část, nebo využít toho, že funkce knihovny \file{numpy} rozumějí komplexním číslům.
             Imaginární jednotka v Pythonu je \code{1j}, komplexní číslo $3+4\im$ se tedy zapíše ve tvaru \code{3 + 4j}. 
-        \end{task}
+        \end{solved}
 
         \begin{solution}
             Vzorové řešení je v souboru \ghfile{python/fourier/}{transform.py} a umí spočítat Fourierovu transformaci pro reálnou i komplexní časovou řadu.
@@ -3335,7 +3337,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             Jakékoliv zrychlení oceníme zejména v případě, kdy budeme chtít počítat transformaci z delší časové řady (již pro $N=1000$ může výpočet trvat několik sekund).
         \end{solution}
 
-        \begin{task}\label{task:3f}
+        \begin{solved}\label{task:3f}
             Vytvořte časovou řadu délky $N=2000$ se vzorkovací frekvencí $f_{s}=2000\,\text{Hz}$ (signál tedy bude trvat přesně $1\,\text{s}$) danou součtem tří harmonických funkcí:
             \begin{equation}
                 h_{j}=\sum_{n=1}^{3}a_{n}\sin\left(2\pi F_{n} t_{j}\right),
@@ -3356,7 +3358,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
 
             Zopakujte výpočet pro $N=1000$ a $f_{s}=1000\,\text{Hz}$. V tomto případě jsou již frekvence $F_{2},F_{3}$ větší než Nyquistova frekvence $f_{\text{max}}$.
             Zvuk bude zkreslený a vrcholy ve frekvenčním diagramu po provedení Fourierovy transformace se posunou.  
-        \end{task}
+        \end{solved}
 
         \begin{solution}
             \begin{figure}[!htbp]
@@ -3407,7 +3409,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             Zadané amplitudy bychom získali po zintegrování nenulového okolí maxim.
         \end{solution}
 
-        \begin{task}\label{task:Vowels}
+        \begin{solved}\label{task:Vowels}
             Ve složce \href{https://github.com/PavelStransky/PCInPhysics2021/tree/main/sounds}{sounds} v repozitáři jsou soubory \ghfile{sounds/}{a.wav}, \ghfile{sounds/}{e.wav}, \ghfile{sounds/}{i.wav}, \ghfile{sounds/}{o.wav}, \ghfile{sounds/}{u.wav}, 
             ve kterých jsou nahrané krátké vzorky samohlásek.\footnote{
                 Nahrávky jsou staženy z \url{https://homepages.wmich.edu/~hillenbr/voweldata.html}.
@@ -3418,7 +3420,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             Této skutečnosti se využívá pro strojovou analýzu hlasu.\footnote{
                 Pomocí funkce \code{rec} si můžete nahrát a zanalyzovat vlastní hlas.
             }
-        \end{task}
+        \end{solved}
 
         \begin{solution}
             \begin{figure}[!htbp]
@@ -3437,7 +3439,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             Právě poměry mezi amplitudami harmonických frekvencí jsou klíčové pro strojové rozpoznání, o kterou hlásku se jedná.
         \end{solution}
 
-        \begin{task}
+        \begin{solved}
             Ve složce \href{https://github.com/PavelStransky/PCInPhysics2021/tree/main/sounds}{sounds} v repozitáři je soubor \ghfile{sounds/}{BlackHolesCollision.wav}, ve kterém je nasimulovaný průběh gravitačních vln těsně před srážkou dvou černých děr.\footnote{
                 Soubor pochází z \url{http://web.mit.edu/sahughes/www/sounds.html}.
             }
@@ -3446,7 +3448,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             Rozdělte časovou řadu na časová okna délky $N_{W}=2000$ bodů a pro každé okno spočítejte Fourierovu transformaci a amplitudy $A_{k}$.
             Následně vykreslete konturový graf (spektrogram), kde na ose $x$ bude čas (začátku nebo středu použitého časového okna), na ose $y$ frekvence a na ose $z$ (barevný kód) amplituda.
             Frekvence omezte pomocí příkazu \code{plt.ylim(0, 500)} na hodnoty $\langle 0\,\text{Hz},500\,\text{Hz}\rangle$. 
-        \end{task} 
+        \end{solved} 
 
         \begin{solution}
             \begin{figure}[!htbp]
@@ -3483,11 +3485,11 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         Existuje mnohem efektivnější algoritmus s časovou složitostí $\mathcal{O}(N\log{N})$.
         V Pythonu naleznete funkci počítající rychlou Fourierovu transformaci ze zadané časové řady v balíku \file{numpy}. Jmenuje se \href{https://numpy.org/doc/stable/reference/generated/numpy.fft.fft.html}{fft.fft}.
     
-        \begin{task}
+        \begin{solved}
             Spočítejte Fourierovu transformaci (i) pomocí funkce naprogramované v úkolu~\ref{task:FT} a (ii) pomocí knihovní funkce \code{numpy.fft.fft} buď pro signál z úkolu~\ref{task:3f}, nebo pro jednu z hlásek z úkolu~\ref{task:Vowels}.
             V grafu porovnejte získané amplitudy.
             Měly by být stejné.
-        \end{task}
+        \end{solved}
 
         \begin{solution}
             \begin{figure}[!htbp]
