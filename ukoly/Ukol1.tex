@@ -67,7 +67,7 @@ Pro numerické řešení převeďte rovnici~\eqref{eq:pendulum} na soustavu oby�
     \vector{k}_{2}&=\vector{f}\left(\vector{y}_{i}+\vector{k}_{1}\frac{\Delta t}{2},t_{i}+\frac{\Delta t}{2}\right),\\
     \vector{k}_{3}&=\vector{f}\left(\vector{y}_{i}+\vector{k}_{2}\frac{\Delta t}{2},t_{i}+\frac{\Delta t}{2}\right),\\
     \vector{k}_{4}&=\vector{f}\left(\vector{y}_{i}+\vector{k}_{3}\Delta t,t_{i}+\Delta t\right),\\
-    \vector{\phi}_{i}&=\frac{1}{6}\left(\vector{k}_{1}+2\vector{k}_{2}+2\vector{k}_{3}+\vector{k}_{4}\right),\\
+    \vector{\phi}_{i}&=\frac{1}{6}\left(\vector{k}_{1}+2\vector{k}_{2}+2\vector{k}_{3}+\vector{k}_{4}\right),
 \end{align*}
 kde $\vector{y}$ je vektor hledaných funkcí, $\vector{f}$ je vektor pravé strany soustavy řešených diferenciálních rovnic prvního řádu a $\Delta t$ je časový krok.
 Integrační krok se dělá stejně jako u ostatních procvičovaných jednokrokových algoritmů,
@@ -76,11 +76,11 @@ Integrační krok se dělá stejně jako u ostatních procvičovaných jednokrok
 \end{equation*}
 
 Uvažujte následující hodnoty parametrů
-\begin{align}
+\begin{align*}
     \eta&=0.5,
     &\omega&=1,
     &A&=1.
-\end{align}
+\end{align*}
 Pro frekvenci buzení volte tři různé hodnoty $\omega_0=0\c2;0\c4;0\c8$ a řešte na časovém intervalu $t=\langle0;500\rangle$ s počátečními podmínkami $\theta_0=0,\dot{\theta}_{0}=1$.
 Otestujte stabilitu řešení volbou dvou různých časových kroků $\Delta t=0\c01$ a $\Delta t=0\c005$.
 

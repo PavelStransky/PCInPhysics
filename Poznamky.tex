@@ -734,7 +734,7 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
         \item \code{git reset 946cb25} se vrátí na zapsání, jehož hash začíná uvedeným číslem.
         \item \code{git reset ORIG_HEAD} se vrátí na tu zapsanou verzi, na které jsme byli bezprostředně před použitím posledního příkazu \code{git reset}.
         \item \code{git checkout -b oldrev 946cb25} vytvoří novou větev nazvanou \uv{oldrev}, ve které budou soubory ve stavu, kdy bylo provedeno zapsání s uvedeným hashem (hash zjistíme například pomocí \code{git log -{}-oneline} popsaného v sekci~\ref{sec:gitlog}).
-        \item \code{git checkout 946cb25} vrátí se do tohoto zapsání, ale ponechá historii tak, jak je.\footnote{Tzv. detached HEAD state.}.
+        \item \code{git checkout 946cb25} vrátí se do tohoto zapsání, ale ponechá historii tak, jak je.\footnote{Tzv. detached HEAD state.}
             K návratu zpět stačí použít příkaz pro přepnutí do hlavní větve \code{git switch main}.
     \end{itemize}
 
