@@ -4,7 +4,7 @@ from matplotlib import cm                       # Colour maps for the contour gr
 
 import poisson
 
-lengthx = 50                                    # Capacitator length
+lengthx = 50                                    # Capacitor length
 lengthy = 50                                    # Distance between plates - horizontal axis
 
 initial = np.full((lengthx, lengthy), -1.0)
