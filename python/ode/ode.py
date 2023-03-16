@@ -11,7 +11,7 @@ def euler_1(model, y, t, dt):
 def euler_2(model, y, t, dt):
     """ Second-order Euler method """
     d1 = model(y, t)
-    d2 = model(y + d1 * dt, t)
+    d2 = model(y + d1 * dt, t + dt)
     y1 = y + 0.5 * (d1 + d2) * dt
     t1 = t + dt
     return y1, t1
