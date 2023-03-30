@@ -1,0 +1,86 @@
+\documentclass[a4paper,11pt,twoside]{article}
+\usepackage[utf8]{inputenc}	% Text coding
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage{epsfig}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[unicode]{hyperref}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{xifthen}
+\usepackage{amsthm,thmtools}
+\usepackage{bold-extra}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[subrefformat=simple,labelformat=simple]{subcaption} % Instead of subfigure
+\usepackage{listings}
+\usepackage{comment}
+\usepackage{titlesec}
+\usepackage{underscore}
+\usepackage{makecell}       % Šířky čar v tabulkách
+
+% Page size
+\addtolength{\topmargin}{-1.5cm} %\addtolength{\textheight}{-10cm}
+\addtolength{\textwidth}{4cm} \addtolength{\textheight}{4cm} % Width and height of the text
+\addtolength{\voffset}{-0.5cm} % Top margin
+\addtolength{\hoffset}{-2cm}
+\setlength{\headheight}{15pt}
+
+\DeclareMathOperator{\e}{e}
+
+\def\vector#1{\boldsymbol{#1}}								% Vector
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\derivative}[3][]{\ifthenelse{\isempty{#1}}	    % Normal derivative
+	{\frac{\d{#2}}{\d{#3}}}
+	{\frac{\d^{#1}{#2}}{\d{#3}^{#1}}}
+}
+\newcommand{\im}{\mathrm{i}}
+
+\def\makematrix#1{\begin{pmatrix}#1\end{pmatrix}}       % Matrix
+\def\abs#1{\left|#1\right|}
+\def\probability#1{\mathrm{Pr}\left[#1\right]}
+\def\expectation#1{\mathrm{E}\left[#1\right]}
+\def\dispersion#1{\sigma_{#1}^{2}}
+\def\c{,\!}
+
+\def\code#1{\textnormal{\texttt{#1}}}
+\def\file#1{\textnormal{\textbf{\texttt{#1}}}}
+\def\ghfile#1#2{\textnormal{\textbf{\texttt{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/#1#2}{#2}}}}}
+
+\def\abbreviation#1{\textnormal{\textsc{#1}}}
+
+\begin{document}
+
+\section*{Domácí úkol na 6.4.2023}
+\subsection*{Hledání minima funkce $D$ proměnných}
+\begin{itemize}
+    \item
+        Naprogramujte a odlaďte náhodnou procházku v $D$-rozměrném prostoru. 
+        Nezapomeňte, že krok do každého směru musí být stejně pravděpodobný, tj. pokud budete opakovat náhodný krok dané délky $d$ z počátku souřadné soustavy, pokryjí koncové body všech kroků rovnoměrně kouli o poloměru $d$.
+
+    \item
+        Pomocí $D$-rozměrné náhodné procházky nalezněte minimum funkce 4 proměnných
+        \begin{align*}
+            h(s,t,u,v)&=\frac{1}{2}\left(s^2+t^2+u^2+v^2\right)\\
+            &\quad-\frac{1}{4}\left[\left(s^2+t^2\right)\left(2-s^2-t^2-u^2-v^2\right)+\left(su-tv\right)^{2}\right]\\
+            &\quad+\frac{s}{4}\sqrt{2-s^{2}-t^{2}-u^{2}-v^{2}}
+        \end{align*}
+        a minimum zobecněné Rosenbrockovy funkce
+        \begin{equation}
+            r(\vector{x})=\sum_{i=1}^{D-1}\left[\left(a-x_{i}\right)^{2}+b\left(x_{i+1}-x_{i}^{2}\right)^{2}\right],
+        \end{equation}
+        kde $\vector{x}=(x_{1},x_{2},\dotsc,x_{D})$. 
+        Počítejte pro $a=1$, $b=100$, $D=6$. 
+        Řešení hledejte pouze v oblasti, kde jsou všechny souřadnice kladné, tj. kde $x_i\geq0,i=1,\dotsc,D$.
+
+    \item
+        Minimum naleznete tím přesněji, čímje kratší bude krok $d$ v náhodné procházce. 
+        Pokud však krátký krok použijete od samého začátku náhodné procházky, výpočet bude trvat velmi dlouho. 
+        Naprogramujte tedy minimalizační proceduru s proměnným krokem: Začněte náhodnou procházku s delším krokem a krok postupně vhodně zmenšujte. 
+        Při optimálním naprogramování bude přesnost nalezení minima úměrná velikosti kroku na konci náhodné procházky.
+\end{itemize}
+
+Vypracovaný úkol odešlete na e-mailovou adresu \href{mailto:pcfyzika@pavelstransky.cz}{pcfyzika@pavelstransky.cz}.
+Před odesláním se přesvědčte, že program neobsahuje žádné syntaktické chyby a že je z kódu pochopitelné, jak ho spustit, aby vrátil hledaný výsledek.
+\end{document}
