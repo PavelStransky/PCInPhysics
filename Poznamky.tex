@@ -3029,7 +3029,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     \begin{itemize}
         \item psát dobře vypadající a typograficky správné odborné texty s matematickými rovnicemi, obrázky a tabulkami,
         \item vybírat z množství profesionálně připravených stylů obsahujících podporu tvorby obsahu, rejstříku, poznámek pod čarou, kapitol, seznamů, referencí a dalších vychytávek,
-        \item stáhnout si přímo styl časopisu či knihy, pro kterou text připravujeme, 
+        \item stáhnout si přímo styl časopisu či knihy, pro které text připravujeme, 
         \item používat tisíce matematických symbolů či druhů písem (lze psát třeba ve švabachu, gotickém písmu či elfím písmu, jste-li fanoušci díla J.R.R. Tolkiena),
         \item využívat různá makra a doplňky k jednoduchému vytváření speciálních objektů (například chemických vzorců nebo Feynmannových diagramů),
         \item vytvářet robustní prezentace (například pomocí knihovny Beamer),
@@ -3046,11 +3046,11 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     Příkazy v \TeX{}u jsou však stále dostupné.
 
     Dokument napsaný v \LaTeX{}u striktně odděluje \emph{text} (obsah) a \emph{styl} (vzhled), přičemž my využijeme standardní \LaTeX{}ovský styl a budeme se zabývat výhradně tím, jak napsat text.
-    Jeho psaní se podobá programování: zdrojový soubor je textový dokument (nebo soubor textových dokumentů), který sestává z našeho textu a doplňujících příkazů.
+    Jeho psaní se podobá programování: zdrojový soubor je textový dokument (nebo několik textových dokumentů), který sestává z psaného textu a doplňujících příkazů.
     Chceme-li vidět, jak bude výsledný dokument vypadat, musíme soubor \uv{přeložit}.
 
     Existují různé \emph{distribuce} \LaTeX{}u.
-    Jedna z nejpoužívanějších je \href{https://miktex.org/}{MiKTeX}.
+    Jedna z nejpoužívanějších je \href{https://miktex.org/}{MiKTeX} (všechny platformy), nebo \href{https://www.tug.org/texlive/}{TeX Live} (Linux, Windows) nebo \href{https://www.tug.org/mactex/}{MaxTeX} pro operační systém Max OS.
     Dále je nutné mít k~dispozici textový editor, přičemž vhodný je ten, který rozumí \TeX{}ovským příkazům a bude umět zdrojový text poslat k překladu a zobrazit.
     Pokročilé editory umějí navigovat mezi zdrojovým textem k přeloženému výsledku (většinou do PDF souboru) a naopak.
     Z volně dostupných editorů jsou nejčastěji používané:
@@ -3078,7 +3078,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     \begin{itemize}
         \item ASCII nebo UTF-8 kódování (lze použít i obskurnější kódování, ale v dnešní době je UTF-8 dostatečně univerzální).
         \item \emph{Mezery}: více mezer je interpretováno jako jedna mezera, jednoduché zalomení řádku také jako jedna mezera.
-        \item \emph{Nový odstavec}: dvě zalomení řádku po sobě.
+        \item \emph{Nový odstavec}: dvě zalomení řádku po sobě nebo příkaz \verb+\par+.
         \item \emph{Příkazy}: uvozeny znakem \verb+\+, jejich povinné parametry ve složených závorkách \verb+{...}+, volitelné parametry v hranatých závorkách \verb+[...]+.
             U názvů příkazů záleží na velikosti písmen.
         \item \emph{Rovnice v textu}: oddělena znaky \verb+$...$+. Některé příkazy lze použít pouze uvnitř rovnic, jiné naopak uvnitř rovnic použít nelze.
@@ -3086,30 +3086,35 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
     \end{itemize}
 
     \subsection{Struktura \TeX{}ovského souboru}
-        \subsubsection{Preambule}
-            Jedná se o první řádky souboru, než začne vlastní tělo dokumentu.
-            Obsahuje výčet všech použitých balíčků a parametry, které se použijí pro styl textu.
+        \subsubsection{Hlavička}
+        Jedná se o první řádek souboru obsahující příkaz
             \begin{itemize}
                 \item \verb+\documentclass[a4paper,twoside,11pt,twocolumn]{article}+: Základní specifikace stylu dokumentu (v tomto případě papír velikosti A4, dvoustránkový tisk, základní velikost písma 11 bodů, dvousloupcová sazba).
-                Tento příkaz je povinný, musí být vždy přítomen.
-
-                \item \verb+\usepackage{epsfig}+: Použije se balíček \verb+epsfig+.
-                
-                \item \verb+\def\abs#1{\left|#1\right|}}+: Definuje makro \verb+\abs+ s jedním parametrem (absolutní hodnota).
+                Kromě \verb+article+ se často použí nebo \verb+slide+ pro tvorbu prezentací.
+                Příkaz \verb+\documentclass+ je povinný, musí být vždy přítomen.
             \end{itemize}
 
-            Nejčastěji používané balíčky jsou tyto:
+        \subsubsection{Preambule}
+            Část zdrojového kódu obsahující výčet všech použitých dodatečných balíčků.
+            Balíčky jednak obsahují styly, jednak rozšiřují funkce \LaTeX{}u o nová makra.
+            Dále se v preambuli udávají parametry, které se použijí pro styl textu, doplňující parametry balíčků a uživatelské definice maker.
+            \begin{itemize}     
+                \item \verb+\usepackage{epsfig}+: Použije se balíček \verb+epsfig+ pro vkládání vektorových obrázků ve formátu EPS.                           
+                \item \verb+\def\abs#1{\left|#1\right|}}+: Definuje makro \verb+\abs+ s jedním parametrem (absolutní hodnota).
+                \item \verb+\pagestyle{headings}+: Na každé stránce bude záhlaví s názvem aktuální kapitoly, sekce a s číslem stránky.
+            \end{itemize}
+
+            Další nejčastěji používané balíčky jsou:
             \begin{itemize}
                 \item \verb+\usepackage{amsfonts,amsmath,amssymb}+:\footnote{AMS $=$ American Mathematical Society.} Rozšiřuje množství použitelných písem, matematických symbolů a struktur (např. snazší psaní matic, víceřádkových rovnic atd.).
-
+    
                 \item \verb+\usepackage[utf8]{inputenc}+: Specifikuje UTF-8 jako vstupní kódování (jinak je očekáváno ASCII).
             
                 \item \verb+\usepackage[czech]{babel}+: Udávající české formátování (například české uvozovky) a české názvy (například Obsah, Rejstřík).
-
+    
                 \item \verb+\usepackage{epsfig}+: Umožní vkládání vektorových EPS souborů.
-
+    
                 \item \verb+\usepackage[unicode]{hyperref}+: Umožní vkládání hypertextových odkazů a učiní klikabilní i odkazy na rovnice, obrázky, stránky či kapitoly v textu pro snazší navigaci. 
-
             \end{itemize}
 
         \subsubsection{Tělo dokumentu}
@@ -3122,13 +3127,13 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
             a do něj píšeme vlastní text dokumentu.
             Vše, co se nachází za příkazem \verb+\end{document}+, je ignorováno.
 
-            Jednoduchý příklad \LaTeX{}ovského dokumentu s vysvětlením základů psaní textu je v repozitáři v adresáři LaTeX a jmenuje se \file{dokument.tex}.
-            K jeho přeložení budete potřebovat i přiložený EPS soubor \file{kubik.eps}.
+            Jednoduchý příklad \LaTeX{}ovského dokumentu s vysvětlením základů psaní textu je v repozitáři v adresáři LaTeX a jmenuje se \ghfile{LaTeX/}{dokument.tex}.
+            K jeho přeložení budete potřebovat i přiložený EPS soubor \ghfile{LaTeX/}{kubik.eps}.
 
-            Pokročilejším přikladem je přímo tento soubor (i jeho zdroják je v repozitáři).
+            Pokročilejším přikladem je přímo tento soubor s poznámkami (i jeho zdroják \ghfile{}{Poznamky.tex} je dostupný v repozitáři).
 
         \begin{task}
-            Prostudujte si vzorový \LaTeX{}ovský soubor \file{dokument.tex} a napište v \LaTeX{}u vlastní pojednání o nějakém svém oblíbeném vědci či vědkyni, fyzikálním (případně matematickém) teorému nebo rovnici.
+            Prostudujte si vzorový \LaTeX{}ovský soubor \ghfile{LaTeX/}{dokument.tex} a napište v \LaTeX{}u pojednání o nějakém svém oblíbeném vědci či vědkyni nebo o fyzikálním (případně matematickém) problému.
             Dokument by měl obsahovat aspoň jednu rovnici a jeden obrázek.
             Textová část stačí na jednu stránku.
         \end{task}
@@ -3137,6 +3142,8 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
         \begin{itemize}
             \item \href{http://www.penguin.cz/~kocer/texty/lshort2e/lshort2e-cz.pdf}{Ne příliš stručný úvod do systému \LaTeX{}$2{\varepsilon}$}: Vynikající srozumitelný, přehledný a čtivý návod v češtině. 
                 Doporučuji prostudovat.
+
+            \item \href{http://apfyz.upol.cz/ucebnice/down/mini/drslat.pdf}{Drsný úvod do \LaTeX{}u}: Trochu stručnější a zhuštěnější než předchozí návod.
 
             \item \href{https://www.root.cz/serialy/jak-na-latex/}{Jak na LaTeX}: Webový seriál, obsahuje i určité pokročilejší vychytávky.
             
