@@ -1,0 +1,98 @@
+\documentclass[a4paper,11pt,twoside]{article}
+\usepackage[utf8]{inputenc}	% Text coding
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage{epsfig}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[unicode]{hyperref}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{xifthen}
+\usepackage{amsthm,thmtools}
+\usepackage{bold-extra}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[subrefformat=simple,labelformat=simple]{subcaption} % Instead of subfigure
+\usepackage{listings}
+\usepackage{comment}
+\usepackage{titlesec}
+\usepackage{underscore}
+\usepackage{makecell}       % Šířky čar v tabulkách
+\usepackage{wrapfig}
+
+% Page size
+\addtolength{\topmargin}{-1.5cm} %\addtolength{\textheight}{-10cm}
+\addtolength{\textwidth}{4cm} \addtolength{\textheight}{4cm} % Width and height of the text
+\addtolength{\voffset}{-0.5cm} % Top margin
+\addtolength{\hoffset}{-2cm}
+\setlength{\headheight}{15pt}
+
+\DeclareMathOperator{\e}{e}
+
+\def\vector#1{\boldsymbol{#1}}								% Vector
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\derivative}[3][]{\ifthenelse{\isempty{#1}}	    % Normal derivative
+	{\frac{\d{#2}}{\d{#3}}}
+	{\frac{\d^{#1}{#2}}{\d{#3}^{#1}}}
+}
+\newcommand{\im}{\mathrm{i}}
+
+\def\makematrix#1{\begin{pmatrix}#1\end{pmatrix}}       % Matrix
+\def\abs#1{\left|#1\right|}
+\def\probability#1{\mathrm{Pr}\left[#1\right]}
+\def\expectation#1{\mathrm{E}\left[#1\right]}
+\def\dispersion#1{\sigma_{#1}^{2}}
+
+\def\code#1{\textnormal{\texttt{#1}}}
+\def\file#1{\textnormal{\textbf{\texttt{#1}}}}
+\def\ghfile#1#2{\textnormal{\textbf{\texttt{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/#1#2}{#2}}}}}
+
+\def\abbreviation#1{\textnormal{\textsc{#1}}}
+
+\begin{document}
+
+\section*{Domácí úkol na 18.5.2023}
+\subsection*{Fourierova transformace}
+
+\subsubsection*{1. Bílý a Brownův šum}
+    Vytvořte časovou řadu délky $N=2000$ se vzorkovací frekvencí $f_{s}=2000\,\text{Hz}$ (signál tedy bude trvat přesně $1\,\text{s}$), jejíž elementy budou tvořeny nekorelovaným výběrem z rovnoměrného rozdělení na intervalu $(-1,1)$,    
+    \begin{equation*}
+        h_{j}\in R(-1,1),\qquad j=0,\dotsc,N-1,
+    \end{equation*}
+    a časovou řadu vzniklou postupným sčítáním řady $h_{j}$,
+    \begin{equation*}
+        l_{j}=\sum_{k=0}^{j}h_{k}.
+    \end{equation*}
+    Spočítejte Fourierovu transformaci $H_{k}$ a $L_{k}$ obou časových řad a vykreslete do log-log grafu (pomocí funkce \code{loglog} z knihovny \file{matplotlib.pyplot}) kvadráty amplitud $S_{k}^{(H)}=\abs{H_{k}}^{2}$ a $S_{k}^{(L)}=\abs{L_{k}}^{2}$ v závislosti na frekvencích $f_{k}=k f_{s}/(N-1)$ pro $k=1,\dotsc,N/2$.
+    Přesvědčte se, že v případě časové řady $h_{j}$ je frekvenční spektrum téměř konstantní (až na fluktuace), 
+    \begin{equation*}
+        H_{k}\approx\text{konst.},
+    \end{equation*}
+    zatímco v případě časové řady $l_{j}$ klesá podle zákona
+    \begin{equation*}
+        L_{k}\approx\frac{1}{f_{k}^{2}}.
+    \end{equation*}
+    První časová řada odpovídá tzv. \emph{bílému šumu} (v analogii se světlem --- všechny frekvence jsou zastoupeny se stejnou vahou), druhá pak \emph{Brownovskému šumu} ($l_{j}$ odpovídá poloze Brownovské částice pohybující se na přímce).
+
+\subsubsection*{2. Srážka černých děr}
+    Ve složce \href{https://github.com/PavelStransky/PCInPhysics2021/tree/main/sounds}{sounds} v souboru \ghfile{sounds/}{BlackHolesCollision.wav} je nasimulovaný průběh gravitačních vln těsně před srážkou dvou černých děr.\footnote{
+        Soubor pochází z \url{http://web.mit.edu/sahughes/www/sounds.html}.
+    }
+    Načtěte tento soubor pomocí knihovny \file{soundfile} příkazem\\ \\
+    \code{sound, fs = soundfile.read("BlackHolesCollision.wav", dtype="float32")}
+    \\ \\
+    V proměnné \code{fs} bude vzorkovací frekvence použitá v souboru.
+    Pozor, soubor má dva kanály, pro následující analýzu vyberte pouze jeden z nich příkazem \code{signal[:,0]}.
+
+    Signál si můžete přehrát pomocí funkce \code{sounddevice.play(sound, fs)} z knihovny \file{sounddevice}.
+    Uslyšíte charakteristický tzv. \emph{chirp sound}.
+    
+    Rozdělte časovou řadu na časová okna délky $N_{W}=2000$ bodů a pro každé okno spočítejte Fourierovu transformaci a kvadráty amplitud $S_{k}$.
+    Následně vykreslete konturový graf (spektrogram), kde na ose $x$ bude čas (začátku nebo středu použitého časového okna), na ose $y$ frekvence a na ose $z$ (barevný kód) amplituda.
+    Frekvence omezte pomocí příkazu \code{plt.ylim(0, 500)} na hodnoty $\langle 0\,\text{Hz},500\,\text{Hz}\rangle$. 
+
+
+Vypracovaný úkol odešlete na e-mailovou adresu \href{mailto:pcfyzika@pavelstransky.cz}{pcfyzika@pavelstransky.cz}.
+Před odesláním se přesvědčte, že program neobsahuje žádné syntaktické chyby a že je z kódu pochopitelné, jak ho spustit, aby vrátil hledaný výsledek.
+\end{document}
