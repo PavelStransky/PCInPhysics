@@ -30,7 +30,7 @@ def integrate_1D_Pool(p, n, function, a, b):
     return result
 
 
-def plot_1D_duration(processes=range(1, 25), n=1000000, function=f1, a=0, b=2*np.pi):
+def plot_1D_duration(processes=range(1, 48), n=1000000, function=f1, a=0, b=2*np.pi):
     """ Plots a graph with the total computation time depending on the number of processes """
 
     def duration(p):
@@ -76,7 +76,7 @@ def integrate_1D_Process(p, n, function, a, b):
 if __name__ == "__main__":
     print("Počet logických jader:", mp.cpu_count())
 
-    print(integrate_1D_Pool(8, 100000, f1, 0, 2 * np.pi))
-    plot_1D_duration(n=1000000)
-    plot_1D_duration(n=10000000)
-    print(integrate_1D_Process(8, 100000, f1, 0, 2 * np.pi))
+    # print(integrate_1D_Pool(8, 100000, f1, 0, 2 * np.pi))
+    # plot_1D_duration(n=1000000)
+    plot_1D_duration(n=50000000)
+    # print(integrate_1D_Process(8, 100000, f1, 0, 2 * np.pi))

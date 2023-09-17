@@ -995,7 +995,9 @@ Práci s repozitářem budeme demonstrovat na příkladu projektu pro integraci 
     Předně se dnes doporučuje vycházet z předpokladu, že dobře napsaný kód je čitelný i bez komentářů.
     Čitelnost totiž zaručují zejména vhodně a výstižně označené proměnné a správně navržená struktura kódu.
     Komentovat je dobré jen ty části kódu, kde se používá nějaký ne všeobecně známý trik nebo postup.
-    Nadbytek komentářů je velmi těžké udržovat při úpravách a může vést i k tomu, že po několika změnách kódu nebudou komentáře v souladu s tím, co kód vykonává.
+    Nadbytek komentářů je velmi těžké udržovat při úpravách a může vést i k tomu, že po několika změnách kódu nebudou komentáře v souladu s tím, co kód vykonává.\footnote{
+        A common fallacy is to assume authors of incomprehensible code will somehow be able to express themselves lucidly and clearly in comments~\cite{Henney}.
+    }
     
     Naopak doporučené je nešetřit popisem, co dělají jednotlivé funkce, jaké jsou jejich argumenty a co vracejí na výstupu.
     K tomu slouží komentář typu \emph{docstring}, který je vysvětlený v souboru \ghfile{python/basics/}{introduction.py} v sekci o funkcích.\footnote{
@@ -3780,6 +3782,7 @@ A hlavně, nyní již umíte jen pomocí sčítání a násobení vypočítat a 
 
 
 \begin{thebibliography}{99}
+    \bibitem{Henney} Kevlin Henney, \url{https://twitter.com/KevlinHenney/status/381021802941906944}.
     \bibitem{Muller1959} M.E. Muller, {\it A note on a method for generating points uniformly on n-dimensional spheres},
     Communications of the Asociation for Computing Machinery {\bf 2}, 19 (1959).
     \bibitem{Marsaglia1972} G. Marsaglia, {\it Choosing a Point from the Surface of a Sphere},
