@@ -25,8 +25,8 @@ with open(r"kafe.txt") as file:
         t += 10
 
 plt.plot(times, temperatures, 'o', label="Naměřená data")
-plt.xlabel("$t\ [s]$")
-plt.ylabel("$T\ [\degree C]$")
+plt.xlabel(r"$t\ [s]$")
+plt.ylabel(r"$T\ [\degree C]$")
 plt.show()
 
 # Převedeme seznamy na řady
@@ -51,8 +51,8 @@ print(f"Newton: alpha = {alpha_fit} +- {sigma_alpha}, R = {residua_exp}")
 
 plt.scatter(times, temperatures, label="Naměřená data")
 plt.plot(times, temperatures_exp, "red", label=f"Newtonův zákon chladnutí")
-plt.xlabel("t [s]")
-plt.ylabel("T [$\degree$C]")
+plt.xlabel(r"t [s]")
+plt.ylabel(r"T [$\degree$C]")
 plt.legend()
 plt.show()
 
@@ -73,8 +73,8 @@ print(f"Newton: alpha = {alpha_out_fit} +- {sigma_alpha_out}, T_out = {T_out_fit
 
 plt.scatter(times, temperatures, label="Naměřená data")
 plt.plot(times, temperatures_out, "red", label=r"Newtonův zákon chladnutí s $T_{\mathrm{out}}$")
-plt.xlabel("t [s]")
-plt.ylabel("T [$\degree$C]")
+plt.xlabel(r"t [s]")
+plt.ylabel(r"T [$\degree$C]")
 plt.legend()
 plt.show()
 
@@ -103,8 +103,8 @@ print(f"alpha = {alpha_rad_fit} +- {sigma_alpha_rad}, beta= {beta_rad_fit} +- {s
 
 plt.scatter(times, temperatures, label="Naměřená data")
 plt.plot(times, temperatures_rad, "red", label="Newton + vyzařování")
-plt.xlabel("t [s]")
-plt.ylabel("T [$\degree$C]")
+plt.xlabel(r"t [s]")
+plt.ylabel(r"T [$\degree$C]")
 plt.legend()
 plt.show()
 
@@ -131,8 +131,8 @@ print(f"alpha = {alpha_2_fit} +- {sigma_alpha_2}, beta= {beta_2_fit} +- {sigma_b
 
 plt.scatter(times, temperatures, label="Naměřená data")
 plt.plot(times, temperatures_2, "red", label="Newton + druhý člen Taylorova rozvoje")
-plt.xlabel("t [s]")
-plt.ylabel("T [$\degree$C]")
+plt.xlabel(r"t [s]")
+plt.ylabel(r"T [$\degree$C]")
 plt.legend()
 plt.show()
 
