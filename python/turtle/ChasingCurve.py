@@ -146,6 +146,6 @@ def chasing_curve_acceleration(hunter_velocity=2, dog_velocity=5, dt=1):
         t += dt
 
 #chasing_curve_circle(hunter_velocity=10, hunter_turn_velocity=3)
-#chasing_curve_events()
+chasing_curve_events()
 
-chasing_curve_acceleration()
+#chasing_curve_acceleration()
