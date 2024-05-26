@@ -2,6 +2,9 @@
 
 Isingův model se používá k popisu magnetických vlastností pevné látky. Spočívá v sadě $n$ interagujících "spinů" (magnetických dipólů) $S_j$ uspořádaných na pravidelné mříži. Interakce je krátkodosahová a zahrnuje pouze sousední spiny. Podle uspořádání mříže se rozlišují různé typy a dimenzionality mříží: řetízek (1D mříž), čtvercová nebo šesterečná mříž (2D mříž) nebo různé typy prostorových (3D) mříží. Uvažujte, že každý spin může mít pouze jednu ze dvou hodnot: $S_j=\pm 1$ (spin míří nahoru nebo dolů, jinam mířit nemůže).
 
+Schéma dvourozměrné čtvercové mříže s jednou možnou orientací je znázorněno na následujícím obrázku. Interagující spiny jsou spojeny šedivou čarou.
+<img src="ising.png" width="350px" align="center" />
+
 Celková energie systému je $$E=-J\sum_{\langle jk\rangle}S_{j}S_{k},$$ kde $J>0$ je konstanta udávající sílu interakce a sčítá se přes všechny sousední spiny, což je naznačeno symbolem $\langle jk\rangle$. Znaménko $-$ zaručuje, že preferované uspořádání spinů je paralelní (všechny spiny míří stejným směrem) a odpovídá feromagnetu.
 
 Střední magnetizace mříže je $$M=\langle S_{j}\rangle=\frac{1}{N}\sum_{j=1}^{N}S_{j},$$ kde $N$ je celkový počet spinů na mříži. Při nulové teplotě se všechny spiny zorientují paralelně a magnetizace je $M=\pm 1$.
