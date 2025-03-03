@@ -1,0 +1,95 @@
+\documentclass[a4paper,11pt,twoside]{article}
+\usepackage[utf8]{inputenc}	% Text coding
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage{epsfig}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[unicode]{hyperref}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{xifthen}
+\usepackage{amsthm,thmtools}
+\usepackage{bold-extra}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[subrefformat=simple,labelformat=simple]{subcaption} % Instead of subfigure
+\usepackage{listings}
+\usepackage{comment}
+\usepackage{titlesec}
+\usepackage{underscore}
+\usepackage{makecell}       % Šířky čar v tabulkách
+\usepackage{wrapfig}
+
+% Page size
+\addtolength{\topmargin}{-1.5cm} %\addtolength{\textheight}{-10cm}
+\addtolength{\textwidth}{4cm} \addtolength{\textheight}{4cm} % Width and height of the text
+\addtolength{\voffset}{-0.5cm} % Top margin
+\addtolength{\hoffset}{-2cm}
+\setlength{\headheight}{15pt}
+
+\DeclareMathOperator{\e}{e}
+
+\def\vector#1{\boldsymbol{#1}}								% Vector
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\derivative}[3][]{\ifthenelse{\isempty{#1}}	    % Normal derivative
+	{\frac{\d{#2}}{\d{#3}}}
+	{\frac{\d^{#1}{#2}}{\d{#3}^{#1}}}
+}
+\newcommand{\im}{\mathrm{i}}
+
+\def\makematrix#1{\begin{pmatrix}#1\end{pmatrix}}       % Matrix
+\def\abs#1{\left|#1\right|}
+\def\probability#1{\mathrm{Pr}\left[#1\right]}
+\def\expectation#1{\mathrm{E}\left[#1\right]}
+\def\dispersion#1{\sigma_{#1}^{2}}
+
+\def\code#1{\textnormal{\texttt{#1}}}
+\def\file#1{\textnormal{\textbf{\texttt{#1}}}}
+\def\ghfile#1#2{\textnormal{\textbf{\texttt{\href{https://github.com/PavelStransky/PCInPhysics2025/blob/main/#1#2}{#2}}}}}
+
+\def\abbreviation#1{\textnormal{\textsc{#1}}}
+
+\begin{document}
+
+\section*{Domácí úkol na 10.3.2025}
+\subsection*{Rozdělení náhodných čísel}
+    Nakreslete \emph{normalizovaný histogram} a vypočítejte výběrovou střední hodnotu a rozptyl pro následující vstupní data:
+\begin{enumerate}
+    \item
+        Výběr z $R(0,1)$, což označuje náhodnou veličinu rovnomětně rozdělenou na intervalu $\langle 0,1\rangle$ (v Pythonu generované například pomocí funkce \code{numpy.random.rand()}).
+
+    \item
+        Výběr ze \emph{součtu dvou} rovnoměrných rozdělení na intervalu $\langle 0,1\rangle$.
+
+    \item
+        Výběr ze \emph{součtu $M$} rovnoměrných rozdělení na intervalu $\langle 0,1\rangle$.
+        Pro $M=12$ porovnejte s hustotou pravděpodobnosti Gausovského normálního rozdělení $N(\mu,\sigma^2)$ danou
+        \begin{equation}
+            \rho_N(x)=\frac{1}{\sqrt{2\pi\sigma^{2}}}\e^{-\frac{(x-\mu)^{2}}{2\sigma^{2}}},
+        \end{equation}
+        pro $\mu=6$ a $\sigma=1$.
+        Na základě porovnání navrhněte jednoduchý generátor náhodných čísel s Gaussovským rozdělením $N(0,1)$ pomocí rovnoměrného rozdělení $R(0,1)$.
+
+    \item
+        Nakreslete histogram hodnot logistického zobrazení
+        \begin{equation}
+            x_{n+1}=rx_{n}(1-x_{n}),
+        \end{equation}	
+        pro $r=4$.
+        Hodilo by se toto zobrazení ke generování rovnoměrně rozdělených náhodných čísel na intervalu $\langle 0,1\rangle$?
+
+    \item
+        Ukažte numericky, že vlastní hodnoty $a_{k}$ velké reálné náhodné symetrické matice
+        \begin{equation}
+            M=\frac{1}{2}\left(A+A^{\mathrm{T}}\right),
+        \end{equation}	
+        kde $A_{jk}\in N(0,\sigma^{2})$ a $A^{\mathrm{T}}$ je matice transponovaná k $A$, má rozdělení vlastních hodnot přibližně rovné Wignerovu polokruhovému zákonu
+        \begin{equation}
+            \rho_{W}(a)=\frac{2}{\pi R^{2}}\left(R^{2}-a^{2}\right),\qquad R=2\sigma\sqrt{N},
+        \end{equation}
+
+\end{enumerate}
+Pro pěkné grafy volte alespoň $N=10000$ (počet prvků výběru) a $H=100$ (počet intervalů histogramu).
+
+\end{document}
