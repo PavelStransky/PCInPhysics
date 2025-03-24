@@ -52,8 +52,30 @@
 \begin{document}
 
 \section*{Domácí úkol na 31.3.2025}
-\subsection*{Paralelní programování}
+Za domácí úkol stačí naprogramovat jednu z následujících dvou úloh.
+Váš program ať srovná paralelní a neparalelní přístup a ukáže, že paralelizovaný kód je rychlejší.
+
+\subsection*{1. Integrace Monte Carlo}
 Naprogramujte body 3 a 4 \href{https://raw.githubusercontent.com/PavelStransky/PCInPhysics/main/ukoly/2025/Ukol3.pdf}{předchozího domácího úkolu} paralelně využitím objektu \code{Pool} z knihovny \code{multiprocessing}.
-Váš program ať srovná paralelní a neparalelní přístup a ukáže, že paralelizovaný kód je rychlejší (při stejné přesnosti).
+
+\subsection*{2. Mandelbrotova množina}
+Mandelbrotova množina je fraktální množina bodů $c$ v komplexní rovině, pro které je posloupnost
+\begin{equation}
+    z_{n+1}=z_{n}^{2}+c
+\end{equation}
+omezená, přičemž počáteční podmínka se volí $z_0=0$ a podmínka omezenosti je $\abs{z_{n}}\leq2$ pro všechna $n$. 
+V praxi je nutné interační proces ukončit po $N$ krocích, pokud do té doby není překročena podmínka omezenosti.
+
+Vytvořte program, který spočítá a vykreslí Mandelbrotovu množinu v obdélníku $\langle-2,1\rangle\times\langle-1,1\rangle$ pro $M\times M$ bodů, kde $M=2000$.
+Maximální počet iterací volte $N=100$.
+Využijte paralelního výpočtu a přesvědčte se, že při optimálním počtu vláken poběží program rychleji než v jednom jediném vlákně.
+
+\emph{Nápověda:}
+\begin{itemize}
+    \item Výpočet si rozdělte na $P$ bloků a každý bod počítejte ve vlastním vlákně. Využijte objekt \code{Pool} z knihovny \code{multiprocessing}.
+    \item Vykreslete barvou počet nutných iterací ke konvergenci.
+    \item K vykreslení grafu použijte \code{matplotlib.pyplot.imshow}.
+\end{itemize}
+
 
 \end{document}
