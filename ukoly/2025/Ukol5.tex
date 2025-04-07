@@ -1,0 +1,93 @@
+\documentclass[a4paper,11pt,twoside]{article}
+\usepackage[utf8]{inputenc}	% Text coding
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage{epsfig}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[unicode]{hyperref}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{xifthen}
+\usepackage{amsthm,thmtools}
+\usepackage{bold-extra}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[subrefformat=simple,labelformat=simple]{subcaption} % Instead of subfigure
+\usepackage{listings}
+\usepackage{comment}
+\usepackage{titlesec}
+\usepackage{underscore}
+\usepackage{makecell}       % Šířky čar v tabulkách
+
+% Page size
+\addtolength{\topmargin}{-1.5cm} %\addtolength{\textheight}{-10cm}
+\addtolength{\textwidth}{4cm} \addtolength{\textheight}{4cm} % Width and height of the text
+\addtolength{\voffset}{-0.5cm} % Top margin
+\addtolength{\hoffset}{-2cm}
+\setlength{\headheight}{15pt}
+
+\DeclareMathOperator{\e}{e}
+
+\def\vector#1{\boldsymbol{#1}}								% Vector
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\derivative}[3][]{\ifthenelse{\isempty{#1}}	    % Normal derivative
+	{\frac{\d{#2}}{\d{#3}}}
+	{\frac{\d^{#1}{#2}}{\d{#3}^{#1}}}
+}
+\newcommand{\im}{\mathrm{i}}
+
+\def\makematrix#1{\begin{pmatrix}#1\end{pmatrix}}       % Matrix
+\def\abs#1{\left|#1\right|}
+\def\probability#1{\mathrm{Pr}\left[#1\right]}
+\def\expectation#1{\mathrm{E}\left[#1\right]}
+\def\dispersion#1{\sigma_{#1}^{2}}
+\def\c{,\!}
+
+\def\code#1{\textnormal{\texttt{#1}}}
+\def\file#1{\textnormal{\textbf{\texttt{#1}}}}
+\def\ghfile#1#2{\textnormal{\textbf{\texttt{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/#1#2}{#2}}}}}
+
+\def\abbreviation#1{\textnormal{\textsc{#1}}}
+
+\begin{document}
+
+\section*{Domácí úkol na 14.4.2025}
+\subsection*{Obyčejné diferenciální rovnice}
+\subsubsection*{Harmonický oscilátor}
+Naprogramujte a odlaďte řešení pohybové rovnice pro pohyb tlumeného a buzeného kyvadla
+\begin{equation}
+    \label{eq:pendulum}
+    \derivative[2]{\theta}{t}+\eta\derivative{\theta}{t}+\omega^{2}\sin{\theta}=A\sin\omega_{b}t,
+\end{equation}
+kde $\theta$ udává výchylku kyvadla od svislé osy, druhý člen popisuje tlumení (disipaci) s koeficientem tlumení $\eta>0$, třetí člen odpovídá gravitační síle (a způsobuje nelinearitu rovnice) a pravá strana modeluje harmonické buzení s úhlovou frekvencí $\omega_b$.
+
+Pro numerické řešení převeďte rovnici~\eqref{eq:pendulum} na soustavu obyčejných diferenciálních rovnic 1. řádu a použijte Eulerovu metodu 2. řádu (cvičení) a Runge-Kuttovu metodu 4. řádu:
+\begin{align*}
+    \vector{k}^{(1)}_{i}&=\vector{f}(\vector{y}_{i},t_{i}),\\
+    \vector{k}^{(2)}_{i}&=\vector{f}\left(\vector{y}_{i}+\vector{k}^{(1)}_{i}\frac{\Delta t}{2},t_{i}+\frac{\Delta t}{2}\right),\\
+    \vector{k}^{(3)}_{i}&=\vector{f}\left(\vector{y}_{i}+\vector{k}^{(2)}_{i}\frac{\Delta t}{2},t_{i}+\frac{\Delta t}{2}\right),\\
+    \vector{k}^{(4)}_{i}&=\vector{f}\left(\vector{y}_{i}+\vector{k}^{(3)}_{i}\Delta t,t_{i}+\Delta t\right),\\
+    \vector{\phi}_{i}&=\frac{1}{6}\left(\vector{k}^{(1)}_{i}+2\vector{k}^{(2)}_{i}+2\vector{k}^{(3)}_{i}+\vector{k}^{(4)}_{i}\right),\\
+    \vector{y}_{i+1}&=\vector{y}_{i}+\vector{\phi}_{i}\Delta t.
+\end{align*}
+kde $\vector{y}_{i}$ je vektor hledaných funkcí v kroku $i$, $\vector{f}$ je vektor pravé strany soustavy řešených diferenciálních rovnic prvního řádu a $\Delta t$ je časový krok.
+
+\begin{enumerate}
+    \item 
+        Vykreslete grafy pro $\eta=0.5$, $\omega=1$, $A=1$ a tři různé hodnoty frekvence $\omega_b=0\c2;0\c4;0\c6$. Časový interval volte $t=\langle0;500\rangle$ a počáteční podmínky $\theta_0=0,\dot{\theta}_{0}=1$.
+        Otestujte stabilitu řešení volbou dvou různých časových kroků $\Delta t=0\c01$ a $\Delta t=0\c005$.
+
+    \item Nakreslete tzv. \emph{Poincarého řez}:
+        jedná se o speciální zobrazení trajektorie jako bodů v diskrétních časech $nT_b$, kde $T_b=2\pi/\omega_b$ je perioda buzení a $n\in\mathbb{N}$.
+        Zobrazujte body o souřadnicích $\vector{b}_{n}=\left(\theta(nT_b),\dot{\theta}(nT_{b})\right)$.
+        V grafu vykreslete alespoň deset trajektorií s počátečními podmínkami $\theta_0=0,\dot{\theta}_{0}\in\left[0;1\right]$. 
+        Každou trajektorii zakreslujte jinou barvou.
+        Vykreslete alepsoň $n<N=10^{3}$ bodů pro každou trajektorii.
+        Zvolte vhodný časový krok integrace, aby se Poincarého řez dobře počítal.
+        Krok však ať není delší než $\Delta t=0\c01$.
+
+        Ostatní parametry výpočtu volte stejné jako v předchozím bodě úkolu.
+    \end{enumerate}
+
+\end{document}
