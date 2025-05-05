@@ -1,0 +1,162 @@
+\documentclass[a4paper,11pt,twoside]{article}
+\usepackage[utf8]{inputenc}	% Text coding
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage{epsfig}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[unicode]{hyperref}
+%\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{xifthen}
+\usepackage{amsthm,thmtools}
+\usepackage{bold-extra}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[subrefformat=simple,labelformat=simple]{subcaption} % Instead of subfigure
+\usepackage{listings}
+\usepackage{comment}
+\usepackage{titlesec}
+\usepackage{underscore}
+\usepackage{makecell}       % Šířky čar v tabulkách
+
+% Page size
+\addtolength{\topmargin}{-1.5cm} %\addtolength{\textheight}{-10cm}
+\addtolength{\textwidth}{4cm} \addtolength{\textheight}{4cm} % Width and height of the text
+\addtolength{\voffset}{-0.5cm} % Top margin
+\addtolength{\hoffset}{-2cm}
+\setlength{\headheight}{15pt}
+
+\DeclareMathOperator{\e}{e}
+
+\def\vector#1{\boldsymbol{#1}}								% Vector
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\derivative}[3][]{\ifthenelse{\isempty{#1}}	    % Normal derivative
+	{\frac{\d{#2}}{\d{#3}}}
+	{\frac{\d^{#1}{#2}}{\d{#3}^{#1}}}
+}
+\newcommand{\im}{\mathrm{i}}
+
+\def\makematrix#1{\begin{pmatrix}#1\end{pmatrix}}       % Matrix
+\def\abs#1{\left|#1\right|}
+\def\probability#1{\mathrm{Pr}\left[#1\right]}
+\def\expectation#1{\mathrm{E}\left[#1\right]}
+\def\dispersion#1{\sigma_{#1}^{2}}
+\def\c{,\!}
+
+\def\code#1{\textnormal{\texttt{#1}}}
+\def\file#1{\textnormal{\textbf{\texttt{#1}}}}
+\def\ghfile#1#2{\textnormal{\textbf{\texttt{\href{https://github.com/PavelStransky/PCInPhysics2021/blob/main/#1#2}{#2}}}}}
+
+\def\abbreviation#1{\textnormal{\textsc{#1}}}
+
+\def\ket#1{\left|{#1}\right\rangle}
+\def\bra#1{\left\langle{#1}\right|}
+\def\braket#1#2{\left\langle{#1}\middle|{#2}\right\rangle}
+
+\begin{document}
+
+\section*{Domácí úkol na 12.5.2025}
+\subsection*{Wolfram Mathematica}
+
+V programu Wolfram Mathematica vyřešte a vhodně naformátujte následující úlohy.
+
+\begin{enumerate}
+    \item
+    Spočítejte limitu
+    \begin{equation*}
+        \lim_{x\rightarrow 0}\frac{\sqrt[3]{\sin{x}+x^3}-x}{x^5}.
+    \end{equation*}
+
+    \item
+    Spočítejte určitý integrál
+    \begin{equation*}
+        I=\int_{0}^{\infty}\frac{\ln{x}}{\left(x^2+1\right)^2}\,\d x.
+    \end{equation*}
+\end{enumerate}
+
+\subsubsection*{Dvouhladinový kvantový systém}
+
+Uvažujte dvouhladinový systém (například spin) popsaný Hamiltoniánem (maticí $2\times2$)
+\begin{equation*}
+    H=\begin{pmatrix}
+        \Delta & \Omega \\
+        \Omega & \Delta
+    \end{pmatrix},
+\end{equation*}
+kde $\Delta$ je energetický rozdíl mezi dvěma hladinami a $\Omega$ udává intenzitu interakce.
+
+\begin{enumerate}
+    \setcounter{enumi}{2}
+    \item 
+    Nalezněte vlastní hodnoty (energie) a normalizované vlastní vektory (odpovídající stavy) Hamiltoniánu $H$.
+    
+    \item 
+    Vykreslete vlastní hodnoty jako funkci $\Delta$ pro dané $\Omega=1$.
+
+    \item
+    Vykreslete komponenty vlastních vektorů jako funkci $\Delta$ pro dané $\Omega=1$.
+
+    \item
+    Časový vývoj stavu systému je dán řešením Schrödingerovy rovnice, které v tomto případě lze explicitně nalézt jako
+    \begin{equation*}
+        \ket{\psi(t)}=\exp\left(-\im H t\right)\ket{\psi_{0}},
+    \end{equation*}    
+    kde
+    \begin{equation*}
+        \ket{\psi_{0}}=\begin{pmatrix}1 \\ 0\end{pmatrix}
+    \end{equation*}
+    popisuje stav systému v čase $t=0$.
+    Napište funkci, která spočítá pravděpodobnost naměření stavu $\ket{\psi_{0}}$ v čase $t$ pro libovolné hodnoty $\Delta$ a $\Omega$.
+    Pravděpodobnost se vypočítá jako
+    \begin{equation*}
+        p(t;\Delta,\Omega)=\abs{\braket{\psi_{0}}{\psi(t)}}^2.
+    \end{equation*}
+    Pravděpodobnost vykreslete jako funkci $t$ pro nějaké zvolené $\Omega$ a $\Delta$.
+
+    Symbol $\braket{\phi}{\psi}$ značí skalární součin a $\bra{\psi_{0}}$ je duální vektor k $\ket{\psi_{0}}$,
+    \begin{equation*}
+        \bra{\psi_{0}}=\begin{pmatrix}1 & 0\end{pmatrix}.
+    \end{equation*}
+
+\end{enumerate}
+
+    % \begin{task}
+    %     Spočítejte limitu
+    %     \begin{equation}
+    %         \lim_{x\rightarrow a}\left(\frac{\sin{x}}{\sin{a}}\right)^{\frac{1}{x-a}}.
+    %     \end{equation}
+    % \end{task}
+
+    % \begin{task}
+    %     Nalezněte primitivní funkci
+    %     \begin{equation}
+    %         F(x)=\int\sqrt{1+x^4}\,\d x
+    %     \end{equation}
+    %     a vykreslete její graf pro $x\in\langle0,2\rangle$.
+    % \end{task}
+
+    % \begin{task}
+    %     Vyřešte diferenciální rovnici pro matematické kyvadlo s velkou výchylkou
+    %     \begin{equation}
+    %         y''(t)=-\sin y(t)
+    %     \end{equation}
+    %     s počátečními podmínkami
+    %     \begin{equation}
+    %         y(0)=0,
+    %         \qquad
+    %         y'(0)=1
+    %     \end{equation}
+    %     a srovnejte v grafu s řešením linearizované rovnice
+    %     \begin{equation}
+    %         y''(t)=-y(t).
+    %     \end{equation}
+    % \end{task}
+
+    % \begin{solution}
+    %     Řešení všech tří úloh je v souboru \ghfile{mathematica/}{solution.nb}.
+    % \end{solution}
+
+    % Pokud se chcete s možnostmi programu Mathematica seznámit hlouběji a dozvědět se více o pokročilých možnostech programování, které nabízí, můžete navštěvovat dedikovanou přednášku Dr. Tomáše Ledvinky \href{https://is.cuni.cz/studium/predmety/index.php?tid=&do=predmet&kod=NTMF048}{Použití systémů počítačové algebry ve fyzice}.
+
+\end{document}
