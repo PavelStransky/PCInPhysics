@@ -246,6 +246,22 @@
 		\end{table}
 		V tabulce~\ref{tab:tabulka} umístěné ke konci stránky jsou tři zajímavé konstanty.
 
+	\section{Doplňující komentáře (2025)}
+		Při psaní českých čísel s desetinnou čárkou \LaTeX{} přidává nevhodně mezeru za čárku.
+		Toho se lze zbavit buď uzavřením čárky do složených závorek, nebo vymazáním čárky pomocí příkazu \verb+\!+.
+
+		Jednotky se píší vzpřímeným písmem (příkaz \verb+\mathrm+), aby se odlišily od proměn\-ných, a před jednotku se 
+		přidává mezera. Správně tedy $p=1{,}24\,\mathrm{hPa}$.
+
+		Vícepísmenné veličiny a označení veličin v indexech se obvykle píší vzpříměně, 
+		aby se graficky odlišilo od součinu veličin nebo od indexů.
+		Reynoldsovo číslo se tedy zapíše jako $\mathrm{Re}$.
+		Podobně maximální tlak $p_{\mathrm{max}}$.
+	
+		Při psaní textu (a nejen jeho) je znakem profesionality konzistence, 
+		což obnáší dodržovat stejný styl formátování, zápisu veličin a strukturování textu v celém dokumentu.
+		\LaTeX{} k tomu významně pomáhá.
+
 		\section{Závěr}
 		K úplně základnímu seznámení se s psaním v \LaTeX u tento text může stačit.
 		Rozhodně doporučuji přečíst si nějaký trochu podrobnější návod, jakým je například~\cite{UvodLaTeX1998}.
