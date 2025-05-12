@@ -1,0 +1,98 @@
+\documentclass[a4paper,11pt,twoside]{article}
+\usepackage[utf8]{inputenc}	% Text coding
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[czech]{babel}
+\usepackage{epsfig}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[unicode]{hyperref}
+%\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{xifthen}
+\usepackage{amsthm,thmtools}
+\usepackage{bold-extra}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[subrefformat=simple,labelformat=simple]{subcaption} % Instead of subfigure
+\usepackage{listings}
+\usepackage{comment}
+\usepackage{titlesec}
+\usepackage{underscore}
+\usepackage{makecell}       % Šířky čar v tabulkách
+
+% Page size
+\addtolength{\topmargin}{-1.5cm} %\addtolength{\textheight}{-10cm}
+\addtolength{\textwidth}{4cm} \addtolength{\textheight}{4cm} % Width and height of the text
+\addtolength{\voffset}{-0.5cm} % Top margin
+\addtolength{\hoffset}{-2cm}
+\setlength{\headheight}{15pt}
+
+\DeclareMathOperator{\e}{e}
+
+\def\vector#1{\boldsymbol{#1}}								% Vector
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\derivative}[3][]{\ifthenelse{\isempty{#1}}	    % Normal derivative
+	{\frac{\d{#2}}{\d{#3}}}
+	{\frac{\d^{#1}{#2}}{\d{#3}^{#1}}}
+}
+\newcommand{\im}{\mathrm{i}}
+
+\def\makematrix#1{\begin{pmatrix}#1\end{pmatrix}}       % Matrix
+\def\abs#1{\left|#1\right|}
+\def\probability#1{\mathrm{Pr}\left[#1\right]}
+\def\expectation#1{\mathrm{E}\left[#1\right]}
+\def\dispersion#1{\sigma_{#1}^{2}}
+\def\c{,\!}
+
+\def\code#1{\textnormal{\texttt{#1}}}
+\def\file#1{\textnormal{\textbf{\texttt{#1}}}}
+\def\ghfile#1#2{\textnormal{\textbf{\texttt{\href{https://github.com/PavelStransky/PCInPhysics/blob/main/#1#2}{#2}}}}}
+
+\def\abbreviation#1{\textnormal{\textsc{#1}}}
+
+\def\ket#1{\left|{#1}\right\rangle}
+\def\bra#1{\left\langle{#1}\right|}
+\def\braket#1#2{\left\langle{#1}\middle|{#2}\right\rangle}
+
+\begin{document}
+
+\section*{Domácí úkol na 19.5.2025}
+\subsection*{Diskrétní Fourierova transformace}
+
+\begin{enumerate}
+    \item Naprogramujte Fourierovu transformaci, zpětnou Fourierovu transformaci pro zadanou časovou řadu $h_j$, $j=0,1,\dotsc,N-1$ a funkci pro výpočet výkonového spektra $S_k$.
+
+    \item
+        Vytvořte časovou řadu délky $N=2000$ se vzorkovací frekvencí $f_{s}=2000\,\text{Hz}$ (signál tedy bude trvat přesně $1\,\text{s}$) danou součtem tří harmonických funkcí:
+        \begin{equation*}
+            h_{j}=\sum_{n=1}^{3}a_{n}\sin\left(2\pi F_{n} t_{j}\right),
+            \label{eq:FTTest}
+        \end{equation*}
+        kde
+        \begin{align}
+            a_{1}&=0.1, & a_{2}&=0.2 & a_{3}&=0.3,\nonumber\\
+            F_{1}&=440\,\text{Hz} & F_{2}&=\frac{5}{4} F_{1}=550\,\text{Hz} &F_{3}&=\frac{3}{2}F_{1}=660\,\text{Hz}\nonumber
+        \end{align}
+        a časy $t_{j}=j/f_{s}$, $j=0,1,\dotsc,N-1$.
+        Spočítejte Fourierovu transformaci a vykreslete graf výkonového spektra.
+        Ověřte, že graf má tři vrcholy s výškami odpovídajícími zadaným amplitudám $a_{n}$ a středy v místech zadaných frekvencí $F_{n}$.
+
+    \item 
+        Spočítejte Fourierovu transformaci pro časovou řadu $\theta_{j}$, kterou získáte navzorkováním řešení $\theta(t)$ pohybové rovnice pro buzené a tlumené kyvadlo z \href{https://github.com/PavelStransky/PCInPhysics/blob/main/ukoly/2025/Ukol5.pdf}{Úkolu 5} s parametry $\eta=0.5\,\text{Hz}, \omega^2=A=1\,\mathrm{s}^{-2}$ na časovém intervalu $t\in\langle 0\,\mathrm{s},1000\,\mathrm{s}\rangle$ a s vzorkovací frekvencí $f_{s}=2\,\text{Hz}$.
+    
+        Volte tři různé frekvence buzení $\omega_{b}=0.2\,\mathrm{s}^{-1}, 0.5\,\mathrm{s}^{-1}, 0.8\,\mathrm{s}^{-1}$ a pro každou z nich spočítejte Fourierovu transformaci a vykreslete graf výkonového spektra.
+        V případě $\omega_{b}=0.2\,\mathrm{s}^{-1}$ a $\omega_{b}=0.8\,\mathrm{s}^{-1}$ porovnejte dominantní frekvenci Fourierovy transformace s frekvencí buzení $\omega_{b}$.
+        V chaotickém případě $\omega_{b}=0.5\,\mathrm{s}^{-1}$ dostanete \uv{spojité} spektrum frekvencí.
+        Vykreslete ji v log-log grafu. 
+        Proložte přímku 
+        \begin{equation*}
+            y=ax+b
+        \end{equation*}
+        hodnotami $x_{k}=\log{f}_{k},y_{k}=\log{S}_{k}$, kde $S_{k}$ je hodnota výkonového spektra pro frekvence $f_{k}$ omezené $f_{k}<200\,\mathrm{Hz}$ a určete sklon přímky $a$.
+        K prokládání přímky použijte například\\
+        \code{a,b = numpy.polyfit(x, y, deg=1)}.
+
+\end{enumerate}
+
+
+\end{document}
